@@ -389,6 +389,9 @@ function escapeJs(s){ return s.replace(/'/g, "\\'"); }
 
 /* ===================== 음성 읽기 (TTS) ===================== */
 let ttsVoice = null;
+// iOS/모바일 Safari에서 SpeechSynthesisUtterance가 GC(가비지 컬렉션)되면
+// 소리 없이 재생이 끊기는 버그가 있어, 전역 배열에 참조를 붙잡아둔다.
+window._ttsQueue = window._ttsQueue || [];
 function pickVoice(){
   const voices = speechSynthesis.getVoices();
   ttsVoice = voices.find(v=>v.lang==='en-US') || voices.find(v=>v.lang && v.lang.startsWith('en')) || null;
@@ -401,6 +404,7 @@ function speak(text, btnEl){
   if(!('speechSynthesis' in window)){ showToast('이 브라우저는 음성 읽기를 지원하지 않아요.'); return; }
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
+  window._ttsQueue.push(u); // GC 방지용 참조 보관
   u.lang = 'en-US';
   u.rate = 0.82;
   u.pitch = 1;
@@ -408,28 +412,38 @@ function speak(text, btnEl){
   if(btnEl){
     document.querySelectorAll('.speak-btn.playing').forEach(b=>b.classList.remove('playing'));
     btnEl.classList.add('playing');
-    u.onend = ()=> btnEl.classList.remove('playing');
   }
-  speechSynthesis.speak(u);
+  const cleanup = ()=>{
+    if(btnEl) btnEl.classList.remove('playing');
+    window._ttsQueue = window._ttsQueue.filter(x=>x!==u);
+  };
+  u.onend = cleanup;
+  u.onerror = cleanup;
+  // iOS Safari는 cancel() 직후 바로 speak()하면 씹히는 경우가 있어 한 틱 지연
+  setTimeout(()=> speechSynthesis.speak(u), 30);
 }
 function speakAllVocab(){
   const w = WEEKS[currentWeekIdx];
   if(!('speechSynthesis' in window)) return;
   speechSynthesis.cancel();
-  w.vocab.forEach(v=>{
+  w.vocab.forEach((v,i)=>{
     const u = new SpeechSynthesisUtterance(v[0]);
+    window._ttsQueue.push(u);
     u.lang='en-US'; u.rate=0.82; if(ttsVoice) u.voice = ttsVoice;
-    speechSynthesis.speak(u);
+    u.onend = u.onerror = ()=>{ window._ttsQueue = window._ttsQueue.filter(x=>x!==u); };
+    setTimeout(()=> speechSynthesis.speak(u), 30 + i*10);
   });
 }
 function speakAllExpr(){
   const w = WEEKS[currentWeekIdx];
   if(!('speechSynthesis' in window)) return;
   speechSynthesis.cancel();
-  w.expr.forEach(ex=>{
+  w.expr.forEach((ex,i)=>{
     const u = new SpeechSynthesisUtterance(ex.replace(/~/g,'something'));
+    window._ttsQueue.push(u);
     u.lang='en-US'; u.rate=0.82; if(ttsVoice) u.voice = ttsVoice;
-    speechSynthesis.speak(u);
+    u.onend = u.onerror = ()=>{ window._ttsQueue = window._ttsQueue.filter(x=>x!==u); };
+    setTimeout(()=> speechSynthesis.speak(u), 30 + i*10);
   });
 }
 

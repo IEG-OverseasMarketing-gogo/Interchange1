@@ -271,6 +271,9 @@ function stripHtml(s){ return s.replace(/<[^>]+>/g, ''); }
 function escapeJs(s){ return s.replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
 
 let ttsVoice = null;
+// iOS/모바일 Safari에서 SpeechSynthesisUtterance가 GC(가비지 컬렉션)되면
+// 소리 없이 재생이 끊기는 버그가 있어, 전역 배열에 참조를 붙잡아둔다.
+window._ttsQueue = window._ttsQueue || [];
 function pickVoice(){
   const voices = speechSynthesis.getVoices();
   ttsVoice = voices.find(v=>v.lang==='en-US') || voices.find(v=>v.lang && v.lang.startsWith('en')) || null;
@@ -283,27 +286,36 @@ function speak(text, btnEl){
   if(!('speechSynthesis' in window)) return;
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
+  window._ttsQueue.push(u); // GC 방지용 참조 보관
   u.lang='en-US'; u.rate=0.82; u.pitch=1;
   if(ttsVoice) u.voice = ttsVoice;
   if(btnEl){
     document.querySelectorAll('.speak-btn.playing').forEach(b=>b.classList.remove('playing'));
     btnEl.classList.add('playing');
-    u.onend = ()=> btnEl.classList.remove('playing');
   }
-  speechSynthesis.speak(u);
+  const cleanup = ()=>{
+    if(btnEl) btnEl.classList.remove('playing');
+    window._ttsQueue = window._ttsQueue.filter(x=>x!==u);
+  };
+  u.onend = cleanup;
+  u.onerror = cleanup;
+  // iOS Safari는 cancel() 직후 바로 speak()하면 씹히는 경우가 있어 한 틱 지연
+  setTimeout(()=> speechSynthesis.speak(u), 30);
 }
 function playAll(weekIdx){
   if(!('speechSynthesis' in window)) return;
   speechSynthesis.cancel();
   const w = WEEKS[weekIdx];
-  w.lines.forEach(l=>{
+  w.lines.forEach((l,i)=>{
     const speaker = l[0];
     const text = stripHtml(l[1]);
     const u = new SpeechSynthesisUtterance(text);
+    window._ttsQueue.push(u);
     u.lang='en-US'; u.rate=0.82;
     u.pitch = speaker==='A' ? 1.0 : 1.18; // A/B 목소리 톤 살짝 구분
     if(ttsVoice) u.voice = ttsVoice;
-    speechSynthesis.speak(u);
+    u.onend = u.onerror = ()=>{ window._ttsQueue = window._ttsQueue.filter(x=>x!==u); };
+    setTimeout(()=> speechSynthesis.speak(u), 30 + i*10);
   });
 }
 </script>
