@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interchange 1 시니어반 — 학습 대시보드</title>
+<style>
+  :root{ --navy:#1b2a4a; --blue:#2f6fed; --line:#e3e7ee; --bg:#f2f4f8; }
+  *{box-sizing:border-box;}
+  body{margin:0; font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif; background:var(--bg);}
+  header{
+    background:linear-gradient(135deg,var(--navy),#2c3e6b); color:#fff;
+    padding:14px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
+  }
+  header h1{margin:0; font-size:1.1rem;}
+  header p{margin:2px 0 0; font-size:0.78rem; color:#c6d0ea;}
+  .open-links{display:flex; gap:8px;}
+  .open-links a{
+    color:#fff; text-decoration:none; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3);
+    padding:8px 12px; border-radius:8px; font-size:0.82rem;
+  }
+  .open-links a:hover{background:rgba(255,255,255,.28);}
+
+  .split{
+    display:flex; height:calc(100vh - 64px); border-top:1px solid var(--line);
+  }
+  .pane{flex:1; display:flex; flex-direction:column; min-width:0;}
+  .pane + .pane{border-left:2px solid var(--line);}
+  .pane-label{
+    background:#fff; padding:8px 14px; font-size:0.82rem; font-weight:700; color:var(--navy);
+    border-bottom:1px solid var(--line);
+  }
+  .pane iframe{flex:1; border:none; width:100%;}
+
+  /* 모바일: 좌우 분할 대신 탭 전환 */
+  .mobile-tabs{display:none;}
+  @media (max-width: 860px){
+    .split{flex-direction:column; height:auto;}
+    .pane{display:none; height:calc(100vh - 108px);}
+    .pane.active{display:flex;}
+    .mobile-tabs{
+      display:flex; background:#fff; border-bottom:1px solid var(--line);
+    }
+    .mobile-tabs button{
+      flex:1; padding:12px; border:none; background:#fff; font-size:0.9rem; font-weight:700; color:var(--navy);
+      border-bottom:3px solid transparent; cursor:pointer;
+    }
+    .mobile-tabs button.active{border-bottom-color:var(--blue); color:var(--blue);}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📗 Interchange 1 시니어반 학습 대시보드</h1>
+    <p>미니 대화 + 자가학습 워크북을 한 화면에서 함께 봅니다</p>
+  </div>
+  <div class="open-links">
+    <a href="situational_dialogues.html" target="_blank">💬 대화문 새 탭으로 열기</a>
+    <a href="senior_workbook.html" target="_blank">📘 워크북 새 탭으로 열기</a>
+  </div>
+</header>
+
+<div class="mobile-tabs">
+  <button class="active" onclick="showPane('dlg')">💬 미니 대화</button>
+  <button onclick="showPane('wb')">📘 워크북</button>
+</div>
+
+<div class="split">
+  <div class="pane active" id="paneDlg">
+    <div class="pane-label">💬 상황별 미니 대화</div>
+    <iframe src="situational_dialogues.html" title="상황별 미니 대화"></iframe>
+  </div>
+  <div class="pane" id="paneWb">
+    <div class="pane-label">📘 자가학습 워크북</div>
+    <iframe src="senior_workbook.html" title="자가학습 워크북"></iframe>
+  </div>
+</div>
+
+<script>
+function showPane(which){
+  document.getElementById('paneDlg').classList.toggle('active', which==='dlg');
+  document.getElementById('paneWb').classList.toggle('active', which==='wb');
+  document.querySelectorAll('.mobile-tabs button').forEach((b,i)=>{
+    b.classList.toggle('active', (which==='dlg' && i===0) || (which==='wb' && i===1));
+  });
+}
+</script>
+
+</body>
+</html>
