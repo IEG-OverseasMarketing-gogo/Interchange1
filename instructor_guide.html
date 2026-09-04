@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interchange 1 시니어반 — 강사용 수업 진행 스크립트</title>
+<style>
+  :root{
+    --navy:#1b2a4a; --blue:#2f6fed; --blue-light:#eaf0ff;
+    --gray:#5b6472; --line:#e3e7ee; --bg:#f7f8fb;
+    --tue:#2f6fed; --thu:#e08a1e; --green:#2f9e5c;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif; background:var(--bg); color:#20242c; line-height:1.65;}
+  header{background:linear-gradient(135deg,var(--navy),#2c3e6b); color:#fff; padding:30px 24px 26px;}
+  header h1{margin:0 0 6px; font-size:24px;}
+  header p{margin:0; color:#c6d0ea; font-size:13.5px;}
+  .badge-row{margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;}
+  .badge-row span{background:rgba(255,255,255,.14); padding:6px 12px; border-radius:16px; font-size:12.5px;}
+
+  nav.toc{background:#fff; border-bottom:1px solid var(--line); padding:14px 24px; position:sticky; top:0; z-index:10; box-shadow:0 2px 6px rgba(0,0,0,.04);}
+  nav.toc .toc-inner{max-width:960px; margin:0 auto; display:flex; flex-wrap:wrap; gap:6px;}
+  nav.toc a{font-size:12px; color:var(--navy); text-decoration:none; background:var(--blue-light); padding:5px 9px; border-radius:6px; white-space:nowrap;}
+  nav.toc a:hover{background:var(--blue); color:#fff;}
+
+  main{max-width:960px; margin:0 auto; padding:26px 20px 80px;}
+
+  .template-card{background:#fff; border:1px solid var(--line); border-radius:14px; padding:20px 24px; margin-bottom:16px;}
+  .template-card h2{margin:0 0 4px; font-size:17px; color:var(--navy);}
+  .template-card .desc{font-size:13px; color:var(--gray); margin-bottom:14px;}
+  .flow-step{display:flex; gap:12px; padding:10px 0; border-top:1px dashed var(--line);}
+  .flow-step:first-of-type{border-top:none;}
+  .flow-step .min{
+    flex:0 0 54px; font-size:12px; font-weight:800; color:#fff; background:var(--blue);
+    border-radius:8px; height:fit-content; padding:4px 0; text-align:center;
+  }
+  .template-card.thu .flow-step .min{background:var(--thu);}
+  .flow-step .content b{display:block; font-size:14px; color:var(--navy); margin-bottom:3px;}
+  .flow-step .content .say{
+    font-size:13px; color:#20242c; background:#f7f9fd; border-left:3px solid var(--blue);
+    padding:7px 10px; border-radius:6px; margin-top:5px;
+  }
+  .template-card.thu .flow-step .content .say{background:#fff7ec; border-left-color:var(--thu);}
+  .flow-step .content .note{font-size:12px; color:var(--gray); margin-top:4px;}
+
+  .tip-box{background:var(--blue-light); border-radius:10px; padding:12px 16px; font-size:12.5px; color:var(--navy); margin-bottom:22px;}
+  .tip-box b{display:block; margin-bottom:4px;}
+
+  section.week{background:#fff; border:1px solid var(--line); border-radius:14px; margin-bottom:18px; overflow:hidden; scroll-margin-top:70px;}
+  .week-head{padding:14px 22px; background:linear-gradient(135deg,#f4f7ff,#fff); border-bottom:1px solid var(--line);}
+  .week-head .tag{font-size:12px; color:var(--blue); font-weight:700;}
+  .week-head h3{margin:2px 0; font-size:16.5px; color:var(--navy);}
+  .week-head .sub{font-size:12.5px; color:var(--gray);}
+
+  .day-block{padding:16px 22px; border-top:1px solid var(--line);}
+  .day-block .day-tag{
+    display:inline-block; font-size:12px; font-weight:800; padding:3px 10px; border-radius:12px; margin-bottom:10px;
+  }
+  .day-block.tue .day-tag{background:var(--blue-light); color:var(--tue);}
+  .day-block.thu .day-tag{background:#fff4e7; color:var(--thu);}
+
+  .script-line{font-size:13.5px; margin-bottom:8px;}
+  .script-line .label{font-weight:700; color:var(--navy); font-size:12.5px;}
+  .script-line .say{
+    display:block; background:#f7f9fd; border-radius:8px; padding:8px 12px; margin-top:4px; color:#20242c;
+  }
+  .day-block.thu .script-line .say{background:#fff9f0;}
+  .checklist-note{
+    font-size:12px; color:var(--green); background:#effaf2; border-radius:8px; padding:7px 10px; margin-top:10px;
+  }
+
+  .print-btn{position:fixed; right:22px; bottom:22px; background:var(--navy); color:#fff; border:none; border-radius:30px; padding:12px 18px; font-size:13px; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,.25);}
+  footer{text-align:center; color:var(--gray); font-size:12px; padding:20px;}
+  @media print{ nav.toc, .print-btn{display:none;} section.week{break-inside:avoid;} }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>👩‍🏫 Interchange 1 시니어반 — 강사용 수업 진행 스크립트</h1>
+  <p>화·목 각 50분 · 주차별 커리큘럼 연동 · 워크북 & 미니 대화 부교재와 함께 사용</p>
+  <div class="badge-row">
+    <span>🗓 16주 / 32회</span>
+    <span>⏱ 회당 50분</span>
+    <span>👥 시니어 2인 소그룹</span>
+  </div>
+</header>
+
+<nav class="toc"><div class="toc-inner" id="tocList"></div></nav>
+
+<main>
+  <div class="template-card tue">
+    <h2>🔵 화요일 표준 진행 템플릿 (50분) — 문법 & 새 단어 도입</h2>
+    <div class="desc">매주 화요일은 이 순서를 그대로 따르고, 아래 주차별 섹션의 내용만 바꿔 넣으시면 됩니다.</div>
+    <div class="flow-step"><div class="min">0-5분</div><div class="content">
+      <b>인사 & 워밍업</b>
+      <div class="say">"안녕하세요! 오늘도 만나서 반가워요. 이번 주는 [Unit 제목]을 배울 거예요. 지난주 배운 표현 하나만 같이 말해볼까요?"</div>
+      <div class="note">지난주 핵심표현 중 1개를 자연스럽게 다시 물어보며 워밍업</div>
+    </div></div>
+    <div class="flow-step"><div class="min">5-10분</div><div class="content">
+      <b>지난 회차 복습</b>
+      <div class="say">"지난 목요일에 연습했던 대화 기억나세요? [지난주 핵심표현]으로 저한테 한 문장 말해주실 수 있을까요?"</div>
+    </div></div>
+    <div class="flow-step"><div class="min">10-25분</div><div class="content">
+      <b>이번 주 핵심 문법 소개</b>
+      <div class="say">(주차별 스크립트 참고 — 쉬운 말로, 한 문장씩 천천히, 칠판/종이에 형태 적어가며 설명)</div>
+      <div class="note">문법 용어보다 "이럴 때 이렇게 말해요" 식 상황 중심 설명이 시니어 학습자에게 효과적</div>
+    </div></div>
+    <div class="flow-step"><div class="min">25-40분</div><div class="content">
+      <b>새 단어 8개 도입 & 발음 연습</b>
+      <div class="say">"제가 먼저 읽어드릴게요. 따라 읽어보세요." (단어 1개씩 3회 반복 → 뜻 확인 → 짧은 예문)</div>
+      <div class="note">단어는 워크북 '암기 단어' 목록과 동일 — 워크북을 펼쳐두고 함께 보면 좋음</div>
+    </div></div>
+    <div class="flow-step"><div class="min">40-45분</div><div class="content">
+      <b>배운 단어로 문장 만들어보기</b>
+      <div class="say">"이 단어로 짧은 문장 하나만 만들어볼까요? 정답은 없어요, 자유롭게 말씀해보세요."</div>
+    </div></div>
+    <div class="flow-step"><div class="min">45-50분</div><div class="content">
+      <b>마무리 & 워크북 안내</b>
+      <div class="say">"오늘 배운 내용은 워크북에서 '화요일 학습 완료'를 체크해주시고, 시간 되실 때 단어도 하나씩 체크해보세요."</div>
+    </div></div>
+  </div>
+
+  <div class="template-card thu">
+    <h2>🟠 목요일 표준 진행 템플릿 (50분) — 회화 연습 & 자가체크</h2>
+    <div class="desc">화요일에 배운 문법·단어를 실제 대화로 옮기는 시간입니다.</div>
+    <div class="flow-step"><div class="min">0-5분</div><div class="content">
+      <b>인사 & 단어 미니 퀴즈</b>
+      <div class="say">"이번 주 단어 중에 2~3개만 뜻을 여쭤볼게요. 편하게 말씀해주세요." (정답 유도보다 격려 중심)</div>
+    </div></div>
+    <div class="flow-step"><div class="min">5-10분</div><div class="content">
+      <b>화요일 내용 복습</b>
+      <div class="say">"화요일에 배운 [핵심 문법]을 다시 한번 짚어볼게요."</div>
+    </div></div>
+    <div class="flow-step"><div class="min">10-25분</div><div class="content">
+      <b>상황별 미니 대화 함께 읽기</b>
+      <div class="say">"이번 주 대화문을 같이 읽어볼게요. 제가 A 할게요. [학습자1]님은 B 해주시고, 그다음 바꿔서 읽어볼까요?"</div>
+      <div class="note">situational_dialogues.html 해당 주차 화면을 함께 보며 진행 (노란 표시 = 핵심 표현)</div>
+    </div></div>
+    <div class="flow-step"><div class="min">25-40분</div><div class="content">
+      <b>역할 바꿔 응용 대화 만들기</b>
+      <div class="say">"이번엔 이름이나 상황을 살짝 바꿔서 두 분이 직접 대화를 만들어보세요. 제가 도와드릴게요."</div>
+    </div></div>
+    <div class="flow-step"><div class="min">40-45분</div><div class="content">
+      <b>워크북 자가체크 함께 작성</b>
+      <div class="say">"오늘 배운 것들 워크북에 체크해볼까요? 출석, 오늘 성취도, 잘한 점, 더 연습하고 싶은 점까지 적어주시면 제가 확인할게요."</div>
+      <div class="checklist-note">✔ 이 시간에 학습자가 직접 저장 버튼까지 누르도록 안내 → 구글시트에 자동 기록</div>
+    </div></div>
+    <div class="flow-step"><div class="min">45-50분</div><div class="content">
+      <b>마무리 & 다음 주 예고</b>
+      <div class="say">(주차별 스크립트의 '다음 주 예고' 멘트 참고)</div>
+    </div></div>
+  </div>
+
+  <div class="tip-box">
+    <b>💡 시니어 학습자 진행 팁</b>
+    말은 평소보다 20~30% 천천히, 한 문장을 짧게 끊어서. 틀려도 바로 고쳐주기보다 "좋아요, 이렇게도 말할 수 있어요"로 자연스럽게 재진술. 매 회차 마지막엔 반드시 칭찬 한마디로 마무리.
+  </div>
+
+  <div id="weeksContainer"></div>
+</main>
+
+<button class="print-btn" onclick="window.print()">🖨 인쇄 / PDF 저장</button>
+<footer>본 스크립트는 강사(켈리) 전용 진행 가이드입니다. 학습자용 대시보드에는 포함하지 않는 것을 권장합니다.</footer>
+
+<script>
+const WEEKS = [
+{unit:"Unit 1", title:"Please call me Beth.",
+ grammar:"be동사(am/is/are)는 '~이다'라는 뜻이에요. 이름, 직업, 상태를 말할 때 씁니다. 예를 들어 'I am Beth', 'She is a nurse'처럼요.",
+ vocabPick:["introduce (소개하다)","hometown (고향)","nickname (별명)"],
+ thuLead:"오늘은 처음 만난 두 사람이 인사 나누는 장면이에요. 실제로 두 분도 서로 처음 만난 것처럼 상상하며 읽어볼까요?",
+ next:"다음 주에는 하루 일과를 영어로 말하는 걸 배울 거예요. 아침에 몇 시에 일어나시는지 한번 생각해오세요!"},
+{unit:"Unit 2", title:"How do you spend your day?",
+ grammar:"오늘은 매일 반복하는 일을 말하는 법이에요. 동사에 s를 붙여요 — 'He gets up at 7', 'She works at a hospital'처럼요.",
+ vocabPick:["get up (일어나다)","schedule (일정)","free time (여가 시간)"],
+ thuLead:"오늘 대화는 이웃끼리 하루 일과를 물어보는 장면이에요. 실제 두 분의 하루와 비교하며 읽어보세요.",
+ next:"다음 주는 쇼핑할 때 쓰는 표현이에요. 최근에 사신 물건이 있으면 그 이야기도 나눠볼게요."},
+{unit:"Unit 3", title:"How much is it?",
+ grammar:"this/that은 가까운 것/먼 것을 가리켜요. 가격을 물을 땐 'How much is it?'이라고 해요.",
+ vocabPick:["price (가격)","expensive (비싼)","try on (입어보다)"],
+ thuLead:"오늘은 옷가게 상황이에요. 한 분은 손님, 한 분은 점원 역할로 연기해볼까요?",
+ next:"다음 주는 좋아하는 음악, 영화 이야기예요. 좋아하시는 노래나 프로그램 하나 생각해오세요."},
+{unit:"Unit 4", title:"Do you like rap music?",
+ grammar:"좋아하는 것을 말할 때 'like + 명사' 또는 'like + ~ing'를 써요. 'I like listening to music'처럼요.",
+ vocabPick:["favorite (가장 좋아하는)","boring (지루한)","can't stand (질색하다)"],
+ thuLead:"오늘은 두 친구가 음악 취향을 이야기하는 장면이에요. 실제 좋아하시는 음악으로 바꿔서도 말해볼게요.",
+ next:"다음 주는 가족 이야기예요. 가족 구성원을 영어로 어떻게 말하는지 배울 거예요."},
+{unit:"Unit 5", title:"Tell me about your family.",
+ grammar:"내 것, 네 것을 말할 때 my, your, his, her를 써요. 'my sister', 'her son'처럼요.",
+ vocabPick:["sibling (형제자매)","grandparent (조부모)","get along with (잘 지내다)"],
+ thuLead:"오늘은 가족을 소개하는 대화예요. 실제 두 분의 가족 이야기로도 이어가 볼게요.",
+ next:"다음 주는 운동, 취미 이야기예요. 평소 즐기시는 운동이나 활동을 떠올려보세요."},
+{unit:"Unit 6", title:"How often do you exercise?",
+ grammar:"얼마나 자주 하는지 말할 때 always, usually, sometimes, never 같은 단어를 동사 앞에 넣어요.",
+ vocabPick:["exercise (운동하다)","jog (조깅하다)","beginner (초보자)"],
+ thuLead:"오늘은 운동 습관을 묻는 대화예요. 실제로 얼마나 자주 걷기 운동을 하시는지도 여쭤볼게요.",
+ next:"다음 주는 지난 주말 이야기예요. 이번 주말에 특별한 계획이 있으신지 미리 생각해보세요."},
+{unit:"Unit 7", title:"We had a great time!",
+ grammar:"지난 일을 말할 땐 동사를 과거형으로 바꿔요. go는 went, have는 had처럼 모양이 바뀌는 것도 있어요.",
+ vocabPick:["stay home (집에 머물다)","relax (쉬다)","take a trip (여행 가다)"],
+ thuLead:"오늘은 주말 이야기를 나누는 대화예요. 실제 지난 주말 이야기로 자연스럽게 연결해보세요.",
+ next:"다음 주는 우리 동네 이야기예요. 집 근처에 뭐가 있는지 떠올려보시면 좋아요."},
+{unit:"Unit 8", title:"What's your neighborhood like?",
+ grammar:"'~가 있다'는 There is/There are로 말해요. 하나면 is, 여러 개면 are예요.",
+ vocabPick:["neighborhood (동네)","convenient (편리한)","across from (맞은편에)"],
+ thuLead:"오늘은 동네를 소개하는 대화예요. 실제 사시는 동네 이야기로 이어가면 훨씬 재밌어요.",
+ next:"다음 주는 사람 외모를 설명하는 표현이에요. 가족이나 친구 얼굴을 떠올려보세요."},
+{unit:"Unit 9", title:"What does she look like?",
+ grammar:"외모를 말할 땐 'has + 특징' 또는 'is wearing + 옷'을 써요. 'She has curly hair', 'He's wearing glasses'처럼요.",
+ vocabPick:["curly hair (곱슬머리)","glasses (안경)","wear (입다/착용하다)"],
+ thuLead:"오늘은 사람을 찾는 상황이에요. 서로 가족이나 지인의 외모를 설명해보는 것도 좋아요.",
+ next:"다음 주는 살면서 해본 특별한 경험을 말하는 표현이에요. 기억에 남는 경험 하나 떠올려보세요."},
+{unit:"Unit 10", title:"Have you ever ridden a camel?",
+ grammar:"'해본 적 있다'는 have/has + p.p.(과거분사)를 써요. 'Have you ever tried~?'로 경험을 물어요.",
+ vocabPick:["experience (경험)","overseas (해외로)","several times (여러 번)"],
+ thuLead:"오늘은 특별한 경험을 나누는 대화예요. 실제 두 분의 여행이나 특별한 경험도 함께 나눠볼게요.",
+ next:"다음 주는 도시를 비교하는 표현이에요. 가보신 여러 도시를 비교해서 이야기해볼 거예요."},
+{unit:"Unit 11", title:"It's a very exciting place!",
+ grammar:"두 가지를 비교할 땐 형용사에 -er을 붙이거나 more를 앞에 붙여요. 'bigger', 'more expensive'처럼요.",
+ vocabPick:["crowded (붐비는)","modern (현대적인)","population (인구)"],
+ thuLead:"오늘은 두 도시를 비교하는 대화예요. 서울과 부산, 또는 두 분이 아시는 도시로 비교해보세요.",
+ next:"다음 주는 몸이 아플 때 쓰는 표현이에요. 감기 걸렸을 때 어떻게 말하는지 배워요."},
+{unit:"Unit 12", title:"It really works!",
+ grammar:"아플 때는 'I have a headache'처럼 have를 써요. 조언할 땐 'You should~'를 써요.",
+ vocabPick:["headache (두통)","get some rest (휴식을 취하다)","feel better (나아지다)"],
+ thuLead:"오늘은 아픈 친구를 걱정하는 대화예요. 평소 아프실 때 어떻게 하시는지도 나눠볼게요.",
+ next:"다음 주는 세계에서 가장 ~한 것들을 이야기해요. 아시는 세계 기록이 있으면 미리 생각해오세요."},
+{unit:"Unit 13", title:"The biggest and the best!",
+ grammar:"'가장 ~한'은 the + 형용사-est 또는 the most + 형용사예요. 'the biggest', 'the most famous'처럼요.",
+ vocabPick:["continent (대륙)","population (인구)","famous for (~로 유명한)"],
+ thuLead:"오늘은 세계 지리 퀴즈 대화예요. 아시는 나라나 도시로 자유롭게 바꿔서 말해볼 수 있어요.",
+ next:"다음 주는 환경, 재활용 이야기예요. 집에서 하시는 재활용 습관을 떠올려보세요."},
+{unit:"Unit 14", title:"Do you recycle?",
+ grammar:"양이 많다/적다는 too much(불가산), too many(가산), not enough로 말해요.",
+ vocabPick:["recycle (재활용하다)","reduce (줄이다)","save energy (에너지를 절약하다)"],
+ thuLead:"오늘은 환경 실천 대화예요. 실제 집에서 재활용을 어떻게 하시는지 이야기해보면 좋아요.",
+ next:"다음 주는 주말 계획, 약속 잡는 표현이에요. 이번 주말 계획을 미리 생각해보세요."},
+{unit:"Unit 15", title:"What are you going to do?",
+ grammar:"미래 계획은 be going to로 말해요. 'I'm going to visit my daughter'처럼요.",
+ vocabPick:["plan (계획하다)","invite (초대하다)","get together (모이다)"],
+ thuLead:"오늘은 약속 잡는 대화예요. 실제 두 분의 이번 주말 계획으로 이어가 볼게요.",
+ next:"다음 주는 마지막 유닛, 가정 상황을 말하는 표현이에요. 그리고 전체 복습도 함께 할 거예요."},
+{unit:"Unit 16", title:"What would you do?",
+ grammar:"가정 상황은 'If I were you, I would~'로 말해요. 실제 일이 아니라 상상하는 상황이에요.",
+ vocabPick:["emergency (응급 상황)","deal with (대처하다)","apologize (사과하다)"],
+ thuLead:"오늘은 갑작스러운 상황에 어떻게 대처할지 이야기하는 대화예요. 마지막 유닛이니 그동안 배운 표현도 자유롭게 섞어서 말해보도록 격려해주세요.",
+ next:"오늘로 Interchange 1 전체 과정을 완주하셨어요! 다음 시간엔 그동안 배운 내용을 자유롭게 복습하고, 원하시면 Book 2로 이어갈지 이야기 나눠볼게요."}
+];
+
+const tocEl = document.getElementById('tocList');
+const container = document.getElementById('weeksContainer');
+
+WEEKS.forEach((w,i)=>{
+  const weekNum = i+1;
+  const id = "week"+weekNum;
+  const a = document.createElement('a');
+  a.href = "#"+id; a.textContent = "W"+weekNum+" · "+w.unit;
+  tocEl.appendChild(a);
+
+  const section = document.createElement('section');
+  section.className = "week"; section.id = id;
+
+  const vocabHtml = w.vocabPick.map(v=>`<span style="display:inline-block;background:#eef3ff;color:#1b2a4a;border-radius:6px;padding:3px 9px;margin:2px 4px 2px 0;font-size:12.5px;">${v}</span>`).join('');
+
+  section.innerHTML = `
+    <div class="week-head">
+      <div class="tag">WEEK ${weekNum} · ${w.unit}</div>
+      <h3>${w.title}</h3>
+    </div>
+    <div class="day-block tue">
+      <span class="day-tag">🔵 화요일 대사 가이드</span>
+      <div class="script-line"><span class="label">문법 설명 대사</span><span class="say">"${w.grammar}"</span></div>
+      <div class="script-line"><span class="label">우선 도입할 단어 3개 (예시 대사용)</span><span class="say">${vocabHtml}</span></div>
+    </div>
+    <div class="day-block thu">
+      <span class="day-tag">🟠 목요일 대사 가이드</span>
+      <div class="script-line"><span class="label">대화문 도입 멘트</span><span class="say">"${w.thuLead}"</span></div>
+      <div class="script-line"><span class="label">마무리 · 다음 주 예고 멘트</span><span class="say">"${w.next}"</span></div>
+    </div>
+  `;
+  container.appendChild(section);
+});
+</script>
+</body>
+</html>
