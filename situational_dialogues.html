@@ -47,6 +47,17 @@
   .expr-recap{margin:14px 22px 20px; padding:12px 16px; background:var(--blue-light); border-radius:10px; font-size:13px;}
   .expr-recap b{color:var(--navy); display:block; margin-bottom:6px; font-size:12.5px;}
   .expr-recap span{display:inline-block; background:#fff; border:1px solid var(--line); border-radius:6px; padding:3px 8px; margin:2px 4px 2px 0; font-size:12.5px;}
+  .speak-btn{
+    border:none; background:var(--blue-light); color:var(--blue); border-radius:50%;
+    width:30px; height:30px; font-size:14px; cursor:pointer; flex:0 0 auto; margin-top:2px;
+  }
+  .speak-btn:active, .speak-btn.playing{background:var(--blue); color:#fff;}
+  .line-row{display:flex; align-items:flex-start; gap:8px;}
+  .play-all-btn{
+    border:none; background:rgba(255,255,255,.18); color:#fff; border:1px solid rgba(255,255,255,.35);
+    border-radius:20px; padding:6px 14px; font-size:12.5px; cursor:pointer; margin-top:8px;
+  }
+  .play-all-btn:hover{background:rgba(255,255,255,.3);}
   .tip{margin:0 22px 20px; font-size:12.5px; color:var(--gray); background:#f9fafc; border-left:3px solid var(--amber); padding:9px 12px; border-radius:6px;}
   .print-btn{position:fixed; right:22px; bottom:22px; background:var(--navy); color:#fff; border:none; border-radius:30px; padding:12px 18px; font-size:13px; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,.25);}
   footer{text-align:center; color:var(--gray); font-size:12px; padding:20px;}
@@ -222,13 +233,19 @@ WEEKS.forEach((w,i)=>{
   section.className = "week";
   section.id = id;
 
-  const linesHtml = w.lines.map(l=>{
+  const linesHtml = w.lines.map((l,li)=>{
     const who = l[0];
+    const plain = stripHtml(l[1]);
     return `<div class="line ${who.toLowerCase()}">
       <div class="who">${who}</div>
       <div class="bubble">
-        <div class="en">${l[1]}</div>
-        <div class="kr">${l[2]}</div>
+        <div class="line-row">
+          <button class="speak-btn" onclick="speak('${escapeJs(plain)}', this)">🔊</button>
+          <div style="flex:1;">
+            <div class="en">${l[1]}</div>
+            <div class="kr">${l[2]}</div>
+          </div>
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -240,6 +257,7 @@ WEEKS.forEach((w,i)=>{
       <div class="tag">WEEK ${weekNum} · ${w.unit}</div>
       <h3>${w.title}</h3>
       <div class="scenario">${w.scenario}</div>
+      <button class="play-all-btn" style="color:var(--navy); background:var(--blue-light); border-color:var(--line);" onclick="playAll(${i})">▶ 대화 전체 듣기</button>
     </div>
     <div class="dialogue">${linesHtml}</div>
     <div class="expr-recap"><b>이번 대화에 담긴 암기 표현</b>${exprTags}</div>
@@ -247,6 +265,47 @@ WEEKS.forEach((w,i)=>{
   `;
   container.appendChild(section);
 });
+
+/* ===================== 음성 읽기 (TTS) ===================== */
+function stripHtml(s){ return s.replace(/<[^>]+>/g, ''); }
+function escapeJs(s){ return s.replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
+
+let ttsVoice = null;
+function pickVoice(){
+  const voices = speechSynthesis.getVoices();
+  ttsVoice = voices.find(v=>v.lang==='en-US') || voices.find(v=>v.lang && v.lang.startsWith('en')) || null;
+}
+if('speechSynthesis' in window){
+  speechSynthesis.onvoiceschanged = pickVoice;
+  pickVoice();
+}
+function speak(text, btnEl){
+  if(!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang='en-US'; u.rate=0.82; u.pitch=1;
+  if(ttsVoice) u.voice = ttsVoice;
+  if(btnEl){
+    document.querySelectorAll('.speak-btn.playing').forEach(b=>b.classList.remove('playing'));
+    btnEl.classList.add('playing');
+    u.onend = ()=> btnEl.classList.remove('playing');
+  }
+  speechSynthesis.speak(u);
+}
+function playAll(weekIdx){
+  if(!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const w = WEEKS[weekIdx];
+  w.lines.forEach(l=>{
+    const speaker = l[0];
+    const text = stripHtml(l[1]);
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang='en-US'; u.rate=0.82;
+    u.pitch = speaker==='A' ? 1.0 : 1.18; // A/B 목소리 톤 살짝 구분
+    if(ttsVoice) u.voice = ttsVoice;
+    speechSynthesis.speak(u);
+  });
+}
 </script>
 </body>
 </html>
