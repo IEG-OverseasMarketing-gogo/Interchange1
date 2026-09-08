@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interchange 1 자가학습 워크북 (시니어반)</title>
+<style>
+  :root{
+    --navy:#1b2a4a; --blue:#2f6fed; --blue-light:#eaf0ff;
+    --gray:#5c6472; --line:#dfe4ec; --bg:#f6f7fb;
+    --green:#2f9e5c; --amber:#d98a1e; --red:#d94f4f;
+  }
+  *{box-sizing:border-box;}
+  html{font-size:19px;} /* 시니어 기본 폰트 확대 */
+  body{
+    margin:0; font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    background:var(--bg); color:#20242c; line-height:1.65;
+  }
+  header{
+    background:linear-gradient(135deg,var(--navy),#2c3e6b); color:#fff;
+    padding:22px 20px; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;
+  }
+  header h1{margin:0; font-size:1.35rem;}
+  header p{margin:4px 0 0; color:#c6d0ea; font-size:0.85rem;}
+  .gear-btn{
+    background:rgba(255,255,255,.15); border:none; color:#fff; border-radius:10px;
+    padding:10px 14px; font-size:0.95rem; cursor:pointer;
+  }
+  main{max-width:760px; margin:0 auto; padding:20px 16px 90px;}
+
+  .student-tabs{display:flex; gap:10px; margin-bottom:18px;}
+  .student-tab{
+    flex:1; padding:16px; border-radius:14px; border:2px solid var(--line);
+    background:#fff; text-align:center; font-size:1.05rem; font-weight:700;
+    cursor:pointer; color:var(--gray);
+  }
+  .student-tab.active{border-color:var(--blue); background:var(--blue-light); color:var(--navy);}
+
+  .card{background:#fff; border:1px solid var(--line); border-radius:16px; padding:20px; margin-bottom:16px;}
+  .card h2{margin:0 0 12px; font-size:1.1rem; color:var(--navy);}
+  label{display:block; font-weight:700; margin:14px 0 6px; color:var(--navy); font-size:0.95rem;}
+  select, input[type=date], textarea{
+    width:100%; font-size:1rem; padding:12px 14px; border-radius:10px;
+    border:2px solid var(--line); font-family:inherit; background:#fbfcfe;
+  }
+  textarea{min-height:70px; resize:vertical;}
+
+  .week-title{font-size:1.15rem; font-weight:800; color:var(--navy); margin:2px 0 2px;}
+  .week-sub{color:var(--gray); font-size:0.9rem; margin-bottom:10px;}
+
+  .task-item{
+    display:flex; align-items:flex-start; gap:12px; padding:14px 12px;
+    border:2px solid var(--line); border-radius:12px; margin-bottom:10px; background:#fbfcfe;
+  }
+  .task-item.checked{border-color:var(--green); background:#effaf2;}
+  .task-item input[type=checkbox]{width:26px; height:26px; margin-top:2px; accent-color:var(--green); cursor:pointer;}
+  .task-item .t-main{font-size:1rem; font-weight:600;}
+  .task-item .t-sub{font-size:0.85rem; color:var(--gray); margin-top:2px;}
+
+  .attend-toggle{display:flex; gap:10px;}
+  .attend-btn{
+    flex:1; padding:16px; border-radius:12px; border:2px solid var(--line); background:#fff;
+    font-size:1.05rem; font-weight:700; cursor:pointer; color:var(--gray);
+  }
+  .attend-btn.on-yes.active{border-color:var(--green); background:#effaf2; color:var(--green);}
+  .attend-btn.on-no.active{border-color:var(--red); background:#fdecec; color:var(--red);}
+
+  .rating-row{display:flex; gap:8px; justify-content:space-between;}
+  .rating-btn{
+    flex:1; padding:14px 4px; border-radius:12px; border:2px solid var(--line); background:#fff;
+    font-size:1.4rem; text-align:center; cursor:pointer;
+  }
+  .rating-btn .lbl{display:block; font-size:0.68rem; margin-top:4px; color:var(--gray); font-weight:600;}
+  .rating-btn.active{border-color:var(--blue); background:var(--blue-light);}
+
+  .progress-bar-outer{background:var(--line); border-radius:20px; height:14px; overflow:hidden; margin-top:8px;}
+  .progress-bar-inner{background:var(--blue); height:100%; border-radius:20px; transition:width .3s;}
+  .progress-label{font-size:0.85rem; color:var(--gray); margin-top:6px;}
+
+  .submit-btn{
+    width:100%; padding:18px; font-size:1.15rem; font-weight:800; color:#fff;
+    background:var(--blue); border:none; border-radius:14px; cursor:pointer; margin-top:6px;
+  }
+  .submit-btn:active{transform:scale(0.99);}
+  .toast{
+    position:fixed; left:50%; bottom:26px; transform:translateX(-50%);
+    background:var(--navy); color:#fff; padding:14px 22px; border-radius:30px;
+    font-size:0.95rem; box-shadow:0 6px 18px rgba(0,0,0,.25); display:none; z-index:50; text-align:center; max-width:90%;
+  }
+
+  table.history{width:100%; border-collapse:collapse; font-size:0.82rem; margin-top:8px;}
+  table.history th, table.history td{border:1px solid var(--line); padding:6px 8px; text-align:center;}
+  table.history th{background:var(--blue-light); color:var(--navy);}
+
+  .modal-bg{
+    display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:100;
+    align-items:center; justify-content:center; padding:20px;
+  }
+  .modal-bg.open{display:flex;}
+  .modal{background:#fff; border-radius:16px; padding:22px; max-width:480px; width:100%; max-height:85vh; overflow:auto;}
+  .modal h3{margin-top:0; color:var(--navy);}
+  .modal .field{margin-bottom:14px;}
+  .modal .field label{margin-bottom:6px;}
+  .modal input[type=text]{width:100%; padding:11px 12px; border-radius:9px; border:2px solid var(--line); font-size:0.95rem;}
+  .modal .btn-row{display:flex; gap:10px; margin-top:16px;}
+  .modal button{flex:1; padding:13px; border-radius:10px; border:none; font-size:0.95rem; font-weight:700; cursor:pointer;}
+  .modal .save{background:var(--blue); color:#fff;}
+  .modal .close{background:var(--line); color:var(--navy);}
+  .hint{font-size:0.78rem; color:var(--gray); margin-top:4px;}
+  .sync-status{font-size:0.8rem; margin-top:4px;}
+  .sync-status.ok{color:var(--green);}
+  .sync-status.warn{color:var(--amber);}
+  details.vocab-detail{margin-top:10px;}
+  details.vocab-detail summary{cursor:pointer; font-weight:700; color:var(--blue); font-size:0.9rem; padding:6px 0;}
+  table.vocab-check{width:100%; border-collapse:collapse; font-size:0.85rem; margin-top:6px;}
+  table.vocab-check td{border:1px solid var(--line); padding:6px 8px; vertical-align:middle;}
+  table.vocab-check td.chk{width:34px; text-align:center;}
+  table.vocab-check input[type=checkbox]{width:20px; height:20px; accent-color:var(--green);}
+  .speak-btn{
+    border:none; background:var(--blue-light); color:var(--blue); border-radius:50%;
+    width:30px; height:30px; font-size:14px; cursor:pointer; flex:0 0 auto;
+  }
+  .speak-btn:active{background:var(--blue); color:#fff;}
+  .speak-btn.playing{background:var(--blue); color:#fff;}
+  .speak-all-btn{
+    border:none; background:var(--navy); color:#fff; border-radius:20px; padding:7px 14px;
+    font-size:0.8rem; cursor:pointer; margin:8px 0 4px;
+  }
+  td.word-cell{display:flex; align-items:center; gap:8px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📗 Interchange 1 자가학습 워크북</h1>
+    <p>화·목 수업 · 시니어반 · 체크 후 자동으로 구글시트에 기록됩니다</p>
+  </div>
+  <button class="gear-btn" onclick="window.open('situational_dialogues.html', '_blank')">💬 미니 대화 같이 열기</button>
+  <button class="gear-btn" onclick="openSettings()">⚙️ 설정</button>
+  <button class="gear-btn" onclick="diagnoseTTS()">🔍 음성 진단</button>
+</header>
+
+<main>
+  <div class="student-tabs" id="studentTabs"></div>
+
+  <div class="card">
+    <h2>📅 오늘 수업 정보</h2>
+    <label>수업 날짜</label>
+    <input type="date" id="classDate">
+    <label>주차 / 유닛 선택</label>
+    <select id="weekSelect"></select>
+  </div>
+
+  <div class="card" id="weekCard">
+    <div class="week-title" id="weekTitle"></div>
+    <div class="week-sub" id="weekSub"></div>
+    <div id="taskList"></div>
+
+    <details class="vocab-detail">
+      <summary>📖 이번 주 암기 단어 개별 체크 펼치기</summary>
+      <button class="speak-all-btn" onclick="speakAllVocab()">🔊 단어 전체 듣기</button>
+      <table class="vocab-check" id="vocabTable"></table>
+    </details>
+
+    <details class="vocab-detail">
+      <summary>💬 이번 주 암기 표현 개별 체크 펼치기</summary>
+      <button class="speak-all-btn" onclick="speakAllExpr()">🔊 표현 전체 듣기</button>
+      <table class="vocab-check" id="exprTable"></table>
+    </details>
+
+    <div class="progress-bar-outer"><div class="progress-bar-inner" id="progBar" style="width:0%"></div></div>
+    <div class="progress-label" id="progLabel">완료 0 / 0 (0%)</div>
+  </div>
+
+  <div class="card">
+    <h2>✅ 출석 체크</h2>
+    <div class="attend-toggle">
+      <button class="attend-btn on-yes" id="attendYes" onclick="setAttend(true)">오늘 출석했어요</button>
+      <button class="attend-btn on-no" id="attendNo" onclick="setAttend(false)">결석 / 보충 예정</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>⭐ 오늘의 성취도</h2>
+    <div class="rating-row" id="ratingRow"></div>
+  </div>
+
+  <div class="card">
+    <h2>📝 자가 평가</h2>
+    <label>👍 오늘 잘한 점 (장점)</label>
+    <textarea id="strengths" placeholder="예: 새 단어를 빠르게 외웠어요 / 문장을 자신 있게 말했어요"></textarea>
+    <label>🔧 더 연습이 필요한 점 (보완점)</label>
+    <textarea id="improvement" placeholder="예: 과거형 발음이 헷갈려요 / 표현을 문장으로 바로 못 만들어요"></textarea>
+  </div>
+
+  <button class="submit-btn" onclick="submitRecord()">✔️ 이번 회차 기록 저장 &amp; 구글시트 전송</button>
+  <div class="sync-status" id="syncStatus"></div>
+  <button class="submit-btn" id="familyShareBtn" style="background:var(--navy); margin-top:10px; display:none;" onclick="shareToFamily()">👨‍👩‍👧 가족에게 오늘 진행상황 공유하기</button>
+
+  <div class="card">
+    <h2>📊 최근 기록</h2>
+    <table class="history" id="historyTable"></table>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-bg" id="settingsModal">
+  <div class="modal">
+    <h3>⚙️ 워크북 설정</h3>
+    <div class="field">
+      <label>학습자 1 이름</label>
+      <input type="text" id="nameA" placeholder="예: 김OO">
+    </div>
+    <div class="field">
+      <label>학습자 2 이름</label>
+      <input type="text" id="nameB" placeholder="예: 이OO">
+    </div>
+    <div class="field">
+      <label>Google Apps Script 웹앱 URL</label>
+      <input type="text" id="webhookUrl" placeholder="https://script.google.com/macros/s/xxxx/exec">
+      <div class="hint">구글시트에 자동 기록하려면 Apps Script 웹앱 URL을 붙여넣으세요. 설정 방법은 대화창의 안내를 참고하세요.</div>
+    </div>
+    <div class="btn-row">
+      <button class="close" onclick="closeSettings()">닫기</button>
+      <button class="save" onclick="saveSettings()">저장</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===================== 데이터: 16주 커리큘럼 ===================== */
+const WEEKS = [
+{unit:"Unit 1", title:"Please call me Beth.", topic:"이름·인사·자기소개",
+ tue:"화요일: be동사 & 인사 표현 학습", thu:"목요일: 짝 인터뷰 & 자기소개 발표",
+ vocab:[["introduce","소개하다"],["nickname","별명"],["classmate","반 친구"],["coworker","동료"],["hometown","고향"],["single","미혼의"],["married","기혼의"],["address","주소"]],
+ expr:["What's your name?","Please call me ~.","Where are you from?","This is my ~."]},
+{unit:"Unit 2", title:"How do you spend your day?", topic:"일과·직업·시간",
+ tue:"화요일: 일반동사 현재시제 & 직업 어휘", thu:"목요일: 하루 일과 인터뷰 & 직업 맞히기",
+ vocab:[["get up","일어나다"],["go to work","출근하다"],["have lunch","점심 먹다"],["schedule","일정"],["part-time job","아르바이트"],["nurse","간호사"],["busy","바쁜"],["free time","여가 시간"]],
+ expr:["What time do you ~?","I usually ~.","What do you do?","after that / then"]},
+{unit:"Unit 3", title:"How much is it?", topic:"쇼핑·색깔·가격",
+ tue:"화요일: this/that/these/those & 쇼핑 어휘", thu:"목요일: 옷가게 역할극 & 쇼핑리스트",
+ vocab:[["sweater","스웨터"],["price","가격"],["expensive","비싼"],["cheap","저렴한"],["on sale","할인 중인"],["try on","입어보다"],["size","사이즈"],["cash","현금"]],
+ expr:["How much is/are ~?","Can I try this on?","I'll take it.","Do you have this in ~?"]},
+{unit:"Unit 4", title:"Do you like rap music?", topic:"취향·엔터테인먼트",
+ tue:"화요일: like/love/don't like & 장르 어휘", thu:"목요일: 취향 설문조사 & 발표",
+ vocab:[["classical music","클래식 음악"],["sitcom","시트콤"],["actor","배우"],["favorite","가장 좋아하는"],["boring","지루한"],["exciting","흥미진진한"],["can't stand","질색하다"],["So do I.","나도 그래"]],
+ expr:["Do you like ~?","I'm really into ~.","What kind of ~ do you like?","So do I. / Neither do I."]},
+{unit:"Unit 5", title:"Tell me about your family.", topic:"가족·소유격",
+ tue:"화요일: 소유격 & 가족 어휘", thu:"목요일: 가족 사진 소개 & 가계도 발표",
+ vocab:[["sibling","형제자매"],["only child","외동"],["grandparent","조부모"],["twin","쌍둥이"],["get along with","잘 지내다"],["look like","닮다"],["retired","은퇴한"],["divorced","이혼한"]],
+ expr:["Tell me about your ~.","How many ~ do you have?","I take after my ~.","We get along really well."]},
+{unit:"Unit 6", title:"How often do you exercise?", topic:"여가활동·빈도",
+ tue:"화요일: 빈도부사 & 운동 어휘", thu:"목요일: 빈도표 인터뷰 & 취미 토론",
+ vocab:[["exercise","운동하다"],["work out","운동하다"],["jog","조깅하다"],["go hiking","등산가다"],["once a week","일주일에 한 번"],["hardly ever","거의 ~ 않는"],["beginner","초보자"],["athletic","운동을 잘하는"]],
+ expr:["How often do you ~?","I ~ once/twice a week.","How well can you ~?","I'm pretty good at ~."]},
+{unit:"Unit 7", title:"We had a great time!", topic:"과거시제·주말/휴가",
+ tue:"화요일: 과거시제(be/일반동사)", thu:"목요일: 지난 주말 이야기 & 여행 경험",
+ vocab:[["stay home","집에 머물다"],["go camping","캠핑가다"],["amazing","놀라운"],["terrible","끔찍한"],["crowded","붐비는"],["souvenir","기념품"],["take a trip","여행을 가다"],["ago","~전에"]],
+ expr:["How was your ~?","I had a great/terrible time.","What did you do ~?","I went to ~ and ~."]},
+{unit:"Unit 8", title:"What's your neighborhood like?", topic:"동네·위치 전치사",
+ tue:"화요일: There is/are & 위치 전치사", thu:"목요일: 동네 지도 설명 & 장단점 말하기",
+ vocab:[["neighborhood","동네"],["convenience store","편의점"],["subway station","지하철역"],["across from","맞은편에"],["next to","옆에"],["between A and B","A와 B 사이에"],["quiet","조용한"],["convenient","편리한"]],
+ expr:["What's your neighborhood like?","Is there a ~ near here?","It's across from/next to ~.","There are a lot of ~ around here."]},
+{unit:"Unit 9", title:"What does she look like?", topic:"외모 묘사",
+ tue:"화요일: 형용사 어순 & 외모 어휘", thu:"목요일: 사람 묘사 게임 & 발표",
+ vocab:[["tall / short","키가 큰/작은"],["curly hair","곱슬머리"],["straight hair","생머리"],["bald","대머리인"],["glasses","안경"],["slim","날씬한"],["in his/her twenties","20대인"],["wear","입다"]],
+ expr:["What does he/she look like?","He/She has ~.","He's wearing ~.","He/She looks like ~."]},
+{unit:"Unit 10", title:"Have you ever ridden a camel?", topic:"경험·현재완료",
+ tue:"화요일: 현재완료(have+p.p.) & ever/never", thu:"목요일: 경험 인터뷰 빙고 & 발표",
+ vocab:[["have been to","~에 가본 적 있다"],["have never","한 번도 ~해본 적 없다"],["skydiving","스카이다이빙"],["overseas","해외로"],["experience","경험"],["once","한 번"],["several times","여러 번"],["scary","무서운"]],
+ expr:["Have you ever ~?","Yes, I have. / No, I haven't.","I've never ~.","How many times have you ~?"]},
+{unit:"Unit 11", title:"It's a very exciting place!", topic:"도시 묘사·비교급",
+ tue:"화요일: 비교급 & 도시 어휘", thu:"목요일: 두 도시 비교 발표",
+ vocab:[["crowded","붐비는"],["modern","현대적인"],["historic","역사적인"],["polluted","오염된"],["population","인구"],["landmark","랜드마크"],["public transportation","대중교통"],["view","전망"]],
+ expr:["A is bigger than B.","A is more expensive than B.","What's ~ like?","Compared to ~, ~ is ~."]},
+{unit:"Unit 12", title:"It really works!", topic:"건강·조언",
+ tue:"화요일: 신체·증상 어휘 & should", thu:"목요일: 병원 역할극 & 민간요법 소개",
+ vocab:[["headache","두통"],["stomachache","복통"],["sore throat","인후통"],["fever","열"],["remedy","치료법"],["get some rest","휴식을 취하다"],["see a doctor","진료를 받다"],["feel better","나아지다"]],
+ expr:["What's wrong?","I have a ~.","You should ~.","Why don't you ~?"]},
+{unit:"Unit 13", title:"The biggest and the best!", topic:"최상급·세계 상식",
+ tue:"화요일: 최상급 & 지리 어휘", thu:"목요일: 세계 기록 퀴즈 & 발표",
+ vocab:[["continent","대륙"],["ocean","대양"],["desert","사막"],["mountain range","산맥"],["the tallest","가장 높은"],["the most populated","가장 인구가 많은"],["located in","~에 위치한"],["famous for","~로 유명한"]],
+ expr:["What's the biggest ~ in the world?","It's the most ~ ~ in ~.","~ is located in ~.","~ is famous for ~."]},
+{unit:"Unit 14", title:"Do you recycle?", topic:"환경·수량표현",
+ tue:"화요일: 수량 표현 & 환경 어휘", thu:"목요일: 환경 캠페인 & 설문",
+ vocab:[["recycle","재활용하다"],["reduce","줄이다"],["reuse","재사용하다"],["pollution","오염"],["plastic bag","비닐봉지"],["reusable","재사용 가능한"],["save energy","에너지를 절약하다"],["disposable","일회용의"]],
+ expr:["Do you recycle?","I use too much/too many ~.","I don't ~ enough.","We should ~ to protect the environment."]},
+{unit:"Unit 15", title:"What are you going to do?", topic:"미래계획·초대",
+ tue:"화요일: be going to & 계획 어휘", thu:"목요일: 주말 계획 발표 & 약속 역할극",
+ vocab:[["plan","계획(하다)"],["invite","초대하다"],["available","시간이 되는"],["reschedule","일정을 변경하다"],["get together","모이다"],["celebrate","축하하다"],["look forward to","~을 기대하다"],["confirm","확정하다"]],
+ expr:["What are you going to do ~?","Would you like to ~?","I'd love to, but ~.","Sounds great! Let's ~."]},
+{unit:"Unit 16", title:"What would you do?", topic:"가정법·상황대처",
+ tue:"화요일: If절+would 가정법", thu:"목요일: 상황 롤플레이 & 총복습",
+ vocab:[["unexpected","예상치 못한"],["stranger","낯선 사람"],["lost","길을 잃은"],["emergency","응급 상황"],["deal with","대처하다"],["situation","상황"],["awkward","어색한"],["apologize","사과하다"]],
+ expr:["What would you do if ~?","If I were you, I would ~.","I would probably ~.","That's a tough situation."]}
+];
+
+const RATINGS = [
+  {v:1, emoji:"😣", label:"어려웠어요"},
+  {v:2, emoji:"😕", label:"조금 힘들었어요"},
+  {v:3, emoji:"🙂", label:"보통이었어요"},
+  {v:4, emoji:"😀", label:"잘했어요"},
+  {v:5, emoji:"🤩", label:"아주 잘했어요"}
+];
+
+/* ===================== 상태 관리 ===================== */
+let settings = JSON.parse(localStorage.getItem('workbook_settings') || '{}');
+if(!settings.nameA) settings.nameA = "학습자 1";
+if(!settings.nameB) settings.nameB = "학습자 2";
+if(!settings.webhookUrl) settings.webhookUrl = "https://script.google.com/macros/s/AKfycbyH5qKcuHaJJ0Qb2ysEkbvXH1wRML0q94nZZG_5soI7003ct_HPhXuAdxSinWaIMHSu/exec";
+
+let currentStudentKey = localStorage.getItem('workbook_current_student') || 'A';
+let currentWeekIdx = 0;
+let attendState = null;
+let ratingState = null;
+let checkedTasks = {tue:false, thu:false, vocabAll:false, exprAll:false};
+let vocabChecks = {};
+let exprChecks = {};
+
+function studentName(key){ return key==='A' ? settings.nameA : settings.nameB; }
+function historyKey(key){ return 'workbook_history_' + key; }
+function getHistory(key){ return JSON.parse(localStorage.getItem(historyKey(key)) || '[]'); }
+function saveHistory(key, arr){ localStorage.setItem(historyKey(key), JSON.stringify(arr)); }
+
+/* ===================== 렌더링 ===================== */
+function renderStudentTabs(){
+  const el = document.getElementById('studentTabs');
+  el.innerHTML = `
+    <div class="student-tab ${currentStudentKey==='A'?'active':''}" onclick="switchStudent('A')">👤 ${settings.nameA}</div>
+    <div class="student-tab ${currentStudentKey==='B'?'active':''}" onclick="switchStudent('B')">👤 ${settings.nameB}</div>
+  `;
+}
+
+function switchStudent(key){
+  currentStudentKey = key;
+  localStorage.setItem('workbook_current_student', key);
+  resetFormState();
+  renderStudentTabs();
+  renderHistory();
+}
+
+function renderWeekSelect(){
+  const sel = document.getElementById('weekSelect');
+  sel.innerHTML = WEEKS.map((w,i)=>`<option value="${i}">Week ${i+1} · ${w.unit} - ${w.title}</option>`).join('');
+  sel.value = currentWeekIdx;
+  sel.onchange = ()=>{ currentWeekIdx = parseInt(sel.value); resetFormState(); renderWeekCard(); };
+}
+
+function renderWeekCard(){
+  const w = WEEKS[currentWeekIdx];
+  document.getElementById('weekTitle').textContent = `Week ${currentWeekIdx+1} · ${w.unit} — ${w.title}`;
+  document.getElementById('weekSub').textContent = w.topic;
+
+  document.getElementById('taskList').innerHTML = `
+    <div class="task-item" id="taskTue" onclick="toggleTask('tue')">
+      <input type="checkbox" id="cbTue" onclick="event.stopPropagation(); toggleTask('tue')">
+      <div><div class="t-main">${w.tue}</div></div>
+    </div>
+    <div class="task-item" id="taskThu" onclick="toggleTask('thu')">
+      <input type="checkbox" id="cbThu" onclick="event.stopPropagation(); toggleTask('thu')">
+      <div><div class="t-main">${w.thu}</div></div>
+    </div>
+    <div class="task-item" id="taskVocabAll" onclick="toggleTask('vocabAll')">
+      <input type="checkbox" id="cbVocabAll" onclick="event.stopPropagation(); toggleTask('vocabAll')">
+      <div><div class="t-main">암기 단어 ${w.vocab.length}개 다 외웠어요</div><div class="t-sub">아래 '개별 체크'를 펼쳐서 하나씩 확인하고 🔊 발음도 들어보세요</div></div>
+    </div>
+    <div class="task-item" id="taskExprAll" onclick="toggleTask('exprAll')">
+      <input type="checkbox" id="cbExprAll" onclick="event.stopPropagation(); toggleTask('exprAll')">
+      <div><div class="t-main">암기 표현 ${w.expr.length}개 다 외웠어요</div></div>
+    </div>
+  `;
+
+  document.getElementById('vocabTable').innerHTML = w.vocab.map((v,i)=>`
+    <tr><td class="chk"><input type="checkbox" id="vc${i}" onchange="onVocabCheck(${i})"></td>
+    <td class="word-cell"><button class="speak-btn" onclick="speak('${escapeJs(v[0])}', this)">🔊</button><span>${v[0]}</span></td>
+    <td>${v[1]}</td></tr>
+  `).join('');
+
+  document.getElementById('exprTable').innerHTML = w.expr.map((ex,i)=>`
+    <tr><td class="chk"><input type="checkbox" id="ec${i}" onchange="onExprCheck(${i})"></td>
+    <td class="word-cell" colspan="2"><button class="speak-btn" onclick="speak('${escapeJs(ex.replace(/~/g,'something'))}', this)">🔊</button><span>${ex}</span></td></tr>
+  `).join('');
+
+  updateProgress();
+}
+
+function escapeJs(s){ return s.replace(/'/g, "\\'"); }
+
+/* ===================== 음성 읽기 (TTS) ===================== */
+let ttsVoice = null;
+function pickVoice(){
+  const voices = speechSynthesis.getVoices();
+  ttsVoice = voices.find(v=>v.lang==='en-US') || voices.find(v=>v.lang && v.lang.startsWith('en')) || null;
+}
+if('speechSynthesis' in window){
+  speechSynthesis.onvoiceschanged = pickVoice;
+  pickVoice();
+}
+let _ttsKeepAlive = null;
+function speak(text, btnEl){
+  if(!('speechSynthesis' in window)){ showToast('이 브라우저는 음성 읽기를 지원하지 않아요.'); return; }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US';
+  u.rate = 0.82;
+  u.pitch = 1;
+  u.volume = 1;
+  if(ttsVoice) u.voice = ttsVoice;
+  _ttsKeepAlive = u;
+  if(btnEl){
+    document.querySelectorAll('.speak-btn.playing').forEach(b=>b.classList.remove('playing'));
+    btnEl.classList.add('playing');
+    u.onend = ()=> btnEl.classList.remove('playing');
+    u.onerror = ()=> btnEl.classList.remove('playing');
+  }
+  speechSynthesis.speak(u);
+}
+function speakAllVocab(){
+  const w = WEEKS[currentWeekIdx];
+  if(!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const utterances = w.vocab.map(v=>{
+    const u = new SpeechSynthesisUtterance(v[0]);
+    u.lang='en-US'; u.rate=0.82; u.volume=1; if(ttsVoice) u.voice = ttsVoice;
+    return u;
+  });
+  _ttsKeepAlive = utterances;
+  utterances.forEach(u=>speechSynthesis.speak(u));
+}
+function speakAllExpr(){
+  const w = WEEKS[currentWeekIdx];
+  if(!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const utterances = w.expr.map(ex=>{
+    const u = new SpeechSynthesisUtterance(ex.replace(/~/g,'something'));
+    u.lang='en-US'; u.rate=0.82; u.volume=1; if(ttsVoice) u.voice = ttsVoice;
+    return u;
+  });
+  _ttsKeepAlive = utterances;
+  utterances.forEach(u=>speechSynthesis.speak(u));
+}
+
+function toggleTask(key){
+  checkedTasks[key] = !checkedTasks[key];
+  document.getElementById('cb'+capitalize(key)).checked = checkedTasks[key];
+  document.getElementById('task'+capitalize(key)).classList.toggle('checked', checkedTasks[key]);
+  updateProgress();
+}
+function capitalize(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+
+function onVocabCheck(i){
+  vocabChecks[i] = document.getElementById('vc'+i).checked;
+  updateProgress();
+}
+function onExprCheck(i){
+  exprChecks[i] = document.getElementById('ec'+i).checked;
+  updateProgress();
+}
+
+function updateProgress(){
+  const w = WEEKS[currentWeekIdx];
+  const totalVocab = w.vocab.length;
+  const checkedVocab = Object.values(vocabChecks).filter(Boolean).length;
+  // vocabAll 체크박스는 개별체크 전체완료와 별개로도 인정
+  const vocabDone = checkedTasks.vocabAll || (checkedVocab === totalVocab && totalVocab>0);
+
+  const totalExpr = w.expr.length;
+  const checkedExpr = Object.values(exprChecks).filter(Boolean).length;
+  const exprDone = checkedTasks.exprAll || (checkedExpr === totalExpr && totalExpr>0);
+
+  const totalTasks = 4;
+  let done = 0;
+  if(checkedTasks.tue) done++;
+  if(checkedTasks.thu) done++;
+  if(vocabDone) done++;
+  if(exprDone) done++;
+
+  const pct = Math.round((done/totalTasks)*100);
+  document.getElementById('progBar').style.width = pct+'%';
+  document.getElementById('progLabel').textContent = `완료 ${done} / ${totalTasks} (${pct}%)`;
+}
+
+function setAttend(val){
+  attendState = val;
+  document.getElementById('attendYes').classList.toggle('active', val===true);
+  document.getElementById('attendNo').classList.toggle('active', val===false);
+}
+
+function renderRatingRow(){
+  const el = document.getElementById('ratingRow');
+  el.innerHTML = RATINGS.map(r=>`
+    <div class="rating-btn" id="rate${r.v}" onclick="setRating(${r.v})">${r.emoji}<span class="lbl">${r.label}</span></div>
+  `).join('');
+}
+function setRating(v){
+  ratingState = v;
+  RATINGS.forEach(r=>document.getElementById('rate'+r.v).classList.toggle('active', r.v===v));
+}
+
+function resetFormState(){
+  attendState = null; ratingState = null;
+  checkedTasks = {tue:false, thu:false, vocabAll:false, exprAll:false};
+  vocabChecks = {};
+  exprChecks = {};
+  document.getElementById('classDate').value = new Date().toISOString().slice(0,10);
+  document.getElementById('strengths').value = '';
+  document.getElementById('improvement').value = '';
+  renderWeekCard();
+  renderRatingRow();
+  document.getElementById('attendYes').classList.remove('active');
+  document.getElementById('attendNo').classList.remove('active');
+  const shareBtn = document.getElementById('familyShareBtn');
+  if(shareBtn) shareBtn.style.display = 'none';
+}
+
+function renderHistory(){
+  const hist = getHistory(currentStudentKey).slice(-8).reverse();
+  const tbl = document.getElementById('historyTable');
+  if(hist.length===0){ tbl.innerHTML = '<tr><td style="text-align:center; color:#999; padding:14px;">아직 기록이 없어요</td></tr>'; return; }
+  tbl.innerHTML = `<tr><th>날짜</th><th>주차</th><th>출석</th><th>완료율</th><th>성취도</th></tr>` +
+    hist.map(h=>`<tr><td>${h.date}</td><td>W${h.week}</td><td>${h.attendance?'✅':'❌'}</td><td>${h.pct}%</td><td>${'⭐'.repeat(h.rating)}</td></tr>`).join('');
+}
+
+/* ===================== 제출 & 구글시트 전송 ===================== */
+async function submitRecord(){
+  const w = WEEKS[currentWeekIdx];
+  const date = document.getElementById('classDate').value;
+
+  if(attendState===null){ showToast('출석 여부를 선택해 주세요.'); return; }
+  if(ratingState===null){ showToast('오늘의 성취도를 선택해 주세요.'); return; }
+
+  const totalVocab = w.vocab.length;
+  const checkedVocabCount = Object.values(vocabChecks).filter(Boolean).length;
+  const vocabDone = checkedTasks.vocabAll || (checkedVocabCount === totalVocab && totalVocab>0);
+  const totalExpr = w.expr.length;
+  const checkedExprCount = Object.values(exprChecks).filter(Boolean).length;
+  const exprDone = checkedTasks.exprAll || (checkedExprCount === totalExpr && totalExpr>0);
+  const totalTasks = 4;
+  let done = 0;
+  if(checkedTasks.tue) done++;
+  if(checkedTasks.thu) done++;
+  if(vocabDone) done++;
+  if(exprDone) done++;
+  const pct = Math.round((done/totalTasks)*100);
+
+  const record = {
+    student: studentName(currentStudentKey),
+    week: currentWeekIdx+1,
+    unit: w.unit + ' - ' + w.title,
+    date: date,
+    attendance: attendState,
+    completedCount: done,
+    totalCount: totalTasks,
+    pct: pct,
+    rating: ratingState,
+    strengths: document.getElementById('strengths').value.trim(),
+    improvement: document.getElementById('improvement').value.trim(),
+    vocabCheckedCount: checkedVocabCount,
+    vocabTotal: totalVocab,
+    exprCheckedCount: checkedExprCount,
+    exprTotal: totalExpr
+  };
+
+  // 1) 로컬 기록 저장 (백업)
+  const hist = getHistory(currentStudentKey);
+  hist.push(record);
+  saveHistory(currentStudentKey, hist);
+  renderHistory();
+
+  // 2) 구글시트로 전송
+  const statusEl = document.getElementById('syncStatus');
+  if(settings.webhookUrl){
+    try{
+      await fetch(settings.webhookUrl, {
+        method:'POST',
+        mode:'no-cors',
+        headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body: JSON.stringify(record)
+      });
+      statusEl.textContent = '✅ 구글시트로 전송했어요 (시트에서 새 행을 확인해 보세요)';
+      statusEl.className = 'sync-status ok';
+    }catch(err){
+      statusEl.textContent = '⚠️ 전송 실패 — 인터넷 연결을 확인해 주세요. 기록은 이 기기에 안전하게 저장되어 있어요.';
+      statusEl.className = 'sync-status warn';
+    }
+  }else{
+    statusEl.textContent = '⚠️ 설정(⚙️)에서 구글시트 웹앱 URL을 먼저 등록해 주세요. 기록은 이 기기에 저장되었어요.';
+    statusEl.className = 'sync-status warn';
+  }
+
+  showToast('오늘 기록이 저장되었습니다. 수고하셨어요! 🎉');
+
+  // 3) 가족 공유 버튼 활성화
+  lastRecord = record;
+  document.getElementById('familyShareBtn').style.display = 'block';
+}
+
+let lastRecord = null;
+
+function shareToFamily(){
+  if(!lastRecord){ showToast('먼저 기록을 저장해주세요.'); return; }
+  const r = lastRecord;
+  const ratingStars = '⭐'.repeat(r.rating) + '☆'.repeat(5-r.rating);
+  const text =
+`📗 [${r.student}] 영어 수업 리포트
+📅 ${r.date} · Week ${r.week} (${r.unit})
+${r.attendance ? '✅ 출석' : '⏸ 결석/보충 예정'}
+📊 과업 완료율: ${r.pct}% (${r.completedCount}/${r.totalCount})
+📖 암기 단어: ${r.vocabCheckedCount}/${r.vocabTotal}개 · 표현: ${r.exprCheckedCount}/${r.exprTotal}개
+${ratingStars} 오늘의 성취도
+👍 잘한 점: ${r.strengths || '(작성 안 함)'}
+🔧 보완할 점: ${r.improvement || '(작성 안 함)'}
+
+- Interchange 자가학습 워크북에서 자동 생성된 리포트입니다.`;
+
+  if(navigator.share){
+    navigator.share({ title: `${r.student}님 학습 리포트`, text: text })
+      .catch(()=>{ /* 사용자가 공유를 취소한 경우 등 - 별도 처리 없음 */ });
+  } else if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(()=>{
+      alert('이 브라우저는 공유 기능을 지원하지 않아, 리포트 내용을 클립보드에 복사했어요.\n카카오톡이나 문자 앱에 붙여넣기(길게 눌러 붙여넣기) 해주세요.');
+    }).catch(()=>{
+      alert(text); // 최후 수단: 텍스트를 직접 보여줌
+    });
+  } else {
+    alert(text);
+  }
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(()=>{ t.style.display='none'; }, 3200);
+}
+
+/* ===================== 설정 모달 ===================== */
+function openSettings(){
+  document.getElementById('nameA').value = settings.nameA;
+  document.getElementById('nameB').value = settings.nameB;
+  document.getElementById('webhookUrl').value = settings.webhookUrl;
+  document.getElementById('settingsModal').classList.add('open');
+}
+function closeSettings(){ document.getElementById('settingsModal').classList.remove('open'); }
+function saveSettings(){
+  settings.nameA = document.getElementById('nameA').value.trim() || '학습자 1';
+  settings.nameB = document.getElementById('nameB').value.trim() || '학습자 2';
+  settings.webhookUrl = document.getElementById('webhookUrl').value.trim();
+  localStorage.setItem('workbook_settings', JSON.stringify(settings));
+  renderStudentTabs();
+  closeSettings();
+  showToast('설정이 저장되었습니다.');
+}
+
+function diagnoseTTS(){
+  if(!('speechSynthesis' in window)){
+    alert('이 브라우저는 음성 합성(Web Speech API)을 지원하지 않습니다.');
+    return;
+  }
+  const voices = speechSynthesis.getVoices();
+  const enVoices = voices.filter(v=>v.lang && v.lang.startsWith('en'));
+  let msg = `전체 음성 개수: ${voices.length}개\n영어 음성: ${enVoices.length}개\n`;
+  if(enVoices.length > 0){
+    msg += enVoices.slice(0,8).map(v=>`- ${v.name} (${v.lang})`).join('\n');
+  } else {
+    msg += '\n영어 음성이 설치되어 있지 않은 것 같아요.\n기기 설정에서 영어 음성을 추가하거나, 다른 브라우저(Chrome/Safari 최신버전)로 시도해보세요.\n\n아이폰이라면 무음 스위치(측면 스위치)가 켜져 있는지도 확인해주세요.';
+  }
+  speak('Hello, this is a voice test.', null);
+  alert(msg);
+}
+
+/* ===================== 초기화 ===================== */
+renderStudentTabs();
+renderWeekSelect();
+renderRatingRow();
+resetFormState();
+renderHistory();
+</script>
+</body>
+</html>
