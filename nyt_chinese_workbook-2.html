@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>纽约时报中文网 리딩 워크북</title>
+<style>
+  :root{
+    --navy:#1b2a4a; --blue:#2f6fed; --blue-light:#eaf0ff;
+    --gray:#5c6472; --line:#dfe4ec; --bg:#f6f7fb;
+    --green:#2f9e5c; --amber:#d98a1e; --red:#d94f4f;
+  }
+  *{box-sizing:border-box;}
+  html{font-size:17px;}
+  body{margin:0; font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif; background:var(--bg); color:#20242c; line-height:1.6;}
+  header{background:linear-gradient(135deg,var(--navy),#2c3e6b); color:#fff; padding:20px 20px; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;}
+  header h1{margin:0; font-size:1.25rem;}
+  header p{margin:4px 0 0; color:#c6d0ea; font-size:0.82rem;}
+  .gear-btn{background:rgba(255,255,255,.15); border:none; color:#fff; border-radius:10px; padding:9px 13px; font-size:0.85rem; cursor:pointer;}
+  main{max-width:760px; margin:0 auto; padding:20px 16px 90px;}
+
+  .card{background:#fff; border:1px solid var(--line); border-radius:16px; padding:20px; margin-bottom:16px;}
+  .card h2{margin:0 0 12px; font-size:1.05rem; color:var(--navy);}
+  label{display:block; font-weight:700; margin:14px 0 6px; color:var(--navy); font-size:0.92rem;}
+  select, input[type=date], textarea{width:100%; font-size:0.95rem; padding:11px 13px; border-radius:10px; border:2px solid var(--line); font-family:inherit; background:#fbfcfe;}
+  textarea{min-height:65px; resize:vertical;}
+
+  .week-title{font-size:1.1rem; font-weight:800; color:var(--navy); margin:2px 0 2px;}
+  .week-sub{color:var(--gray); font-size:0.85rem; margin-bottom:6px;}
+  a.src-link{font-size:0.82rem; color:var(--blue); text-decoration:none;}
+  a.src-link:hover{text-decoration:underline;}
+
+  .task-item{display:flex; align-items:flex-start; gap:12px; padding:13px 12px; border:2px solid var(--line); border-radius:12px; margin-bottom:10px; background:#fbfcfe;}
+  .task-item.checked{border-color:var(--green); background:#effaf2;}
+  .task-item input[type=checkbox]{width:24px; height:24px; margin-top:2px; accent-color:var(--green); cursor:pointer;}
+  .task-item .t-main{font-size:0.95rem; font-weight:600;}
+  .task-item .t-sub{font-size:0.8rem; color:var(--gray); margin-top:2px;}
+
+  .rating-row{display:flex; gap:8px; justify-content:space-between;}
+  .rating-btn{flex:1; padding:13px 4px; border-radius:12px; border:2px solid var(--line); background:#fff; font-size:1.3rem; text-align:center; cursor:pointer;}
+  .rating-btn .lbl{display:block; font-size:0.65rem; margin-top:4px; color:var(--gray); font-weight:600;}
+  .rating-btn.active{border-color:var(--blue); background:var(--blue-light);}
+
+  .progress-bar-outer{background:var(--line); border-radius:20px; height:13px; overflow:hidden; margin-top:8px;}
+  .progress-bar-inner{background:var(--blue); height:100%; border-radius:20px; transition:width .3s;}
+  .progress-label{font-size:0.82rem; color:var(--gray); margin-top:6px;}
+
+  .submit-btn{width:100%; padding:17px; font-size:1.05rem; font-weight:800; color:#fff; background:var(--blue); border:none; border-radius:14px; cursor:pointer; margin-top:6px;}
+  .toast{position:fixed; left:50%; bottom:26px; transform:translateX(-50%); background:var(--navy); color:#fff; padding:14px 22px; border-radius:30px; font-size:0.92rem; box-shadow:0 6px 18px rgba(0,0,0,.25); display:none; z-index:50; text-align:center; max-width:90%;}
+  .sync-status{font-size:0.78rem; margin-top:4px;}
+  .sync-status.ok{color:var(--green);}
+  .sync-status.warn{color:var(--amber);}
+
+  table.history{width:100%; border-collapse:collapse; font-size:0.8rem; margin-top:8px;}
+  table.history th, table.history td{border:1px solid var(--line); padding:6px 7px; text-align:center;}
+  table.history th{background:var(--blue-light); color:var(--navy);}
+
+  details.vocab-detail{margin-top:10px;}
+  details.vocab-detail summary{cursor:pointer; font-weight:700; color:var(--blue); font-size:0.88rem; padding:6px 0;}
+  table.vocab-check{width:100%; border-collapse:collapse; font-size:0.83rem; margin-top:6px;}
+  table.vocab-check td{border:1px solid var(--line); padding:6px 7px; vertical-align:middle;}
+  table.vocab-check td.chk{width:32px; text-align:center;}
+  table.vocab-check input[type=checkbox]{width:19px; height:19px; accent-color:var(--green);}
+  .speak-all-btn{border:none; background:var(--navy); color:#fff; border-radius:20px; padding:6px 13px; font-size:0.78rem; cursor:pointer; margin:8px 0 4px;}
+  .speak-btn{border:none; background:var(--blue-light); color:var(--blue); border-radius:50%; width:28px; height:28px; font-size:13px; cursor:pointer; flex:0 0 auto;}
+  .speak-btn.playing{background:var(--blue); color:#fff;}
+  .word-cell{display:flex; align-items:center; gap:7px;}
+
+  .modal-bg{display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:100; align-items:center; justify-content:center; padding:20px;}
+  .modal-bg.open{display:flex;}
+  .modal{background:#fff; border-radius:16px; padding:22px; max-width:460px; width:100%; max-height:85vh; overflow:auto;}
+  .modal h3{margin-top:0; color:var(--navy);}
+  .modal .field{margin-bottom:14px;}
+  .modal input[type=text]{width:100%; padding:11px 12px; border-radius:9px; border:2px solid var(--line); font-size:0.92rem;}
+  .modal .btn-row{display:flex; gap:10px; margin-top:16px;}
+  .modal button{flex:1; padding:12px; border-radius:10px; border:none; font-size:0.92rem; font-weight:700; cursor:pointer;}
+  .modal .save{background:var(--blue); color:#fff;}
+  .modal .close{background:var(--line); color:var(--navy);}
+  .hint{font-size:0.76rem; color:var(--gray); margin-top:4px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📰 纽约时报中文网 리딩 워크북</h1>
+    <p>16주 중고급 뉴스 리딩 자가학습 · 켈리</p>
+  </div>
+  <button class="gear-btn" onclick="openSettings()">⚙️ 설정</button>
+  <button class="gear-btn" onclick="diagnoseTTS()">🔍 음성 진단</button>
+</header>
+
+<main>
+  <div class="card">
+    <h2>📅 오늘 학습</h2>
+    <label>학습 날짜</label>
+    <input type="date" id="classDate">
+    <label>주차 / 기사 선택</label>
+    <select id="weekSelect"></select>
+  </div>
+
+  <div class="card" id="weekCard">
+    <div class="week-title" id="weekTitle"></div>
+    <div class="week-sub" id="weekSub"></div>
+    <a class="src-link" id="srcLink" href="#" target="_blank">🔗 원문 기사 열기</a>
+
+    <div id="taskList" style="margin-top:14px;"></div>
+
+    <details class="vocab-detail">
+      <summary>📖 예습 단어 개별 체크 펼치기</summary>
+      <button class="speak-all-btn" onclick="speakAllVocab()">🔊 단어 전체 듣기</button>
+      <table class="vocab-check" id="vocabTable"></table>
+    </details>
+
+    <details class="vocab-detail">
+      <summary>💬 표현 패턴 보기</summary>
+      <table class="vocab-check" id="exprTable"></table>
+    </details>
+
+    <div class="progress-bar-outer"><div class="progress-bar-inner" id="progBar" style="width:0%"></div></div>
+    <div class="progress-label" id="progLabel">완료 0 / 0 (0%)</div>
+  </div>
+
+  <div class="card">
+    <h2>⭐ 오늘의 이해도 / 성취도</h2>
+    <div class="rating-row" id="ratingRow"></div>
+  </div>
+
+  <div class="card">
+    <h2>📝 자가 평가</h2>
+    <label>👍 오늘 잘한 점 (예: 새 단어 습득, 문장 구조 이해 등)</label>
+    <textarea id="strengths" placeholder="예: 정치·외교 관련 어휘가 익숙해졌어요"></textarea>
+    <label>🔧 더 학습이 필요한 점</label>
+    <textarea id="improvement" placeholder="예: 문장이 길어지면 구조 파악이 어려워요"></textarea>
+  </div>
+
+  <button class="submit-btn" onclick="submitRecord()">✔️ 오늘 기록 저장 &amp; 구글시트 전송</button>
+  <div class="sync-status" id="syncStatus"></div>
+
+  <div class="card">
+    <h2>📊 최근 기록</h2>
+    <table class="history" id="historyTable"></table>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-bg" id="settingsModal">
+  <div class="modal">
+    <h3>⚙️ 워크북 설정</h3>
+    <div class="field">
+      <label>Google Apps Script 웹앱 URL</label>
+      <input type="text" id="webhookUrl" placeholder="https://script.google.com/macros/s/xxxx/exec">
+      <div class="hint">시니어반 워크북과 같은 Apps Script 코드를 재사용할 수 있어요. 같은 시트에 이어서 기록하려면 같은 URL을, 별도 시트로 관리하려면 새 구글시트에 같은 코드를 붙여넣고 새 URL을 입력하세요.</div>
+    </div>
+    <div class="btn-row">
+      <button class="close" onclick="closeSettings()">닫기</button>
+      <button class="save" onclick="saveSettings()">저장</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===================== 데이터: 16주 커리큘럼 (요약) ===================== */
+const WEEKS = [
+{section:"국제/미국", titleKr:"中俄印伊峰会：地缘博弈中，习近平手中的筹码", url:"https://www.google.com/search?q=site:cn.nytimes.com+"+encodeURIComponent("中俄印伊峰会：地缘博弈中，习近平手中的筹码"),
+ vocab:[["峰会","fēnghuì","정상회의"],["杠杆/筹码","gǎngǎn / chóumǎ","지렛대, 협상 카드"],["地缘政治","dìyuán zhèngzhì","지정학"],["博弈","bóyì","전략적 경쟁"],["盟友","méngyǒu","동맹국"],["制衡","zhìhéng","견제하다"],["多边主义","duōbiān zhǔyì","다자주의"],["战略自主","zhànlüè zìzhǔ","전략적 자율성"]],
+ expr:["在...的背景下 (~을 배경으로)","进一步巩固了... (~을 한층 공고히 했다)","为...提供了契机 (~에 계기를 제공했다)"]},
+{section:"국제", titleKr:"中国还是美国？两场会议展示两种全球权力样本", url:"https://www.google.com/search?q=site:cn.nytimes.com+"+encodeURIComponent("中国还是美国？两场会议展示两种全球权力样本"),
+ vocab:[["全球权力","quánqiú quánlì","글로벌 파워"],["展示","zhǎnshì","과시하다"],["竞争","jìngzhēng","경쟁"],["国际舞台","guójì wǔtái","국제 무대"],["软实力","ruǎn shílì","소프트파워"],["硬实力","yìng shílì","하드파워"],["主导","zhǔdǎo","주도하다"],["格局","géjú","세력 구도"]],
+ expr:["与此同时 (이와 동시에)","形成鲜明对比 (뚜렷한 대조를 이루다)","在国际舞台上扮演...角色 (국제무대에서 ~한 역할을 하다)"]},
+{section:"중국/티베트", titleKr:"中国审查并处罚不当言论，以塑造西藏洪灾叙事，与尼泊尔形成对比", url:"https://www.google.com/search?q=site:cn.nytimes.com+"+encodeURIComponent("中国审查并处罚不当言论，以塑造西藏洪灾叙事，与尼泊尔形成对比"),
+ vocab:[["审查","shěnchá","검열하다"],["叙事","xùshì","내러티브"],["洪灾","hóngzāi","홍수 재해"],["言论管控","yánlùn guǎnkòng","언론 통제"],["处罚","chǔfá","처벌하다"],["舆论","yúlùn","여론"],["透明度","tòumíngdù","투명성"],["灾情","zāiqíng","재해 상황"]],
+ expr:["与...形成对比 (~와 대조를 이루다)","试图塑造...形象 (~한 이미지를 만들려 하다)","引发外界质疑 (외부의 의문을 불러일으키다)"]},
+{section:"미국/정치", titleKr:"G20会议上，贝森特指责中国以廉价商品冲击全球市场", url:"https://www.google.com/search?q=site:cn.nytimes.com+"+encodeURIComponent("G20会议上，贝森特指责中国以廉价商品冲击全球市场"),
+ vocab:[["指责","zhǐzé","비난하다"],["廉价出口","liánjià chūkǒu","저가 수출"],["产能过剩","chǎnnéng guòshèng","생산 과잉"],["贸易失衡","màoyì shīhéng","무역 불균형"],["保护主义","bǎohù zhǔyì","보호주의"],["关税","guānshuì","관세"],["市场冲击","shìchǎng chōngjī","시장 충격"],["达成共识","dáchéng gòngshí","합의에 이르다"]],
+ expr:["指责...为... (~을 ~라고 비난하다)","未能达成一致 (합의에 이르지 못하다)","加剧了...紧张关系 (~긴장을 심화시켰다)"]},
+{section:"국제/중국", titleKr:"伊朗战事重塑中东联盟之际，习近平抵达埃及", url:"https://cn.nytimes.com/china/20260903/china-egypt-xi-jinping-el-sisi/",
+ vocab:[["国事访问","guóshì fǎngwèn","국빈 방문"],["中东","Zhōngdōng","중동"],["重塑","chóngsù","재편하다"],["联盟","liánméng","동맹"],["战略伙伴","zhànlüè huǒbàn","전략적 파트너"],["地区局势","dìqū júshì","지역 정세"],["一带一路","Yídài Yílù","일대일로"],["外交突破","wàijiāo tūpò","외교적 돌파구"]],
+ expr:["之际 (~한 시점에)","标志着... (~을 상징하다)","进一步扩大...影响力 (~영향력을 한층 확대하다)"]},
+{section:"오피니언", titleKr:"无序的新世界即将到来，我们没有做好准备", url:"https://cn.nytimes.com/opinion/20260903/world-order-international-relations/",
+ vocab:[["世界秩序","shìjiè zhìxù","세계 질서"],["无序","wúxù","무질서한"],["多极化","duōjíhuà","다극화"],["权力真空","quánlì zhēnkōng","권력 공백"],["不确定性","bùquèdìngxìng","불확실성"],["旧秩序","jiù zhìxù","구질서"],["新常态","xīn chángtài","뉴노멀"],["动荡","dòngdàng","혼란, 격변"]],
+ expr:["我们没有做好准备 (우리는 준비가 안 되어 있다)","正在经历深刻的变革 (깊은 변화를 겪고 있다)","难以预测 (예측하기 어렵다)"]},
+{section:"미국/군사", titleKr:"美国海军舰队的后勤噩梦", url:"https://cn.nytimes.com/usa/20260903/iran-war-us-navy-carriers-supply/",
+ vocab:[["后勤","hòuqín","병참"],["舰队","jiànduì","함대"],["补给","bǔjǐ","보급"],["部署","bùshǔ","배치하다"],["航母","hángmǔ","항공모함"],["战备","zhànbèi","전투 준비태세"],["供应链","gōngyìngliàn","공급망"],["消耗","xiāohào","소모하다"]],
+ expr:["面临...压力 (~압박에 직면하다)","难以为继 (지속하기 어렵다)","暴露出...问题 (~문제를 드러내다)"]},
+{section:"미국/정치", titleKr:"特朗普对伊朗已经套路用尽、无牌可打？", url:"https://cn.nytimes.com/usa/20260903/trump-iran-strait-of-hormuz/",
+ vocab:[["套路","tàolù","수법, 패턴"],["无牌可打","wú pái kě dǎ","쓸 카드가 없다"],["强硬立场","qiángyìng lìchǎng","강경한 입장"],["谈判筹码","tánpàn chóumǎ","협상 카드"],["制裁","zhìcái","제재"],["局势升级","júshì shēngjí","상황 격화"],["外交施压","wàijiāo shīyā","외교적 압박"],["僵局","jiāngjú","교착 상태"]],
+ expr:["已经...殆尽 (이미 거의 ~ 소진되다)","陷入僵局 (교착 상태에 빠지다)","下一步棋 (다음 수/전략)"]},
+{section:"미국/정치", titleKr:"深入剖析特朗普第二任期：谁应对他最成功？", url:"https://cn.nytimes.com/usa/20260903/trump-regime-change-strike-wedding/",
+ vocab:[["剖析","pōuxī","심층 분석하다"],["任期","rènqī","임기"],["应对","yìngduì","대응하다"],["政治遗产","zhèngzhì yíchǎn","정치적 유산"],["支持率","zhīchílǜ","지지율"],["内阁","nèigé","내각"],["权力集中","quánlì jízhōng","권력 집중"],["反对派","fǎnduìpài","반대파"]],
+ expr:["从...角度来看 (~관점에서 보면)","被认为是... (~로 여겨지다)","取得了一定成效 (어느 정도 성과를 거두다)"]},
+{section:"세계/인간사", titleKr:"尼泊尔洪灾中的“奇迹”绿房子", url:"https://cn.nytimes.com/world/20260903/nepal-flood-miracle-house-dhunge-bazaar/",
+ vocab:[["洪灾","hóngzāi","홍수 재해"],["奇迹","qíjì","기적"],["幸存","xìngcún","생존하다"],["废墟","fèixū","폐허"],["重建","chóngjiàn","재건하다"],["韧性","rènxìng","회복탄력성"],["社区","shèqū","공동체"],["自然灾害","zìrán zāihài","자연재해"]],
+ expr:["在...的废墟中 (~의 폐허 속에서)","成为...的象征 (~의 상징이 되다)","展现出惊人的韧性 (놀라운 회복력을 보여주다)"]},
+{section:"사회/부고", titleKr:"美国女权运动标志性人物斯泰纳姆去世，享年92岁", url:"https://cn.nytimes.com/obits/20260904/gloria-steinem-dead/",
+ vocab:[["女权运动","nǚquán yùndòng","여성 인권 운동"],["标志性人物","biāozhìxìng rénwù","상징적 인물"],["逝世/去世","shìshì / qùshì","별세하다"],["享年","xiǎngnián","향년"],["先驱","xiānqū","선구자"],["平权","píngquán","평등권"],["遗产","yíchǎn","유산"],["悼念","dàoniàn","애도하다"]],
+ expr:["享年...岁 (향년 ~세로)","被誉为... (~로 칭송받다)","为...奠定了基础 (~에 기초를 다졌다)"]},
+{section:"문화", titleKr:"如果这个世界上多一些马友友", url:"https://cn.nytimes.com/culture/20260904/yo-yo-ma-profile/",
+ vocab:[["大提琴家","dàtíqínjiā","첼리스트"],["演奏","yǎnzòu","연주하다"],["跨界合作","kuàjiè hézuò","크로스오버 협업"],["曲目","qǔmù","레퍼토리"],["感染力","gǎnrǎnlì","전달력"],["天赋","tiānfù","타고난 재능"],["传奇","chuánqí","전설적인"],["情感共鸣","qínggǎn gòngmíng","감정적 공명"]],
+ expr:["以...著称 (~으로 유명하다)","打动了无数听众 (수많은 청중을 감동시켰다)","不仅...更... (~할 뿐 아니라 더욱 ~하다)"]},
+{section:"건강/과학", titleKr:"肾病患者靠移植猪肾生活九个月，直到接受人类肾脏移植", url:"https://cn.nytimes.com/health/20260904/pig-kidney-bridge-transplant/",
+ vocab:[["器官移植","qìguān yízhí","장기 이식"],["猪肾","zhūshèn","돼지 신장"],["基因编辑","jīyīn biānjí","유전자 편집"],["免疫排斥","miǎnyì páichì","면역 거부반응"],["肾衰竭","shènshuāijié","신부전"],["桥接治疗","qiáojiē zhìliáo","브릿지 치료"],["临床试验","línchuáng shìyàn","임상시험"],["突破性进展","tūpòxìng jìnzhǎn","획기적 진전"]],
+ expr:["为...争取了时间 (~을 위해 시간을 벌어주다)","标志着...里程碑 (~의 이정표가 되다)","仍面临...挑战 (여전히 ~한 도전에 직면해 있다)"]},
+{section:"기술", titleKr:"人工智能全面接管？为什么你应该更担心AI有多危险", url:"https://cn.nytimes.com/technology/20260904/openai-hugging-face-hacking/",
+ vocab:[["人工智能","réngōng zhìnéng","인공지능"],["失控","shīkòng","통제 불능"],["网络攻击","wǎngluò gōngjī","사이버 공격"],["黑客","hēikè","해커"],["自主性","zìzhǔxìng","자율성"],["安全隐患","ānquán yǐnhuàn","안전 위험 요소"],["监管","jiānguǎn","규제하다"],["数据安全","shùjù ānquán","데이터 보안"]],
+ expr:["越来越多的人担心... (점점 더 많은 사람이 ~을 우려한다)","存在...风险 (~한 위험이 존재한다)","亟需加强监管 (규제 강화가 시급하다)"]},
+{section:"경제", titleKr:"史上最彻底重组：大众汽车计划额外裁员5万人", url:"https://cn.nytimes.com/business/20260904/volkswagen-job-cuts/",
+ vocab:[["重组","chóngzǔ","구조조정"],["裁员","cáiyuán","감원하다"],["工会","gōnghuì","노동조합"],["产能过剩","chǎnnéng guòshèng","생산 과잉"],["电动车转型","diàndòngchē zhuǎnxíng","전기차 전환"],["竞争力","jìngzhēnglì","경쟁력"],["成本削减","chéngběn xuējiǎn","비용 절감"],["股东","gǔdōng","주주"]],
+ expr:["计划裁员...人 (~명 감원 계획이다)","面临激烈竞争 (치열한 경쟁에 직면하다)","史上最...的 (역사상 가장 ~한)"]},
+{section:"중국/문화", titleKr:"“台湾馆”引发政治风波：中国抵制韩国光州双年展", url:"https://cn.nytimes.com/china/20260904/china-taiwan-gwangju-biennale/",
+ vocab:[["双年展","shuāngniánzhǎn","비엔날레"],["撤展","chèzhǎn","전시 철수"],["外交风波","wàijiāo fēngbō","외교적 파문"],["主权","zhǔquán","주권"],["策展团队","cèzhǎn tuánduì","전시 기획팀"],["抵制","dǐzhì","보이콧하다"],["敏感议题","mǐngǎn yìtí","민감한 사안"],["立场","lìchǎng","입장"]],
+ expr:["引发...风波 (~파문을 불러일으키다)","以...为由 (~을 이유로)","坚持...立场 (~입장을 고수하다)"]}
+];
+
+const RATINGS = [
+  {v:1, emoji:"😣", label:"많이 어려웠음"},
+  {v:2, emoji:"😕", label:"조금 힘들었음"},
+  {v:3, emoji:"🙂", label:"보통"},
+  {v:4, emoji:"😀", label:"잘 이해함"},
+  {v:5, emoji:"🤩", label:"수월했음"}
+];
+
+/* ===================== 상태 ===================== */
+let settings = JSON.parse(localStorage.getItem('nyt_workbook_settings') || '{}');
+if(!settings.webhookUrl) settings.webhookUrl = "";
+
+let currentWeekIdx = 0;
+let ratingState = null;
+let checkedTasks = {read:false, vocabAll:false, exprSeen:false};
+let vocabChecks = {};
+
+function historyKey(){ return 'nyt_workbook_history'; }
+function getHistory(){ return JSON.parse(localStorage.getItem(historyKey()) || '[]'); }
+function saveHistory(arr){ localStorage.setItem(historyKey(), JSON.stringify(arr)); }
+
+/* ===================== TTS ===================== */
+let ttsVoice = null;
+function pickVoice(){
+  const voices = speechSynthesis.getVoices();
+  ttsVoice = voices.find(v=>v.lang==='zh-CN') || voices.find(v=>v.lang && v.lang.startsWith('zh')) || null;
+}
+if('speechSynthesis' in window){
+  speechSynthesis.onvoiceschanged = pickVoice;
+  pickVoice();
+  setInterval(()=>{ if(speechSynthesis.paused) speechSynthesis.resume(); }, 4000);
+}
+let _ttsKeepAlive = null;
+function speak(text, btnEl, _isRetry){
+  if(!('speechSynthesis' in window)) return;
+  if(speechSynthesis.paused) speechSynthesis.resume();
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'zh-CN';
+  u.rate = 0.85;
+  u.pitch = 1;
+  u.volume = 1;
+  if(ttsVoice) u.voice = ttsVoice;
+  _ttsKeepAlive = u; // iOS Safari 버그 방지: 재생 전 가비지 컬렉션되는 것을 막기 위해 참조 유지
+  if(btnEl){
+    document.querySelectorAll('.speak-btn.playing').forEach(b=>b.classList.remove('playing'));
+    btnEl.classList.add('playing');
+  }
+  u.onend = ()=>{ if(btnEl) btnEl.classList.remove('playing'); };
+  u.onerror = ()=>{
+    if(btnEl) btnEl.classList.remove('playing');
+    if(!_isRetry){ setTimeout(()=> speak(text, btnEl, true), 250); } // 1회 자동 재시도
+  };
+  speechSynthesis.speak(u);
+}
+function speakAllVocab(){
+  const w = WEEKS[currentWeekIdx];
+  if(!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const utterances = w.vocab.map(v=>{
+    const u = new SpeechSynthesisUtterance(v[0]);
+    u.lang='zh-CN'; u.rate=0.85; u.volume=1; if(ttsVoice) u.voice = ttsVoice;
+    return u;
+  });
+  _ttsKeepAlive = utterances; // 배열 전체를 참조 유지
+  utterances.forEach(u=>speechSynthesis.speak(u));
+}
+
+/* ===================== 렌더링 ===================== */
+function renderWeekSelect(){
+  const sel = document.getElementById('weekSelect');
+  sel.innerHTML = WEEKS.map((w,i)=>`<option value="${i}">Week ${i+1} · ${w.section}</option>`).join('');
+  sel.value = currentWeekIdx;
+  sel.onchange = ()=>{ currentWeekIdx = parseInt(sel.value); resetFormState(); renderWeekCard(); };
+}
+
+function renderWeekCard(){
+  const w = WEEKS[currentWeekIdx];
+  document.getElementById('weekTitle').textContent = `Week ${currentWeekIdx+1} · ${w.titleKr}`;
+  document.getElementById('weekSub').textContent = w.section;
+  document.getElementById('srcLink').href = w.url;
+  document.getElementById('srcLink').textContent = w.url.includes('google.com/search')
+    ? '🔍 구글에서 기사 검색 (정확한 링크 미확인)'
+    : '🔗 원문 기사 열기';
+
+  document.getElementById('taskList').innerHTML = `
+    <div class="task-item" id="taskRead" onclick="toggleTask('read')">
+      <input type="checkbox" id="cbRead" onclick="event.stopPropagation(); toggleTask('read')">
+      <div><div class="t-main">원문 기사 읽기 완료</div><div class="t-sub">위 링크를 열어 실제 기사를 읽으셨나요?</div></div>
+    </div>
+    <div class="task-item" id="taskVocabAll" onclick="toggleTask('vocabAll')">
+      <input type="checkbox" id="cbVocabAll" onclick="event.stopPropagation(); toggleTask('vocabAll')">
+      <div><div class="t-main">예습 단어 ${w.vocab.length}개 다 익혔어요</div></div>
+    </div>
+    <div class="task-item" id="taskExprSeen" onclick="toggleTask('exprSeen')">
+      <input type="checkbox" id="cbExprSeen" onclick="event.stopPropagation(); toggleTask('exprSeen')">
+      <div><div class="t-main">표현 패턴 확인 및 문장 만들기 완료</div></div>
+    </div>
+  `;
+
+  document.getElementById('vocabTable').innerHTML = w.vocab.map((v,i)=>`
+    <tr><td class="chk"><input type="checkbox" id="vc${i}" onchange="onVocabCheck(${i})"></td>
+    <td class="word-cell"><button class="speak-btn" onclick="speak('${v[0].replace(/'/g,"\\'")}', this)">🔊</button><span>${v[0]}</span></td>
+    <td>${v[1]}</td><td>${v[2]}</td></tr>
+  `).join('');
+
+  document.getElementById('exprTable').innerHTML = w.expr.map(e=>`<tr><td>${e}</td></tr>`).join('');
+
+  updateProgress();
+}
+
+function toggleTask(key){
+  checkedTasks[key] = !checkedTasks[key];
+  const idMap = {read:'Read', vocabAll:'VocabAll', exprSeen:'ExprSeen'};
+  document.getElementById('cb'+idMap[key]).checked = checkedTasks[key];
+  document.getElementById('task'+idMap[key]).classList.toggle('checked', checkedTasks[key]);
+  updateProgress();
+}
+function onVocabCheck(i){
+  vocabChecks[i] = document.getElementById('vc'+i).checked;
+  updateProgress();
+}
+
+function updateProgress(){
+  const w = WEEKS[currentWeekIdx];
+  const totalVocab = w.vocab.length;
+  const checkedVocab = Object.values(vocabChecks).filter(Boolean).length;
+  const vocabDone = checkedTasks.vocabAll || (checkedVocab === totalVocab && totalVocab>0);
+
+  const totalTasks = 3;
+  let done = 0;
+  if(checkedTasks.read) done++;
+  if(vocabDone) done++;
+  if(checkedTasks.exprSeen) done++;
+
+  const pct = Math.round((done/totalTasks)*100);
+  document.getElementById('progBar').style.width = pct+'%';
+  document.getElementById('progLabel').textContent = `완료 ${done} / ${totalTasks} (${pct}%)`;
+}
+
+function renderRatingRow(){
+  const el = document.getElementById('ratingRow');
+  el.innerHTML = RATINGS.map(r=>`<div class="rating-btn" id="rate${r.v}" onclick="setRating(${r.v})">${r.emoji}<span class="lbl">${r.label}</span></div>`).join('');
+}
+function setRating(v){
+  ratingState = v;
+  RATINGS.forEach(r=>document.getElementById('rate'+r.v).classList.toggle('active', r.v===v));
+}
+
+function resetFormState(){
+  ratingState = null;
+  checkedTasks = {read:false, vocabAll:false, exprSeen:false};
+  vocabChecks = {};
+  document.getElementById('classDate').value = new Date().toISOString().slice(0,10);
+  document.getElementById('strengths').value = '';
+  document.getElementById('improvement').value = '';
+  renderWeekCard();
+  renderRatingRow();
+}
+
+function renderHistory(){
+  const hist = getHistory().slice(-8).reverse();
+  const tbl = document.getElementById('historyTable');
+  if(hist.length===0){ tbl.innerHTML = '<tr><td style="text-align:center; color:#999; padding:14px;">아직 기록이 없어요</td></tr>'; return; }
+  tbl.innerHTML = `<tr><th>날짜</th><th>주차</th><th>완료율</th><th>이해도</th></tr>` +
+    hist.map(h=>`<tr><td>${h.date}</td><td>W${h.week}</td><td>${h.pct}%</td><td>${'⭐'.repeat(h.rating)}</td></tr>`).join('');
+}
+
+/* ===================== 제출 & 구글시트 전송 ===================== */
+async function submitRecord(){
+  const w = WEEKS[currentWeekIdx];
+  const date = document.getElementById('classDate').value;
+
+  if(ratingState===null){ showToast('오늘의 이해도를 선택해 주세요.'); return; }
+
+  const totalVocab = w.vocab.length;
+  const checkedVocabCount = Object.values(vocabChecks).filter(Boolean).length;
+  const vocabDone = checkedTasks.vocabAll || (checkedVocabCount === totalVocab && totalVocab>0);
+  const totalTasks = 3;
+  let done = 0;
+  if(checkedTasks.read) done++;
+  if(vocabDone) done++;
+  if(checkedTasks.exprSeen) done++;
+  const pct = Math.round((done/totalTasks)*100);
+
+  const record = {
+    student: "켈리",
+    week: currentWeekIdx+1,
+    unit: w.section + ' - ' + w.titleKr,
+    date: date,
+    attendance: true,
+    completedCount: done,
+    totalCount: totalTasks,
+    pct: pct,
+    rating: ratingState,
+    strengths: document.getElementById('strengths').value.trim(),
+    improvement: document.getElementById('improvement').value.trim(),
+    vocabCheckedCount: checkedVocabCount,
+    vocabTotal: totalVocab
+  };
+
+  const hist = getHistory();
+  hist.push(record);
+  saveHistory(hist);
+  renderHistory();
+
+  const statusEl = document.getElementById('syncStatus');
+  if(settings.webhookUrl){
+    try{
+      await fetch(settings.webhookUrl, {
+        method:'POST', mode:'no-cors',
+        headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body: JSON.stringify(record)
+      });
+      statusEl.textContent = '✅ 구글시트로 전송했어요';
+      statusEl.className = 'sync-status ok';
+    }catch(err){
+      statusEl.textContent = '⚠️ 전송 실패 — 기록은 이 기기에 저장되어 있어요.';
+      statusEl.className = 'sync-status warn';
+    }
+  }else{
+    statusEl.textContent = '⚠️ 설정(⚙️)에서 구글시트 웹앱 URL을 등록해 주세요. 기록은 이 기기에 저장되었어요.';
+    statusEl.className = 'sync-status warn';
+  }
+  showToast('오늘 기록이 저장되었습니다 🎉');
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(()=>{ t.style.display='none'; }, 3200);
+}
+
+/* ===================== 설정 ===================== */
+function openSettings(){
+  document.getElementById('webhookUrl').value = settings.webhookUrl;
+  document.getElementById('settingsModal').classList.add('open');
+}
+function closeSettings(){ document.getElementById('settingsModal').classList.remove('open'); }
+function saveSettings(){
+  settings.webhookUrl = document.getElementById('webhookUrl').value.trim();
+  localStorage.setItem('nyt_workbook_settings', JSON.stringify(settings));
+  closeSettings();
+  showToast('설정이 저장되었습니다.');
+}
+
+function diagnoseTTS(){
+  if(!('speechSynthesis' in window)){
+    alert('이 브라우저는 음성 합성(Web Speech API)을 지원하지 않습니다.');
+    return;
+  }
+  const voices = speechSynthesis.getVoices();
+  const zhVoices = voices.filter(v=>v.lang && v.lang.startsWith('zh'));
+  let msg = `전체 음성 개수: ${voices.length}개\n중국어 음성: ${zhVoices.length}개\n`;
+  if(zhVoices.length > 0){
+    msg += zhVoices.map(v=>`- ${v.name} (${v.lang})`).join('\n');
+  } else {
+    msg += '\n중국어 음성이 설치되어 있지 않은 것 같아요.\n기기 설정에서 중국어 음성을 추가하거나, 다른 브라우저(Chrome/Safari 최신버전)로 시도해보세요.\n\n아이폰이라면 무음 스위치(측면 스위치)가 켜져 있는지도 확인해주세요 — 음성 합성 소리가 무음 스위치의 영향을 받을 수 있습니다.';
+  }
+  speak('你好，这是一个语音测试。', null);
+  // 진단 정보는 음성 재생 시도 후 표시 (알림창이 사용자 동작 컨텍스트를 끊지 않도록)
+  alert(msg);
+}
+
+/* ===================== 초기화 ===================== */
+renderWeekSelect();
+renderRatingRow();
+resetFormState();
+renderHistory();
+</script>
+</body>
+</html>

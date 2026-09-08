@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>纽约时报中文网 중고급 리딩 커리큘럼</title>
+<style>
+  :root{
+    --navy:#1b2a4a; --blue:#2f6fed; --blue-light:#eaf0ff;
+    --gray:#5b6472; --line:#e3e7ee; --bg:#f7f8fb; --red:#c0392b;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif; background:var(--bg); color:#20242c; line-height:1.65;}
+  header{background:linear-gradient(135deg,var(--navy),#2c3e6b); color:#fff; padding:32px 24px 26px;}
+  header h1{margin:0 0 6px; font-size:24px;}
+  header p{margin:0; color:#c6d0ea; font-size:14px;}
+  .badge-row{margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;}
+  .badge-row span{background:rgba(255,255,255,.14); padding:6px 12px; border-radius:16px; font-size:12.5px;}
+  nav.toc{background:#fff; border-bottom:1px solid var(--line); padding:14px 24px; position:sticky; top:0; z-index:10; box-shadow:0 2px 6px rgba(0,0,0,.04);}
+  nav.toc .toc-inner{max-width:960px; margin:0 auto; display:flex; flex-wrap:wrap; gap:6px;}
+  nav.toc a{font-size:12px; color:var(--navy); text-decoration:none; background:var(--blue-light); padding:5px 9px; border-radius:6px; white-space:nowrap;}
+  nav.toc a:hover{background:var(--blue); color:#fff;}
+  main{max-width:960px; margin:0 auto; padding:26px 20px 80px;}
+  .notice{background:#fff7ec; border:1px solid #f0d9b5; border-radius:12px; padding:16px 20px; margin-bottom:24px; font-size:13.5px; color:#7a5220;}
+  .notice b{color:var(--navy);}
+  .expr-common{background:#fff; border:1px solid var(--line); border-radius:14px; padding:20px 24px; margin-bottom:24px;}
+  .expr-common h2{margin:0 0 10px; font-size:16px; color:var(--navy);}
+  .expr-common ul{margin:0; padding-left:0; list-style:none; display:grid; gap:8px;}
+  .expr-common li{background:#f7f9fd; border-radius:8px; padding:8px 12px; font-size:13.5px;}
+  .expr-common .zh{font-weight:700; color:var(--navy);}
+  .expr-common .kr{color:var(--gray); font-size:12.5px; margin-top:2px;}
+  section.week{background:#fff; border:1px solid var(--line); border-radius:14px; margin-bottom:18px; overflow:hidden; scroll-margin-top:70px;}
+  .week-head{padding:16px 22px; background:linear-gradient(135deg,#f4f7ff,#fff); border-bottom:1px solid var(--line);}
+  .week-head .tag{font-size:12px; color:var(--blue); font-weight:700;}
+  .week-head h3{margin:4px 0 4px; font-size:16.5px; color:var(--navy); line-height:1.4;}
+  .week-head .meta{font-size:12px; color:var(--gray);}
+  .week-head a.src-link{font-size:12.5px; color:var(--blue); text-decoration:none; display:inline-block; margin-top:6px;}
+  .week-head a.src-link:hover{text-decoration:underline;}
+  .week-body{padding:16px 22px;}
+  .gloss{font-size:13.5px; color:#20242c; background:#f7f9fd; border-left:3px solid var(--blue); padding:9px 12px; border-radius:6px; margin-bottom:14px;}
+  h4.block-title{font-size:12.5px; color:var(--navy); margin:16px 0 8px; text-transform:uppercase; letter-spacing:.03em; border-bottom:2px solid var(--line); padding-bottom:5px;}
+  table.vocab{width:100%; border-collapse:collapse; font-size:13.5px;}
+  table.vocab th, table.vocab td{border:1px solid var(--line); padding:6px 8px; vertical-align:middle;}
+  table.vocab th{background:var(--blue-light); color:var(--navy); text-align:left;}
+  .speak-btn{border:none; background:var(--blue-light); color:var(--blue); border-radius:50%; width:28px; height:28px; font-size:13px; cursor:pointer;}
+  .speak-btn.playing{background:var(--blue); color:#fff;}
+  .word-cell{display:flex; align-items:center; gap:7px;}
+  .expr-list{list-style:none; margin:0; padding:0; display:grid; gap:8px;}
+  .expr-list li{background:#f9fafc; border:1px solid var(--line); border-radius:8px; padding:9px 12px; font-size:13.5px;}
+  .discuss{font-size:13.5px; color:var(--gray); margin-top:12px;}
+  .discuss ol{margin:6px 0 0; padding-left:20px;}
+  .print-btn{position:fixed; right:22px; bottom:22px; background:var(--navy); color:#fff; border:none; border-radius:30px; padding:12px 18px; font-size:13px; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,.25);}
+  footer{text-align:center; color:var(--gray); font-size:12px; padding:20px;}
+  @media print{ nav.toc, .print-btn{display:none;} section.week{break-inside:avoid;} }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📰 纽约时报中文网 — 중고급 뉴스 리딩 커리큘럼</h1>
+  <p>실제 뉴욕타임즈 중국어판 기사 기반 · 켈리 개인 학습용</p>
+  <div class="badge-row">
+    <span>✅ 검증된 실제 기사 16편</span>
+    <span>🎯 中高级 (중고급)</span>
+    <span>🔊 단어 TTS 지원</span>
+  </div>
+</header>
+
+<nav class="toc"><div class="toc-inner" id="tocList"></div></nav>
+
+<main>
+  <div class="notice">
+    <b>참고</b> — cn.nytimes.com은 유료 구독 사이트라 전체 아카이브를 날짜별로 완전히 훑기 어려워서, 검색으로 확인 가능한 <b>2026년 8월 말~9월 초</b> 실제 기사 16편으로 구성했습니다. 12편은 정확한 원문 URL을 확인했고, 4편(1~4주차)은 영어판 제목만 확인되어 검색 링크로 대체했습니다. 기사 본문은 저작권상 그대로 옮기지 않았고, 제목과 주제를 바탕으로 사전 학습용 단어·표현만 제가 직접 정리했습니다. 실제 읽기는 각 주차의 원문 링크를 클릭해서 진행하시면 됩니다.
+  </div>
+
+  <div class="expr-common">
+    <h2>💬 뉴스 읽기 공통 표현 (매주 활용)</h2>
+    <ul>
+      <li><span class="zh">据报道，...</span><div class="kr">보도에 따르면 ~ (기사 도입부에 자주 등장)</div></li>
+      <li><span class="zh">...引发了广泛关注/争议</span><div class="kr">~가 광범위한 관심/논란을 불러일으켰다</div></li>
+      <li><span class="zh">有分析认为，...</span><div class="kr">일부 분석에 따르면 ~</div></li>
+      <li><span class="zh">尽管...，但...</span><div class="kr">비록 ~이지만, ~하다</div></li>
+      <li><span class="zh">这一事件反映了...</span><div class="kr">이 사건은 ~을 반영한다</div></li>
+      <li><span class="zh">对...产生了深远影响</span><div class="kr">~에 深遠한(깊고 먼) 영향을 미쳤다</div></li>
+    </ul>
+  </div>
+
+  <div id="weeksContainer"></div>
+</main>
+
+<button class="print-btn" onclick="window.print()">🖨 인쇄 / PDF 저장</button>
+<footer>기사 본문은 저작권 보호 대상이며 이 페이지에 복제하지 않았습니다. 원문은 각 주차의 링크에서 직접 열람하세요 (구독 필요할 수 있음).</footer>
+
+<script>
+const WEEKS = [
+{date:"2026-08-31~09-01", section:"국제/미국", title:"Summit With Russia, India and Iran Shows Leverage Wars Have Given Xi of China",
+ titleZh:"中俄印伊峰会：地缘博弈中，习近平手中的筹码", url:"https://cn.nytimes.com/",
+ gloss:"러시아·인도·이란 등이 참여한 정상회의를 계기로, 최근 지정학적 갈등(무역·이란 문제 등) 속에서 중국이 얻고 있는 외교적 지렛대를 분석하는 기사로 보입니다.",
+ vocab:[["峰会","fēnghuì","정상회의"],["杠杆/筹码","gǎngǎn / chóumǎ","지렛대, 협상 카드"],["地缘政治","dìyuán zhèngzhì","지정학"],["博弈","bóyì","(전략적) 경쟁, 게임"],["盟友","méngyǒu","동맹국"],["制衡","zhìhéng","견제하다"],["多边主义","duōbiān zhǔyì","다자주의"],["战略自主","zhànlüè zìzhǔ","전략적 자율성"]],
+ expr:["在...的背景下 (~을 배경으로)","进一步巩固了... (~을 한층 공고히 했다)","为...提供了契机 (~에 계기를 제공했다)"]},
+
+{date:"2026-09-01", section:"국제", title:"China or the U.S.? Two Meetings Offer Competing Showcases of Global Power.",
+ titleZh:"中国还是美国？两场会议展示两种全球权力样本", url:"https://cn.nytimes.com/",
+ gloss:"비슷한 시기에 열린 두 개의 국제회의(미국 주도 vs 중국 주도)를 비교하며, 세계 질서에서 두 강대국이 각각 어떤 방식으로 영향력을 과시하는지 다루는 기사로 보입니다.",
+ vocab:[["全球权力","quánqiú quánlì","글로벌 파워"],["展示","zhǎnshì","과시하다, 보여주다"],["竞争","jìngzhēng","경쟁"],["国际舞台","guójì wǔtái","국제 무대"],["软实力","ruǎn shílì","소프트파워"],["硬实力","yìng shílì","하드파워"],["主导","zhǔdǎo","주도하다"],["格局","géjú","(세력) 구도"]],
+ expr:["与此同时 (이와 동시에)","形成鲜明对比 (뚜렷한 대조를 이루다)","在国际舞台上扮演...角色 (국제무대에서 ~한 역할을 하다)"]},
+
+{date:"2026-09-01", section:"중국/티베트", title:"China Censors and Punishes to Shape Narrative on Floods in Tibet, a Contrast to Nepal",
+ titleZh:"中国审查并处罚不当言论，以塑造西藏洪灾叙事，与尼泊尔形成对比", url:"https://cn.nytimes.com/",
+ gloss:"티베트 지역 홍수 재해에 대한 중국 정부의 여론 통제·검열 방식을, 같은 시기 네팔의 재난 대응 방식과 대조하는 기사로 보입니다.",
+ vocab:[["审查","shěnchá","검열하다"],["叙事","xùshì","내러티브, 서사"],["洪灾","hóngzāi","홍수 재해"],["言论管控","yánlùn guǎnkòng","언론 통제"],["处罚","chǔfá","처벌하다"],["舆论","yúlùn","여론"],["透明度","tòumíngdù","투명성"],["灾情","zāiqíng","재해 상황"]],
+ expr:["与...形成对比 (~와 대조를 이루다)","试图塑造...形象 (~한 이미지를 만들려 하다)","引发外界质疑 (외부의 의문을 불러일으키다)"]},
+
+{date:"2026-09-01", section:"미국/정치", title:"At G20 Meeting, Scott Bessent Accuses China of Flooding the World With Cheap Exports",
+ titleZh:"G20会议上，贝森特指责中国以廉价商品冲击全球市场", url:"https://cn.nytimes.com/",
+ gloss:"G20 재무장관 회의에서 미국 재무장관이 중국의 저가 수출(공급 과잉)을 비판한 상황과, 이에 대한 각국의 반응을 다루는 경제 기사로 보입니다.",
+ vocab:[["指责","zhǐzé","비난하다"],["廉价出口","liánjià chūkǒu","저가 수출"],["产能过剩","chǎnnéng guòshèng","생산 과잉"],["贸易失衡","màoyì shīhéng","무역 불균형"],["保护主义","bǎohù zhǔyì","보호주의"],["关税","guānshuì","관세"],["市场冲击","shìchǎng chōngjī","시장 충격"],["达成共识","dáchéng gòngshí","합의에 이르다"]],
+ expr:["指责...为... (~을 ~라고 비난하다)","未能达成一致 (합의에 이르지 못하다)","加剧了...紧张关系 (~긴장을 심화시켰다)"]},
+
+{date:"2026-09-02~03", section:"국제/중국", title:"China's Xi lands in Egypt as Iran war reshapes Middle East alliances",
+ titleZh:"伊朗战事重塑中东联盟之际，习近平抵达埃及", url:"https://cn.nytimes.com/china/20260903/china-egypt-xi-jinping-el-sisi/",
+ gloss:"이란을 둘러싼 중동 정세 변화 속에서 시진핑 주석이 이집트를 국빈 방문한 배경과 의미를 분석하는 기사로 보입니다.",
+ vocab:[["国事访问","guóshì fǎngwèn","국빈 방문"],["中东","Zhōngdōng","중동"],["重塑","chóngsù","재편하다"],["联盟","liánméng","동맹"],["战略伙伴","zhànlüè huǒbàn","전략적 파트너"],["地区局势","dìqū júshì","지역 정세"],["一带一路","Yídài Yílù","일대일로"],["外交突破","wàijiāo tūpò","외교적 돌파구"]],
+ expr:["之际 (~한 시점에)","标志着... (~을 상징하다/보여주다)","进一步扩大...影响力 (~영향력을 한층 확대하다)"]},
+
+{date:"2026-09-03", section:"오피니언", title:"无序的新世界即将到来，我们没有做好准备",
+ titleZh:"(원문 그대로)", url:"https://cn.nytimes.com/opinion/20260903/world-order-international-relations/",
+ gloss:"기존의 국제 질서가 흔들리고 다극화된 '무질서'의 시대로 접어들고 있으며, 세계가 이에 충분히 대비하지 못하고 있다는 오피니언(칼럼) 기사입니다.",
+ vocab:[["世界秩序","shìjiè zhìxù","세계 질서"],["无序","wúxù","무질서한"],["多极化","duōjíhuà","다극화"],["权力真空","quánlì zhēnkōng","권력 공백"],["不确定性","bùquèdìngxìng","불확실성"],["旧秩序","jiù zhìxù","구질서"],["新常态","xīn chángtài","뉴노멀"],["动荡","dòngdàng","혼란, 격변"]],
+ expr:["我们没有做好准备 (우리는 준비가 안 되어 있다)","正在经历深刻的变革 (깊은 변화를 겪고 있다)","难以预测 (예측하기 어렵다)"]},
+
+{date:"2026-09-03", section:"미국/군사", title:"美国海军舰队的后勤噩梦",
+ titleZh:"(원문 그대로)", url:"https://cn.nytimes.com/usa/20260903/iran-war-us-navy-carriers-supply/",
+ gloss:"중동 등지에 배치된 미 해군 함대가 겪고 있는 보급·병참 문제를 다루는 기사로, 장기 군사 배치가 미군 물류 체계에 주는 부담을 조명하는 것으로 보입니다.",
+ vocab:[["后勤","hòuqín","병참, 로지스틱스"],["舰队","jiànduì","함대"],["补给","bǔjǐ","보급"],["部署","bùshǔ","배치하다"],["航母","hángmǔ","항공모함"],["战备","zhànbèi","전투 준비태세"],["供应链","gōngyìngliàn","공급망"],["消耗","xiāohào","소모하다"]],
+ expr:["面临...压力 (~압박에 직면하다)","难以为继 (지속하기 어렵다)","暴露出...问题 (~문제를 드러내다)"]},
+
+{date:"2026-09-03", section:"미국/정치", title:"特朗普对伊朗已经套路用尽、无牌可打？",
+ titleZh:"(원문 그대로)", url:"https://cn.nytimes.com/usa/20260903/trump-iran-strait-of-hormuz/",
+ gloss:"트럼프 행정부의 대(對)이란 정책 수단이 소진되어 가고 있는지를 짚어보는 분석 기사로 보입니다 (호르무즈 해협 관련).",
+ vocab:[["套路","tàolù","수법, 패턴"],["无牌可打","wú pái kě dǎ","쓸 카드가 없다(관용구)"],["强硬立场","qiángyìng lìchǎng","강경한 입장"],["谈判筹码","tánpàn chóumǎ","협상 카드"],["制裁","zhìcái","제재"],["局势升级","júshì shēngjí","상황 격화"],["外交施压","wàijiāo shīyā","외교적 압박"],["僵局","jiāngjú","교착 상태"]],
+ expr:["已经...殆尽 (이미 거의 ~ 소진되다)","陷入僵局 (교착 상태에 빠지다)","下一步棋 (다음 수/전략)"]},
+
+{date:"2026-09-03", section:"미국/정치", title:"深入剖析特朗普第二任期：谁应对他最成功？",
+ titleZh:"(원문 그대로)", url:"https://cn.nytimes.com/usa/20260903/trump-regime-change-strike-wedding/",
+ gloss:"트럼프 2기 행정부를 다각도로 분석하며, 그를 상대로 가장 성공적으로 대응해 온 인물/국가가 누구인지 짚어보는 심층 분석 기사로 보입니다.",
+ vocab:[["剖析","pōuxī","심층 분석하다"],["任期","rènqī","임기"],["应对","yìngduì","대응하다"],["政治遗产","zhèngzhì yíchǎn","정치적 유산"],["支持率","zhīchílǜ","지지율"],["内阁","nèigé","내각"],["权力集中","quánlì jízhōng","권력 집중"],["反对派","fǎnduìpài","반대파"]],
+ expr:["从...角度来看 (~관점에서 보면)","被认为是... (~로 여겨지다)","取得了一定成效 (어느 정도 성과를 거두다)"]},
+
+{date:"2026-09-03", section:"세계/인간사", title:"尼泊尔洪灾中的\"奇迹\"绿房子",
+ titleZh:"(원문 그대로)", url:"https://cn.nytimes.com/world/20260903/nepal-flood-miracle-house-dhunge-bazaar/",
+ gloss:"네팔 대홍수 속에서 유일하게 무너지지 않고 살아남은 한 초록색 집을 중심으로, 재난과 회복력을 다루는 휴먼 스토리 기사로 보입니다.",
+ vocab:[["洪灾","hóngzāi","홍수 재해"],["奇迹","qíjì","기적"],["幸存","xìngcún","생존하다"],["废墟","fèixū","폐허"],["重建","chóngjiàn","재건하다"],["韧性","rènxìng","회복탄력성"],["社区","shèqū","공동체"],["自然灾害","zìrán zāihài","자연재해"]],
+ expr:["在...的废墟中 (~의 폐허 속에서)","成为...的象征 (~의 상징이 되다)","展现出惊人的韧性 (놀라운 회복력을 보여주다)"]},
+
+{date:"2026-09-03", section:"사회/부고", title:"美国女权运动标志性人物斯泰纳姆去世，享年92岁",
+ titleZh:"(원문 그대로)", url:"https://cn.nytimes.com/obits/20260904/gloria-steinem-dead/",
+ gloss:"미국 여성운동을 상징하는 인물 글로리아 스타이넘의 별세를 알리며, 그의 생애와 사회적 영향을 조명하는 부고 기사로 보입니다.",
+ vocab:[["女权运动","nǚquán yùndòng","여성 인권 운동"],["标志性人物","biāozhìxìng rénwù","상징적 인물"],["逝世/去世","shìshì / qùshì","별세하다"],["享年","xiǎngnián","향년"],["先驱","xiānqū","선구자"],["平权","píngquán","평등권"],["遗产","yíchǎn","(정신적) 유산"],["悼念","dàoniàn","애도하다"]],
+ expr:["享年...岁 (향년 ~세로)","被誉为... (~로 칭송받다)","为...奠定了基础 (~에 기초를 다졌다)"]},
+
+{date:"2026-09-04", section:"문화", title:"如果这个世界上多一些马友友",
+ titleZh:"(원문 그대로)", url:"https://cn.nytimes.com/culture/20260904/yo-yo-ma-profile/",
+ gloss:"첼리스트 요요마의 음악 인생과 그가 세상에 주는 울림을 조명하는 문화 섹션의 인물 프로필 기사로 보입니다.",
+ vocab:[["大提琴家","dàtíqínjiā","첼리스트"],["演奏","yǎnzòu","연주하다"],["跨界合作","kuàjiè hézuò","크로스오버 협업"],["曲目","qǔmù","레퍼토리"],["感染力","gǎnrǎnlì","(감정적) 전달력"],["天赋","tiānfù","타고난 재능"],["传奇","chuánqí","전설(적인)"],["情感共鸣","qínggǎn gòngmíng","감정적 공명"]],
+ expr:["以...著称 (~으로 유명하다)","打动了无数听众 (수많은 청중을 감동시켰다)","不仅...更... (~할 뿐 아니라 더욱 ~하다)"]},
+
+{date:"2026-09-04", section:"건강/과학", title:"肾病患者靠移植猪肾生活九个月，直到接受人类肾脏移植",
+ titleZh:"(원문 그대로)", url:"https://cn.nytimes.com/health/20260904/pig-kidney-bridge-transplant/",
+ gloss:"돼지 신장을 '가교(브릿지) 이식'받아 9개월을 버틴 뒤 사람 신장 이식을 받은 환자 사례를 통해 이종장기이식 연구의 진전을 다루는 기사로 보입니다.",
+ vocab:[["器官移植","qìguān yízhí","장기 이식"],["猪肾","zhūshèn","돼지 신장"],["基因编辑","jīyīn biānjí","유전자 편집"],["免疫排斥","miǎnyì páichì","면역 거부반응"],["肾衰竭","shènshuāijié","신부전"],["桥接治疗","qiáojiē zhìliáo","브릿지(가교) 치료"],["临床试验","línchuáng shìyàn","임상시험"],["突破性进展","tūpòxìng jìnzhǎn","획기적 진전"]],
+ expr:["为...争取了时间 (~을 위해 시간을 벌어주다)","标志着...里程碑 (~의 이정표가 되다)","仍面临...挑战 (여전히 ~한 도전에 직면해 있다)"]},
+
+{date:"2026-09-04", section:"기술", title:"人工智能全面接管？为什么你应该更担心AI有多危险",
+ titleZh:"(원문 그대로)", url:"https://cn.nytimes.com/technology/20260904/openai-hugging-face-hacking/",
+ gloss:"AI가 통제 불능 상태로 치달을 가능성과 관련 보안 위험(해킹 등)을 짚어보며, 사람들이 AI 위험성을 왜 더 진지하게 우려해야 하는지 다루는 기술 기사로 보입니다.",
+ vocab:[["人工智能","réngōng zhìnéng","인공지능"],["失控","shīkòng","통제 불능이 되다"],["网络攻击","wǎngluò gōngjī","사이버 공격"],["黑客","hēikè","해커"],["自主性","zìzhǔxìng","자율성"],["安全隐患","ānquán yǐnhuàn","안전상의 위험 요소"],["监管","jiānguǎn","규제/감독하다"],["数据安全","shùjù ānquán","데이터 보안"]],
+ expr:["越来越多的人担心... (점점 더 많은 사람이 ~을 우려한다)","存在...风险 (~한 위험이 존재한다)","亟需加强监管 (규제 강화가 시급하다)"]},
+
+{date:"2026-09-04", section:"경제", title:"史上最彻底重组：大众汽车计划额外裁员5万人",
+ titleZh:"(원문 그대로)", url:"https://cn.nytimes.com/business/20260904/volkswagen-job-cuts/",
+ gloss:"폭스바겐이 사상 최대 규모의 구조조정을 발표하며 추가로 5만 명을 감원할 계획이라는 소식을 다루는 경제 기사로, 전기차 전환과 경쟁 심화가 배경으로 보입니다.",
+ vocab:[["重组","chóngzǔ","구조조정"],["裁员","cáiyuán","감원하다"],["工会","gōnghuì","노동조합"],["产能过剩","chǎnnéng guòshèng","생산 과잉"],["电动车转型","diàndòngchē zhuǎnxíng","전기차 전환"],["竞争力","jìngzhēnglì","경쟁력"],["成本削减","chéngběn xuējiǎn","비용 절감"],["股东","gǔdōng","주주"]],
+ expr:["计划裁员...人 (~명 감원 계획이다)","面临激烈竞争 (치열한 경쟁에 직면하다)","史上最...的 (역사상 가장 ~한)"]},
+
+{date:"2026-09-04", section:"중국/문화", title:"\"台湾馆\"引发政治风波：中国抵制韩国光州双年展",
+ titleZh:"(원문 그대로)", url:"https://cn.nytimes.com/china/20260904/china-taiwan-gwangju-biennale/",
+ gloss:"한국 광주비엔날레에서 '대만관' 명칭 사용을 둘러싸고 중국이 반발하며 전시 참여를 보이콧한 외교적 갈등을 다루는 기사로 보입니다.",
+ vocab:[["双年展","shuāngniánzhǎn","비엔날레"],["撤展","chèzhǎn","전시 철수하다"],["外交风波","wàijiāo fēngbō","외교적 파문"],["主权","zhǔquán","주권"],["策展团队","cèzhǎn tuánduì","전시 기획팀"],["抵制","dǐzhì","보이콧하다"],["敏感议题","mǐngǎn yìtí","민감한 사안"],["立场","lìchǎng","입장"]],
+ expr:["引发...风波 (~파문을 불러일으키다)","以...为由 (~을 이유로)","坚持...立场 (~입장을 고수하다)"]}
+];
+
+const tocEl = document.getElementById('tocList');
+const container = document.getElementById('weeksContainer');
+
+let ttsVoice = null;
+function pickVoice(){
+  const voices = speechSynthesis.getVoices();
+  ttsVoice = voices.find(v=>v.lang==='zh-CN') || voices.find(v=>v.lang && v.lang.startsWith('zh')) || null;
+}
+if('speechSynthesis' in window){ speechSynthesis.onvoiceschanged = pickVoice; pickVoice(); }
+function speak(text, btnEl){
+  if(!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang='zh-CN'; u.rate=0.85;
+  if(ttsVoice) u.voice = ttsVoice;
+  if(btnEl){
+    document.querySelectorAll('.speak-btn.playing').forEach(b=>b.classList.remove('playing'));
+    btnEl.classList.add('playing');
+    u.onend = ()=> btnEl.classList.remove('playing');
+  }
+  speechSynthesis.speak(u);
+}
+
+WEEKS.forEach((w,i)=>{
+  const weekNum = i+1;
+  const id = "week"+weekNum;
+  const a = document.createElement('a');
+  a.href = "#"+id; a.textContent = "W"+weekNum+" · "+w.section;
+  tocEl.appendChild(a);
+
+  const section = document.createElement('section');
+  section.className = "week"; section.id = id;
+
+  const vocabRows = w.vocab.map((v)=>`
+    <tr><td class="word-cell"><button class="speak-btn" onclick="speak('${v[0].replace(/'/g,"\\'")}', this)">🔊</button><span>${v[0]}</span></td>
+    <td>${v[1]}</td><td>${v[2]}</td></tr>
+  `).join('');
+
+  const exprItems = w.expr.map(e=>`<li>${e}</li>`).join('');
+
+  section.innerHTML = `
+    <div class="week-head">
+      <div class="tag">WEEK ${weekNum} · ${w.section} · ${w.date}</div>
+      <h3>${w.titleZh !== "(원문 그대로)" ? w.titleZh : w.title}</h3>
+      <div class="meta">${w.title !== w.titleZh ? "원제: " + w.title : ""}</div>
+      ${w.url === "https://cn.nytimes.com/" 
+        ? '<a class="src-link" href="https://www.google.com/search?q=site:cn.nytimes.com+' + encodeURIComponent(w.titleZh !== "(원문 그대로)" ? w.titleZh : w.title) + '" target="_blank">🔍 구글에서 cn.nytimes.com 내 기사 검색 (정확한 링크 미확인)</a>'
+        : '<a class="src-link" href="' + w.url + '" target="_blank">🔗 원문 기사 열기 (cn.nytimes.com)</a>'}
+    </div>
+    <div class="week-body">
+      <div class="gloss">📝 <b>주제 요약(추정)</b> — ${w.gloss}</div>
+      <h4 class="block-title">📖 예습 단어</h4>
+      <table class="vocab"><tr><th>단어</th><th>병음</th><th>뜻</th></tr>${vocabRows}</table>
+      <h4 class="block-title">💬 관련 표현 패턴</h4>
+      <ul class="expr-list">${exprItems}</ul>
+      <div class="discuss">🗣 <b>읽은 후 생각해보기</b>
+        <ol>
+          <li>이 기사의 핵심 사건/주장은 무엇인가요? 한두 문장으로 중국어로 요약해보세요.</li>
+          <li>위 표현 패턴 중 하나를 활용해 자신의 의견을 한 문장으로 말해보세요.</li>
+        </ol>
+      </div>
+    </div>
+  `;
+  container.appendChild(section);
+});
+</script>
+</body>
+</html>
