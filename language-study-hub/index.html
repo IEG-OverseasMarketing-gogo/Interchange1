@@ -1,1 +1,1223 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>켈리의 언어 자가학습 · 베트남어 · 중국어</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗂️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
 
+  :root{
+    --bg:#F2EDDB;
+    --bg-elev:#E9E1C7;
+    --bg-card:#FFFFFF;
+    --line:rgba(38,33,26,0.12);
+    --ink:#26211c;
+    --ink-dim:#655c4e;
+    --ink-faint:#93876f;
+    --hero-ink:#f7ecd7;
+    --hero-ink-dim:#e3c9a8;
+    --lacquer:#a6342a;
+    --lacquer-dim:#7d322c;
+    --brass:#9c7a2e;
+    --brass-soft:#cda653;
+    --brass-dim:#8c7238;
+    --jade:#3f7864;
+    --jade-dim:#d7e8de;
+    --radius-lg:20px;
+    --radius-sm:10px;
+    --font-display:'Noto Serif', serif;
+    --font-body:'Inter', sans-serif;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    min-height:100vh;
+    display:flex; justify-content:center;
+    -webkit-font-smoothing:antialiased;
+  }
+  #app{
+    width:100%; max-width:480px; min-height:100vh;
+    display:flex; flex-direction:column;
+    background:
+      radial-gradient(ellipse 700px 320px at 50% -12%, rgba(166,52,42,0.07), transparent 60%),
+      var(--bg);
+    position:relative;
+  }
+  header.top{
+    padding:22px 20px 16px;
+    border-bottom:1px solid var(--line);
+    position:sticky; top:0; z-index:5;
+    background:rgba(242,237,219,0.92);
+    backdrop-filter:blur(10px);
+    display:flex; align-items:center; gap:12px;
+  }
+  header.top .back{
+    width:34px;height:34px;border-radius:50%;
+    border:1px solid var(--line); background:var(--bg-elev);
+    color:var(--ink-dim); display:flex; align-items:center; justify-content:center;
+    cursor:pointer; flex:none; font-size:16px;
+  }
+  header.top h1{
+    font-family:var(--font-display); font-weight:600; font-size:19px; margin:0;
+    letter-spacing:0.2px; flex:1;
+  }
+  header.top .sub{font-size:12px; color:var(--ink-faint); margin-top:2px; font-weight:400;}
+  main{flex:1; padding:20px 20px 100px; overflow-y:auto;}
+
+  /* ---- Home view ---- */
+  .hero-card{
+    background:linear-gradient(155deg, #b8443a, var(--lacquer-dim) 75%);
+    border:1px solid rgba(205,166,83,0.35);
+    border-radius:var(--radius-lg);
+    padding:26px 22px;
+    margin-bottom:22px;
+    position:relative; overflow:hidden;
+    color:var(--hero-ink);
+  }
+  .hero-card::after{
+    content:"";position:absolute; right:-30px; top:-30px; width:140px; height:140px;
+    border-radius:50%; border:1px solid rgba(205,166,83,0.3);
+  }
+  .hero-card .course-tag{
+    font-size:12px; color:var(--brass-soft); font-weight:600; letter-spacing:0.3px;
+  }
+  .hero-card h2{
+    font-family:var(--font-display); font-size:26px; margin:8px 0 4px; font-weight:600; line-height:1.3;
+    color:var(--hero-ink);
+  }
+  .hero-card .book{
+    font-size:13px; color:var(--hero-ink-dim); margin-bottom:18px;
+  }
+  .hero-stats{display:flex; gap:22px;}
+  .hero-stats .stat b{font-family:var(--font-display); font-size:26px; display:block; font-weight:700; color:var(--hero-ink);}
+  .hero-stats .stat span{font-size:11.5px; color:var(--hero-ink-dim);}
+
+  .progress-track{height:8px; border-radius:5px; background:rgba(247,236,215,0.22); margin-top:18px; overflow:hidden;}
+  .progress-fill{height:100%; background:linear-gradient(90deg, var(--brass-soft), #7bc4a8); border-radius:5px; transition:width .4s ease;}
+
+  .section-title{
+    font-family:var(--font-display); font-size:15px; font-weight:600;
+    color:var(--ink); margin:26px 0 12px; display:flex; justify-content:space-between; align-items:baseline;
+  }
+  .section-title small{font-family:var(--font-body); font-size:12px; color:var(--ink-faint); font-weight:400;}
+
+  .week-block{margin-bottom:6px;}
+  .week-label{font-size:11.5px; color:var(--brass); text-transform:none; margin:18px 2px 8px; font-weight:600;}
+
+  .session-row{
+    display:flex; align-items:center; gap:14px;
+    background:var(--bg-card); border:1px solid var(--line);
+    border-radius:var(--radius-sm); padding:14px 14px; margin-bottom:9px;
+    cursor:pointer; transition:border-color .15s, transform .1s;
+  }
+  .session-row:active{transform:scale(0.98);}
+  .session-row.done{border-color:rgba(92,147,130,0.5); background:linear-gradient(180deg, rgba(92,147,130,0.1), var(--bg-card) 40%);}
+  .session-num{
+    width:36px;height:36px;border-radius:50%; flex:none;
+    background:var(--bg-elev); border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-display); font-weight:600; font-size:14px; color:var(--ink-dim);
+  }
+  .session-row.done .session-num{background:var(--jade-dim); border-color:var(--jade); color:var(--jade);}
+  .session-body{flex:1; min-width:0;}
+  .session-body .kr{font-size:14.5px; font-weight:600; color:var(--ink);}
+  .session-body .vi{font-size:12px; color:var(--ink-faint); margin-top:2px;}
+  .session-state{font-size:11px; color:var(--ink-faint); flex:none; text-align:right;}
+  .session-row.done .session-state{color:var(--jade);}
+  .chevron{color:var(--ink-faint); font-size:14px; flex:none;}
+
+  /* ---- Session detail ---- */
+  .chip{
+    display:inline-block; font-size:11.5px; padding:4px 10px; border-radius:20px;
+    background:var(--bg-elev); border:1px solid var(--line); color:var(--ink-dim); margin-bottom:14px;
+  }
+  h2.session-title{font-family:var(--font-display); font-size:23px; margin:0 0 2px; font-weight:600;}
+  .session-title-vi{color:var(--brass); font-size:14px; margin-bottom:22px;}
+
+  .block{margin-bottom:26px;}
+  .block-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;}
+  .block-head h3{font-family:var(--font-display); font-size:15px; font-weight:600; margin:0; color:var(--ink);}
+  .block-head .count{font-size:11.5px; color:var(--ink-faint);}
+
+  .vocab-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+  .vocab-card{
+    background:var(--bg-card); border:1px solid var(--line); border-radius:var(--radius-sm);
+    padding:11px 8px 11px 12px; cursor:pointer; transition:border-color .15s;
+    display:flex; align-items:center; justify-content:space-between; gap:6px;
+  }
+  .vocab-card.checked{border-color:var(--jade); background:linear-gradient(180deg, rgba(92,147,130,0.14), var(--bg-card));}
+  .vocab-card .vi{font-family:var(--font-display); font-size:14.5px; font-weight:600; color:var(--ink);}
+  .vocab-card .en{font-size:11.5px; color:var(--ink-faint); margin-top:2px;}
+  .spk-btn{
+    flex:none; width:30px; height:30px; border-radius:50%; border:1px solid var(--line);
+    background:var(--bg-elev); color:var(--lacquer); font-size:13px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .spk-btn:active{transform:scale(0.92);}
+  .spk-btn.playing{background:var(--lacquer); color:#fff; border-color:var(--lacquer);}
+
+  .grammar-card{
+    background:linear-gradient(180deg, rgba(156,122,46,0.08), var(--bg-card) 45%);
+    border:1px solid rgba(156,122,46,0.35); border-radius:var(--radius-sm);
+    padding:14px 16px;
+  }
+  .grammar-title{font-family:var(--font-display); font-size:15px; font-weight:600; color:var(--brass); margin-bottom:6px;}
+  .grammar-explain{font-size:12.5px; color:var(--ink-dim); line-height:1.65; margin-bottom:12px;}
+  .grammar-examples{display:flex; flex-direction:column; gap:8px;}
+  .grammar-ex{background:var(--bg-elev); border:1px solid var(--line); border-radius:8px; padding:8px 10px; display:flex; align-items:center; justify-content:space-between; gap:8px;}
+  .grammar-ex .vi{font-family:var(--font-display); font-size:13.5px; font-weight:600; color:var(--ink);}
+  .grammar-ex .en{font-size:11.5px; color:var(--ink-faint); margin-top:2px;}
+
+  .expr-item{
+    background:var(--bg-card); border:1px solid var(--line); border-radius:var(--radius-sm);
+    padding:12px 10px 12px 14px; margin-bottom:8px; cursor:pointer;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .expr-item.checked{border-color:var(--jade); background:linear-gradient(180deg, rgba(92,147,130,0.14), var(--bg-card));}
+  .expr-item .vi{font-family:var(--font-display); font-size:14.5px; font-weight:600;}
+  .expr-item .en{font-size:12px; color:var(--ink-faint); margin-top:3px;}
+
+  .rate-toggle{
+    display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--ink-dim);
+    background:var(--bg-card); border:1px solid var(--line); border-radius:20px; padding:6px 12px;
+    cursor:pointer; margin-bottom:16px;
+  }
+  .rate-toggle.on{border-color:var(--brass); color:var(--brass); background:var(--jade-dim);}
+  .voice-warning{
+    background:#fbeee0; border:1px solid rgba(166,52,42,0.25); border-radius:var(--radius-sm);
+    padding:12px 14px; margin-bottom:18px; font-size:12px; color:var(--ink-dim); line-height:1.6;
+  }
+  .voice-warning b{color:var(--lacquer);}
+
+  .workbook-item{
+    display:flex; align-items:flex-start; gap:11px;
+    padding:11px 4px; border-bottom:1px solid var(--line); cursor:pointer;
+  }
+  .workbook-item:last-child{border-bottom:none;}
+  .box{
+    width:20px; height:20px; border-radius:6px; border:1.5px solid var(--ink-faint);
+    flex:none; margin-top:1px; display:flex; align-items:center; justify-content:center; font-size:12px;
+  }
+  .workbook-item.checked .box{background:var(--jade); border-color:var(--jade); color:#fff;}
+  .workbook-item span{font-size:13.5px; line-height:1.5; color:var(--ink-dim);}
+  .workbook-item.checked span{color:var(--ink); text-decoration:line-through; text-decoration-color:var(--ink-faint);}
+
+  .attend-row{display:flex; gap:10px; margin-bottom:24px;}
+  .btn{
+    flex:1; padding:13px; border-radius:12px; border:1px solid var(--line);
+    background:var(--bg-card); color:var(--ink); font-family:var(--font-body); font-weight:600;
+    font-size:13.5px; cursor:pointer; text-align:center;
+  }
+  .btn.active{background:var(--jade-dim); border-color:var(--jade); color:var(--jade);}
+  .btn.primary{background:var(--lacquer); border-color:var(--lacquer); color:#fff;}
+  .btn.primary:disabled{opacity:0.4;}
+
+  .save-banner{
+    font-size:12px; color:var(--ink-faint); text-align:center; margin-top:10px;
+  }
+
+  /* ---- Settings ---- */
+  .field{margin-bottom:18px;}
+  .field label{font-size:12.5px; color:var(--ink-dim); display:block; margin-bottom:7px; font-weight:600;}
+  .field input{
+    width:100%; padding:12px 13px; border-radius:10px; border:1px solid var(--line);
+    background:var(--bg-elev); color:var(--ink); font-size:13.5px; font-family:var(--font-body);
+  }
+  .field input::placeholder{color:var(--ink-faint);}
+  .help-text{font-size:12px; color:var(--ink-faint); line-height:1.6; margin-top:6px;}
+  pre.code{
+    background:#0f1a1d; border:1px solid var(--line); border-radius:12px; padding:14px;
+    font-size:11px; color:#b9dfce; overflow-x:auto; line-height:1.6; white-space:pre;
+  }
+  .step{display:flex; gap:12px; margin-bottom:16px;}
+  .step .n{
+    width:24px;height:24px;border-radius:50%; background:var(--bg-elev); border:1px solid var(--line);
+    flex:none; display:flex; align-items:center; justify-content:center; font-size:11.5px; font-weight:700; color:var(--brass);
+  }
+  .step p{margin:0; font-size:13px; color:var(--ink-dim); line-height:1.55;}
+  .status-pill{font-size:11.5px; padding:5px 10px; border-radius:20px; display:inline-block; margin-top:4px;}
+  .status-pill.ok{background:var(--jade-dim); color:var(--jade);}
+  .status-pill.off{background:var(--bg-elev); color:var(--ink-faint); border:1px solid var(--line);}
+
+  nav.tabbar{
+    position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+    width:100%; max-width:480px;
+    display:flex; border-top:1px solid var(--line);
+    background:rgba(242,237,219,0.96); backdrop-filter:blur(10px);
+    padding:9px 6px calc(9px + env(safe-area-inset-bottom));
+  }
+  nav.tabbar button{
+    flex:1; background:none; border:none; color:var(--ink-faint);
+    font-family:var(--font-body); font-size:11px; font-weight:600;
+    display:flex; flex-direction:column; align-items:center; gap:4px; padding:6px 0; cursor:pointer;
+  }
+  nav.tabbar button .ic{font-size:18px;}
+  nav.tabbar button.on{color:var(--brass);}
+
+  ::-webkit-scrollbar{display:none;}
+  a{color:var(--brass);}
+
+  /* ---- Hub (language picker) ---- */
+  .hub-card{
+    background:var(--bg-card); border:1px solid var(--line); border-radius:var(--radius-lg);
+    padding:20px; margin-bottom:14px; display:flex; align-items:center; gap:16px; cursor:pointer;
+    transition:border-color .15s, transform .1s;
+  }
+  .hub-card:active{transform:scale(0.98);}
+  .hub-card .flag{font-size:34px; flex:none;}
+  .hub-card .info{flex:1; min-width:0;}
+  .hub-card .info .name{font-family:var(--font-display); font-size:17px; font-weight:600; color:var(--ink);}
+  .hub-card .info .sub{font-size:12px; color:var(--ink-faint); margin-top:3px;}
+  .hub-card .info .mini-progress{font-size:11.5px; color:var(--brass); margin-top:7px; font-weight:600;}
+  .hub-card .chevron{color:var(--ink-faint); font-size:16px; flex:none;}
+  .hub-intro{font-size:12.5px; color:var(--ink-faint); line-height:1.6; margin:2px 0 20px;}
+
+  .lang-switch{
+    font-size:11px; color:var(--ink-dim); background:var(--bg-elev); border:1px solid var(--line);
+    border-radius:14px; padding:6px 11px; cursor:pointer; white-space:nowrap; flex:none;
+  }
+
+  /* ---- Chinese reading vocab (pinyin) ---- */
+  .pinyin{font-size:11px; color:var(--brass); margin-top:1px; font-style:italic;}
+
+  /* ---- Reading (article) card for NYT Chinese sessions ---- */
+  .reading-card{
+    background:linear-gradient(180deg, rgba(63,120,100,0.08), var(--bg-card) 45%);
+    border:1px solid rgba(63,120,100,0.35); border-radius:var(--radius-sm);
+    padding:14px 16px; margin-bottom:18px;
+  }
+  .reading-card .gloss{font-size:12.5px; color:var(--ink-dim); line-height:1.65; margin-bottom:10px;}
+  .reading-card a.src-link{display:inline-block; font-size:12.5px; color:var(--jade); font-weight:600; text-decoration:none;}
+  .reading-card a.src-link:hover{text-decoration:underline;}
+
+  .discuss-list{margin:8px 0 0; padding-left:18px; font-size:12.5px; color:var(--ink-dim); line-height:1.75;}
+
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="top" id="topHeader"></header>
+  <main id="mainView"></main>
+  <nav class="tabbar" id="tabbar" style="display:none">
+    <button data-tab="home" class="on"><span class="ic">🏠</span>홈</button>
+    <button data-tab="sessions"><span class="ic">📗</span>차시</button>
+    <button data-tab="settings"><span class="ic">⚙️</span>설정</button>
+  </nav>
+</div>
+
+<script>
+/* =====================  DATA: VIETNAMESE (32 sessions)  ===================== */
+const VI_SESSIONS = [
+{id:1, week:1, krTitle:"인사와 자기소개", viTitle:"Chào hỏi & Giới thiệu bản thân",
+ vocab:[["Xin chào","Hello"],["Tạm biệt","Goodbye"],["Cảm ơn","Thank you"],["Xin lỗi","Sorry / Excuse me"],["Tên","Name"],["Tôi","I / me"],["Bạn","You"],["Là","To be"]],
+ expr:[["Tôi tên là ___.","My name is ___."],["Bạn tên là gì?","What is your name?"],["Rất vui được gặp bạn.","Nice to meet you."],["Bạn khỏe không?","How are you?"]],
+ grammar:{title:"\"Là\" — ~이다 (be동사)",explain:"베트남어의 be동사 'là'는 주어와 명사(이름·신분·직업 등)를 연결할 때 씁니다. 한국어 조사처럼 위치가 고정돼 있어 어순만 지키면 됩니다: 주어 + là + 명사.",examples:[["Tôi là Kelly.","I am Kelly."],["Đây là bạn tôi.","This is my friend."]]}},
+{id:2, week:1, krTitle:"자기소개 심화 (국적·직업)", viTitle:"Giới thiệu sâu hơn — Quốc tịch & Nghề nghiệp",
+ vocab:[["Quốc tịch","Nationality"],["Người Hàn Quốc","Korean (person)"],["Người Việt Nam","Vietnamese (person)"],["Nghề nghiệp","Occupation"],["Sinh viên","Student"],["Giáo viên","Teacher"],["Kỹ sư","Engineer"],["Đến từ","To come from"]],
+ expr:[["Tôi là người Hàn Quốc.","I am Korean."],["Bạn đến từ nước nào?","Which country are you from?"],["Tôi làm nghề kỹ sư.","I work as an engineer."],["Bạn có phải là sinh viên không?","Are you a student?"]],
+ grammar:{title:"\"Có phải ... không?\" — 사실 확인 의문문",explain:"명사문을 예/아니오로 물을 때는 문장 앞뒤에 'Có phải'와 'không'을 붙입니다: Có phải + 주어 + là + 명사 + không? 대답은 Phải(맞다)/Không phải(아니다)로 합니다.",examples:[["Có phải bạn là người Việt không?","Are you Vietnamese?"],["Không phải, tôi là người Hàn Quốc.","No, I'm Korean."]]}},
+{id:3, week:2, krTitle:"숫자와 개인정보", viTitle:"Số đếm & Thông tin cá nhân",
+ vocab:[["Một","One"],["Hai","Two"],["Ba","Three"],["Bốn","Four"],["Năm","Five"],["Sáu","Six"],["Bảy","Seven"],["Mười","Ten"]],
+ expr:[["Bạn bao nhiêu tuổi?","How old are you?"],["Tôi ___ tuổi.","I am ___ years old."],["Số điện thoại của bạn là gì?","What's your phone number?"],["Bạn đến từ đâu?","Where are you from?"]],
+ grammar:{title:"수 읽기와 자릿수 구성",explain:"11~19는 '10+숫자'(mười một=11), 20 이상 십의 자리는 '숫자+mươi' 형태(hai mươi=20)입니다. 21은 hai mươi mốt처럼 1이 '무트'로 바뀌는 점에 주의하세요.",examples:[["Hai mươi mốt","Twenty-one"],["Một trăm","One hundred"]]}},
+{id:4, week:2, krTitle:"나이·전화번호 심화", viTitle:"Tuổi & Số điện thoại — nâng cao",
+ vocab:[["Bao nhiêu","How much/many"],["Mấy","How many (small numbers)"],["Tuổi","Age/years old"],["Số","Number"],["Gọi","To call"],["Nhắn tin","To text"],["Địa chỉ","Address"],["Email","Email"]],
+ expr:[["Cháu mấy tuổi?","How old are you (child)?"],["Anh ấy khoảng bốn mươi tuổi.","He is about 40 years old."],["Cho tôi xin địa chỉ email.","Please give me your email."],["Tôi sẽ gọi cho bạn sau.","I'll call you later."]],
+ grammar:{title:"\"Mấy\" vs \"Bao nhiêu\" — 수 묻는 의문사 구분",explain:"'Mấy'는 10 미만의 작은 수(나이가 어린 아이, 시간, 개수)를 예상할 때, 'Bao nhiêu'는 10 이상 큰 수나 예상 범위가 없을 때 씁니다.",examples:[["Bây giờ là mấy giờ?","What time is it now?"],["Vé này bao nhiêu tiền?","How much is this ticket?"]]}},
+{id:5, week:3, krTitle:"가족 소개", viTitle:"Gia đình",
+ vocab:[["Gia đình","Family"],["Bố / Ba","Father"],["Mẹ","Mother"],["Anh trai","Older brother"],["Chị gái","Older sister"],["Em","Younger sibling"],["Con","Child"],["Vợ / Chồng","Wife / Husband"]],
+ expr:[["Đây là bố tôi.","This is my father."],["Gia đình bạn có mấy người?","How many people in your family?"],["Tôi có hai anh chị em.","I have two siblings."],["Bạn đã kết hôn chưa?","Are you married?"]],
+ grammar:{title:"\"Của\" — 소유격 조사",explain:"'Của'는 한국어 '~의'에 해당하며 [소유물] + của + [소유자] 순서로 씁니다. 가족처럼 친밀한 관계에서는 종종 của를 생략하기도 합니다.",examples:[["Bố của tôi","My father"],["Nhà tôi (= Nhà của tôi)","My house"]]}},
+{id:6, week:3, krTitle:"가족 관계 심화", viTitle:"Quan hệ gia đình — nâng cao",
+ vocab:[["Ông","Grandfather"],["Bà","Grandmother"],["Cô/Dì","Aunt"],["Chú/Bác","Uncle"],["Cháu","Nephew/Niece/Grandchild"],["Họ hàng","Relatives"],["Độc thân","Single"],["Kết hôn","To marry"]],
+ expr:[["Ông bà tôi sống ở quê.","My grandparents live in the countryside."],["Chú tôi chưa kết hôn.","My uncle isn't married yet."],["Cô ấy là em gái của mẹ tôi.","She is my mother's younger sister."],["Nhà bạn có mấy anh chị em?","How many siblings do you have?"]],
+ grammar:{title:"인칭 분류사(호칭) — anh/chị/em/ông/bà",explain:"베트남어는 나이·성별·관계에 따라 사람을 부르는 말(호칭)이 곧 2인칭 대명사 역할을 합니다. 손윗사람에겐 anh(남)/chị(여), 손아랫사람에겐 em을 씁니다.",examples:[["Anh tên là gì?","What's your name? (남성 손윗사람에게)"],["Em là sinh viên.","I am a student. (스스로를 낮춰 부를 때)"]]}},
+{id:7, week:4, krTitle:"요일·시간·날짜", viTitle:"Thứ, Giờ & Ngày tháng",
+ vocab:[["Thứ hai","Monday"],["Thứ sáu","Friday"],["Chủ nhật","Sunday"],["Hôm nay","Today"],["Ngày mai","Tomorrow"],["Giờ","Hour / o'clock"],["Phút","Minute"],["Tuần","Week"]],
+ expr:[["Hôm nay là thứ mấy?","What day is it today?"],["Mấy giờ rồi?","What time is it?"],["Bây giờ là ___ giờ.","It is ___ o'clock now."],["Hẹn gặp lại vào ngày mai.","See you tomorrow."]],
+ grammar:{title:"시간 표현의 어순",explain:"베트남어는 시간 표현을 문장 맨 앞이나 맨 뒤에 자유롭게 놓을 수 있습니다: [시간] + 주어 + 동사 또는 주어 + 동사 + [시간]. 둘 다 자연스럽습니다.",examples:[["Ngày mai tôi sẽ đi Hà Nội.","Tomorrow I will go to Hanoi."],["Tôi sẽ đi Hà Nội vào ngày mai.","I will go to Hanoi tomorrow."]]}},
+{id:8, week:4, krTitle:"일정 표현 심화 (시제)", viTitle:"Diễn đạt lịch trình — Thì trong tiếng Việt",
+ vocab:[["Đã","(past marker)"],["Đang","(present continuous marker)"],["Sẽ","(future marker)"],["Vừa mới","Just (recently)"],["Sắp","About to"],["Lịch trình","Schedule"],["Kế hoạch","Plan"],["Dự định","Intend to"]],
+ expr:[["Tôi đã ăn cơm rồi.","I already ate."],["Tôi đang làm việc.","I am working (now)."],["Tôi sẽ đi công tác tuần sau.","I will go on a business trip next week."],["Bạn có kế hoạch gì cho cuối tuần?","Any plans for the weekend?"]],
+ grammar:{title:"\"Đã / Đang / Sẽ\" — 시제 표지",explain:"베트남어 동사는 형태가 변하지 않고, 동사 앞에 시제 표지를 붙여 시제를 나타냅니다: đã(과거), đang(현재진행), sẽ(미래). 문맥상 명확하면 생략되기도 합니다.",examples:[["Tôi đã đi Việt Nam năm ngoái.","I went to Vietnam last year."],["Anh ấy sắp đến rồi.","He is about to arrive."]]}},
+{id:9, week:5, krTitle:"길 안내와 장소", viTitle:"Chỉ đường & Địa điểm",
+ vocab:[["Ở đâu","Where"],["Bên trái","Left"],["Bên phải","Right"],["Đi thẳng","Go straight"],["Gần","Near"],["Xa","Far"],["Đường","Street"],["Ngân hàng","Bank"]],
+ expr:[["___ ở đâu?","Where is ___?"],["Đi thẳng rồi rẽ trái.","Go straight then turn left."],["Có xa không?","Is it far?"],["Cảm ơn vì đã chỉ đường.","Thanks for the directions."]],
+ grammar:{title:"장소 전치사 \"ở / đến / từ\"",explain:"'ở'는 위치(~에 있다), 'đến'은 도착지(~로/에), 'từ'는 출발지(~로부터)를 나타냅니다. 방향을 말할 땐 từ A đến B(A에서 B까지) 형태로 함께 씁니다.",examples:[["Tôi sống ở Hà Nội.","I live in Hanoi."],["Từ đây đến đó xa không?","Is it far from here to there?"]]}},
+{id:10, week:5, krTitle:"장소 심화 (명령문)", viTitle:"Địa điểm nâng cao — Câu mệnh lệnh",
+ vocab:[["Rẽ","To turn"],["Ngã tư","Intersection"],["Đèn giao thông","Traffic light"],["Vòng xuyến","Roundabout"],["Dừng lại","Stop"],["Băng qua","Cross (a street)"],["Cột mốc","Landmark"],["Hướng","Direction"]],
+ expr:[["Hãy dừng lại ở đèn giao thông.","Please stop at the traffic light."],["Đừng rẽ phải ở đây.","Don't turn right here."],["Băng qua đường cẩn thận nhé.","Cross the street carefully."],["Đi qua ngã tư thứ hai.","Go past the second intersection."]],
+ grammar:{title:"명령문 \"Hãy / Đừng\"",explain:"긍정 명령(~하세요)은 동사 앞에 'Hãy'를, 금지(~하지 마세요)는 'Đừng'을 붙입니다. 문장 끝에 'nhé'를 더하면 부드러운 어조가 됩니다.",examples:[["Hãy đi thẳng.","Please go straight."],["Đừng lo lắng.","Don't worry."]]}},
+{id:11, week:6, krTitle:"교통수단", viTitle:"Phương tiện giao thông",
+ vocab:[["Xe máy","Motorbike"],["Xe buýt","Bus"],["Taxi","Taxi"],["Xe đạp","Bicycle"],["Sân bay","Airport"],["Ga","Station"],["Vé","Ticket"],["Đi","To go"]],
+ expr:[["Tôi muốn đi đến ___.","I want to go to ___."],["Vé bao nhiêu tiền?","How much is the ticket?"],["Xe buýt này có đi đến ___ không?","Does this bus go to ___?"],["Bao lâu thì đến?","How long until we arrive?"]],
+ grammar:{title:"\"Muốn\" + 동사 — ~하고 싶다",explain:"희망·의도를 나타낼 때는 'muốn'(원하다) 뒤에 동사원형을 그대로 붙입니다: 주어 + muốn + 동사. 별도의 활용 변화가 없습니다.",examples:[["Tôi muốn mua vé.","I want to buy a ticket."],["Bạn muốn đi đâu?","Where do you want to go?"]]}},
+{id:12, week:6, krTitle:"교통 심화 (비교)", viTitle:"Giao thông nâng cao — So sánh",
+ vocab:[["Bằng","By (means of)"],["Nhanh","Fast"],["Chậm","Slow"],["Tiện lợi","Convenient"],["Đắt hơn","More expensive"],["Rẻ hơn","Cheaper"],["Kẹt xe","Traffic jam"],["Đúng giờ","On time"]],
+ expr:[["Tôi đi làm bằng xe máy.","I go to work by motorbike."],["Xe buýt rẻ hơn taxi.","Bus is cheaper than taxi."],["Hôm nay đường bị kẹt xe.","There's a traffic jam today."],["Tàu nhanh hơn xe buýt.","The train is faster than the bus."]],
+ grammar:{title:"비교급 \"Hơn\"",explain:"A + 형용사 + hơn + B 형태로 'A가 B보다 더 ~하다'를 표현합니다. 최상급은 'nhất'을 붙여 만듭니다(예: nhanh nhất = 가장 빠른).",examples:[["Máy bay nhanh hơn tàu hỏa.","Planes are faster than trains."],["Cái này rẻ nhất.","This one is the cheapest."]]}},
+{id:13, week:7, krTitle:"음식과 주문", viTitle:"Ăn uống & Gọi món",
+ vocab:[["Ăn","To eat"],["Uống","To drink"],["Cơm","Rice"],["Phở","Pho (noodle soup)"],["Nước","Water"],["Cà phê","Coffee"],["Ngon","Delicious"],["Thực đơn","Menu"]],
+ expr:[["Cho tôi xem thực đơn.","Show me the menu."],["Tôi muốn gọi món ___.","I'd like to order ___."],["Tính tiền, xin lỗi.","Check, please."],["Món này rất ngon.","This dish is delicious."]],
+ grammar:{title:"\"Cho\" — 요청·제공 동사",explain:"'Cho'는 '~에게 주다'라는 본동사이자, 정중한 요청 표현 'Cho tôi ___'(저에게 ~을 주세요)로 자주 쓰입니다. 문장 앞에 위치해 주문·요청에 널리 사용됩니다.",examples:[["Cho tôi một ly cà phê.","Please give me a cup of coffee."],["Cho tôi hỏi một chút.","Let me ask you something."]]}},
+{id:14, week:7, krTitle:"음식 심화 (맛 표현)", viTitle:"Ẩm thực nâng cao — Diễn tả hương vị",
+ vocab:[["Cay","Spicy"],["Mặn","Salty"],["Ngọt","Sweet"],["Chua","Sour"],["Đắng","Bitter"],["Nhạt","Bland"],["Vừa ăn","Just right (taste)"],["Đặc sản","Local specialty"]],
+ expr:[["Món này hơi cay.","This dish is a bit spicy."],["Tôi không ăn được đồ cay.","I can't eat spicy food."],["Món này vừa ăn.","This dish tastes just right."],["Đây là đặc sản ở đây.","This is a local specialty here."]],
+ grammar:{title:"형용사 위치와 정도 부사",explain:"베트남어 형용사는 명사 뒤에 옵니다(món cay = 매운 음식). 정도는 'hơi'(약간), 'rất/quá'(매우/너무)를 형용사 앞에 붙여 표현합니다.",examples:[["Món ăn rất ngon.","The food is very delicious."],["Hơi mặn một chút.","It's a bit salty."]]}},
+{id:15, week:8, krTitle:"쇼핑과 가격 (1차 복습)", viTitle:"Mua sắm & Giá cả — Ôn tập 1",
+ vocab:[["Mua","To buy"],["Bán","To sell"],["Giá","Price"],["Đắt","Expensive"],["Rẻ","Cheap"],["Giảm giá","Discount"],["Tiền","Money"],["Bao nhiêu","How much / many"]],
+ expr:[["Cái này giá bao nhiêu?","How much is this?"],["Đắt quá!","Too expensive!"],["Có thể giảm giá không?","Can you give a discount?"],["Tôi lấy cái này.","I'll take this one."]],
+ grammar:{title:"정도부사 \"Quá / Lắm\" — 매우, 너무",explain:"'quá'는 형용사 앞이나 뒤 어디에나 올 수 있고(quá đắt / đắt quá), 감탄의 뉘앙스가 강합니다. 'lắm'은 항상 형용사 뒤에만 옵니다(đắt lắm).",examples:[["Đắt quá! / Quá đắt!","Too expensive!"],["Món này ngon lắm.","This dish is very delicious."]]}},
+{id:16, week:8, krTitle:"쇼핑 심화 (흥정)", viTitle:"Mua sắm nâng cao — Mặc cả",
+ vocab:[["Mặc cả","To bargain"],["Bớt","To reduce (price)"],["Chất lượng","Quality"],["Kích cỡ","Size"],["Màu sắc","Color"],["Đổi hàng","Exchange goods"],["Trả lại","Return (item)"],["Thanh toán","To pay"]],
+ expr:[["Bạn có thể bớt cho tôi không?","Can you reduce it for me?"],["Có thể thanh toán bằng thẻ không?","Can I pay by card?"],["Tôi muốn đổi cái này.","I want to exchange this."],["Có màu khác không?","Do you have a different color?"]],
+ grammar:{title:"가능·허가 \"Có thể ... không?\"",explain:"'Có thể' + 동사 + '(được) không?'은 '~할 수 있어요?/해도 돼요?'라는 가능·허가 의문문입니다. 대답은 Có thể(가능해요)/Không thể(안 돼요)로 합니다.",examples:[["Tôi có thể thử không?","Can I try it on?"],["Bạn có thể giúp tôi không?","Can you help me?"]]}},
+{id:17, week:9, krTitle:"날씨와 계절", viTitle:"Thời tiết & Mùa",
+ vocab:[["Thời tiết","Weather"],["Nóng","Hot"],["Lạnh","Cold"],["Mưa","Rain"],["Nắng","Sunny"],["Mùa hè","Summer"],["Mùa đông","Winter"],["Gió","Wind"]],
+ expr:[["Hôm nay thời tiết thế nào?","How's the weather today?"],["Trời đang mưa.","It's raining."],["Tôi thích mùa thu.","I like autumn."],["Ở đây có nóng không?","Is it hot here?"]],
+ grammar:{title:"가주어 \"Trời\" — 날씨 표현",explain:"날씨를 말할 때는 한국어의 비인칭 주어처럼 'Trời'(하늘)를 문법상 주어로 씁니다: Trời + 형용사/동사. 실제 하늘을 가리키는 것이 아니라 형식상 주어입니다.",examples:[["Trời nóng quá.","It's so hot."],["Trời sắp mưa.","It's about to rain."]]}},
+{id:18, week:9, krTitle:"계절 심화 (빈도부사)", viTitle:"Mùa nâng cao — Trạng từ tần suất",
+ vocab:[["Thường","Usually"],["Hay","Often"],["Thỉnh thoảng","Sometimes"],["Hiếm khi","Rarely"],["Luôn luôn","Always"],["Không bao giờ","Never"],["Khô ráo","Dry"],["Ẩm ướt","Humid"]],
+ expr:[["Mùa hè ở đây rất ẩm ướt.","Summer here is very humid."],["Tôi thường đi bơi vào mùa hè.","I usually go swimming in summer."],["Trời hiếm khi có tuyết.","It rarely snows here."],["Mùa đông luôn luôn lạnh.","Winter is always cold."]],
+ grammar:{title:"빈도부사의 위치",explain:"빈도부사(thường, hay, luôn luôn, không bao giờ 등)는 보통 주어와 본동사 사이에 위치합니다: 주어 + 빈도부사 + 동사.",examples:[["Tôi hay uống cà phê buổi sáng.","I often drink coffee in the morning."],["Anh ấy không bao giờ đi trễ.","He is never late."]]}},
+{id:19, week:10, krTitle:"취미와 여가", viTitle:"Sở thích & Thời gian rảnh",
+ vocab:[["Sở thích","Hobby"],["Đọc sách","Read books"],["Xem phim","Watch movies"],["Nghe nhạc","Listen to music"],["Chơi thể thao","Play sports"],["Du lịch","Travel"],["Nấu ăn","Cook"],["Rảnh","Free / available"]],
+ expr:[["Sở thích của bạn là gì?","What's your hobby?"],["Cuối tuần bạn thường làm gì?","What do you usually do on weekends?"],["Tôi thích xem phim.","I like watching movies."],["Bạn có rảnh không?","Are you free?"]],
+ grammar:{title:"\"Thích\" + 동사 — ~하는 것을 좋아하다",explain:"'Thích'(좋아하다) 뒤에 동사를 그대로 이어 붙여 '~하기를 좋아한다'를 표현합니다: 주어 + thích + 동사(구).",examples:[["Tôi thích đọc sách vào buổi tối.","I like reading books in the evening."],["Bạn có thích du lịch không?","Do you like traveling?"]]}},
+{id:20, week:10, krTitle:"취미 심화 (시간 의문사)", viTitle:"Sở thích nâng cao — Khi nào & Bao giờ",
+ vocab:[["Khi nào","When (future/general)"],["Bao giờ","When (also 'ever')"],["Từ khi","Since when"],["Câu lạc bộ","Club"],["Tập luyện","To practice/train"],["Kỹ năng","Skill"],["Thời gian rảnh","Free time"],["Giải trí","Entertainment"]],
+ expr:[["Khi nào bạn rảnh?","When are you free?"],["Bạn đã bao giờ đi leo núi chưa?","Have you ever gone hiking?"],["Tôi tập luyện mỗi cuối tuần.","I practice every weekend."],["Bạn tham gia câu lạc bộ nào?","Which club do you join?"]],
+ grammar:{title:"\"Khi nào / Bao giờ\" — 문장 위치로 시제 구분",explain:"이 의문사가 문장 앞에 오면 미래(앞으로 언제), 문장 끝에 오면 과거(이미 언제)를 묻는 뜻이 됩니다: Khi nào bạn đi?(언제 갈 거예요-미래) vs Bạn đi khi nào?(언제 갔어요-과거).",examples:[["Khi nào bạn đi Việt Nam?","When will you go to Vietnam?"],["Bạn đã đi khi nào?","When did you go?"]]}},
+{id:21, week:11, krTitle:"직업과 업무", viTitle:"Công việc & Nghề nghiệp",
+ vocab:[["Công việc","Job / work"],["Công ty","Company"],["Nhân viên","Employee"],["Giám đốc","Director / manager"],["Họp","Meeting"],["Bận","Busy"],["Nghỉ","Rest / off"],["Làm việc","To work"]],
+ expr:[["Bạn làm nghề gì?","What do you do for work?"],["Tôi làm việc ở công ty ___.","I work at ___ company."],["Hôm nay tôi rất bận.","I'm very busy today."],["Mấy giờ họp bắt đầu?","What time does the meeting start?"]],
+ grammar:{title:"\"Làm\" — 하다/일하다 다의동사",explain:"'Làm'은 '~을 하다', '~로 일하다', '~을 만들다' 등 여러 의미로 쓰이는 핵심 동사입니다. 뒤에 오는 명사에 따라 뜻이 달라지므로 문맥을 함께 익히세요.",examples:[["Bạn làm gì?","What do you do? / What are you doing?"],["Tôi làm ở phòng kinh doanh.","I work in the sales department."]]}},
+{id:22, week:11, krTitle:"업무 심화 (의무)", viTitle:"Công việc nâng cao — Diễn đạt nghĩa vụ",
+ vocab:[["Phải","Must / have to"],["Cần","Need to"],["Nên","Should"],["Deadline / Hạn chót","Deadline"],["Báo cáo","Report"],["Dự án","Project"],["Đồng nghiệp","Colleague"],["Khách hàng","Client"]],
+ expr:[["Tôi phải nộp báo cáo hôm nay.","I have to submit the report today."],["Bạn nên gửi email trước.","You should send the email first."],["Chúng ta cần họp với khách hàng.","We need to meet with the client."],["Dự án này có hạn chót vào thứ sáu.","This project's deadline is Friday."]],
+ grammar:{title:"의무·조언 조동사 \"Phải / Cần / Nên\"",explain:"'Phải'(반드시 ~해야 한다, 강한 의무), 'Cần'(~할 필요가 있다), 'Nên'(~하는 게 좋다, 권유)은 모두 동사 앞에 놓여 뉘앙스를 구분합니다.",examples:[["Bạn phải đến đúng giờ.","You must arrive on time."],["Bạn nên nghỉ ngơi nhiều hơn.","You should rest more."]]}},
+{id:23, week:12, krTitle:"전화와 약속", viTitle:"Điện thoại & Hẹn gặp",
+ vocab:[["Điện thoại","Phone"],["Gọi điện","To call"],["Hẹn","Appointment"],["Lịch","Schedule"],["Rảnh","Free"],["Bận","Busy"],["Gặp","To meet"],["Sau","Later"]],
+ expr:[["Tôi muốn đặt lịch hẹn.","I'd like to make an appointment."],["Chúng ta gặp nhau lúc mấy giờ?","What time shall we meet?"],["Xin lỗi, tôi phải hủy hẹn.","Sorry, I need to cancel the appointment."],["Gọi lại cho tôi sau nhé.","Call me back later."]],
+ grammar:{title:"미래 계획 \"Sẽ\" + 시간 표현",explain:"확정된 약속·계획을 말할 때는 'sẽ'(will)을 동사 앞에 붙이고, 문장 끝이나 앞에 구체적 시간을 더합니다: 주어 + sẽ + 동사 + (thời gian).",examples:[["Tôi sẽ gặp bạn lúc 3 giờ chiều.","I will meet you at 3pm."],["Chúng tôi sẽ họp vào thứ hai.","We will have a meeting on Monday."]]}},
+{id:24, week:12, krTitle:"약속 심화 (조건문)", viTitle:"Hẹn gặp nâng cao — Câu điều kiện",
+ vocab:[["Nếu","If"],["Thì","Then"],["Hủy","To cancel"],["Dời lịch","To reschedule"],["Xác nhận","To confirm"],["Trễ","Late"],["Đúng hẹn","On time (for appointment)"],["Thông báo","To notify"]],
+ expr:[["Nếu bận thì báo tôi trước nhé.","If you're busy, let me know in advance."],["Tôi cần dời lịch hẹn sang tuần sau.","I need to reschedule to next week."],["Nếu trễ, tôi sẽ gọi cho bạn.","If I'm late, I'll call you."],["Bạn có thể xác nhận lại lịch không?","Can you confirm the schedule again?"]],
+ grammar:{title:"조건문 \"Nếu ... thì ...\"",explain:"'Nếu'(만약) + 조건절 + 'thì'(그러면) + 결과절 구조로 조건문을 만듭니다. 구어에서는 'thì'를 생략하기도 합니다.",examples:[["Nếu trời mưa thì tôi ở nhà.","If it rains, I'll stay home."],["Nếu bạn cần giúp, gọi tôi.","If you need help, call me."]]}},
+{id:25, week:13, krTitle:"건강과 신체", viTitle:"Sức khỏe & Cơ thể",
+ vocab:[["Sức khỏe","Health"],["Đau","Hurt / pain"],["Đầu","Head"],["Bụng","Stomach"],["Bác sĩ","Doctor"],["Bệnh viện","Hospital"],["Thuốc","Medicine"],["Mệt","Tired"]],
+ expr:[["Tôi bị đau đầu.","I have a headache."],["Bạn có sao không?","Are you okay?"],["Tôi cần đi khám bác sĩ.","I need to see a doctor."],["Chúc bạn mau khỏe.","Get well soon."]],
+ grammar:{title:"\"Bị\" — 부정적 사건의 수동 표지",explain:"'Bị'는 아프거나 불행한 일을 당했을 때 동사/형용사 앞에 붙는 표지입니다(우리말 '~에 걸리다/당하다'와 유사). 좋은 일에는 'được'을 대신 씁니다.",examples:[["Tôi bị cảm.","I have a cold / I caught a cold."],["Anh ấy bị mất ví.","He lost his wallet (had it stolen)."]]}},
+{id:26, week:13, krTitle:"병원 심화 (증상)", viTitle:"Bệnh viện nâng cao — Triệu chứng",
+ vocab:[["Sốt","Fever"],["Ho","Cough"],["Chóng mặt","Dizzy"],["Dị ứng","Allergy"],["Đơn thuốc","Prescription"],["Tiêm","To inject/vaccinate"],["Khám bệnh","To have a check-up"],["Hồi phục","To recover"]],
+ expr:[["Tôi bị sốt từ hôm qua.","I've had a fever since yesterday."],["Tôi bị dị ứng với hải sản.","I'm allergic to seafood."],["Bác sĩ kê đơn thuốc cho tôi.","The doctor prescribed medicine for me."],["Tôi cần nghỉ ngơi để hồi phục.","I need to rest to recover."]],
+ grammar:{title:"필요 표현 \"Cần\" + 명사/동사",explain:"'Cần'은 동사 앞뿐 아니라 명사 앞에도 바로 올 수 있어 '~이 필요하다'를 간단히 표현합니다: Tôi cần + [명사/동사].",examples:[["Tôi cần thuốc giảm đau.","I need pain medicine."],["Bạn có cần đi khám không?","Do you need a check-up?"]]}},
+{id:27, week:14, krTitle:"여행과 숙박", viTitle:"Du lịch & Khách sạn",
+ vocab:[["Khách sạn","Hotel"],["Đặt phòng","Book a room"],["Hộ chiếu","Passport"],["Va li","Suitcase"],["Nhận phòng","Check-in"],["Trả phòng","Check-out"],["Phòng đơn","Single room"],["Phòng đôi","Double room"]],
+ expr:[["Tôi muốn đặt một phòng.","I'd like to book a room."],["Mấy giờ có thể nhận phòng?","What time can I check in?"],["Ở đây có wifi không?","Is there wifi here?"],["Cho tôi hộ chiếu của bạn.","Please give me your passport."]],
+ grammar:{title:"\"Có ... không?\" — 존재·소유 의문문",explain:"무언가 있는지 물을 때는 'Có' + 명사 + 'không?' 구조를 씁니다(가장 기본적인 예/아니오 의문문 틀). 대답은 Có(있어요)/Không có(없어요).",examples:[["Phòng có ban công không?","Does the room have a balcony?"],["Ở đây có bãi đỗ xe không?","Is there parking here?"]]}},
+{id:28, week:14, krTitle:"숙박 심화 (날짜·서수)", viTitle:"Khách sạn nâng cao — Ngày tháng & Số thứ tự",
+ vocab:[["Ngày đầu tiên","First day"],["Ngày cuối cùng","Last day"],["Gia hạn","To extend (stay)"],["Tiền cọc","Deposit"],["Hóa đơn","Invoice/bill"],["Tầng","Floor"],["Thang máy","Elevator"],["Dịch vụ phòng","Room service"]],
+ expr:[["Tôi muốn gia hạn thêm một ngày.","I'd like to extend one more day."],["Phòng tôi ở tầng ba.","My room is on the third floor."],["Cho tôi xem hóa đơn.","Please show me the bill."],["Đây là ngày đầu tiên tôi đến đây.","This is my first day here."]],
+ grammar:{title:"서수 만들기 \"Thứ + 숫자\"",explain:"서수는 숫자 앞에 'thứ'를 붙여 만듭니다: thứ nhất(첫째, 예외), thứ hai(둘째), thứ ba(셋째)... 요일 이름도 같은 방식(thứ hai=월요일)입니다.",examples:[["Đây là lần thứ hai tôi đến Việt Nam.","This is my second time in Vietnam."],["Phòng ở tầng thứ năm.","The room is on the fifth floor."]]}},
+{id:29, week:15, krTitle:"약속 잡기와 초대", viTitle:"Hẹn gặp & Mời",
+ vocab:[["Mời","Invite"],["Tiệc","Party"],["Rảnh","Free"],["Chắc chắn","Surely"],["Có lẽ","Maybe"],["Đồng ý","Agree"],["Từ chối","Decline"],["Vui","Happy / fun"]],
+ expr:[["Tôi muốn mời bạn đến bữa tiệc.","I'd like to invite you to a party."],["Bạn có thể đến không?","Can you come?"],["Chắc chắn tôi sẽ đến.","I'll definitely come."],["Cảm ơn vì lời mời.","Thanks for the invitation."]],
+ grammar:{title:"청유·제안 \"Hãy\" / 정중한 권유",explain:"'Hãy'는 명령문 외에 '~합시다/~하세요'라는 정중한 제안에도 쓰입니다. 초대할 때는 'Hãy đến ...' 형태로 자연스럽게 권할 수 있습니다.",examples:[["Hãy đến dự tiệc với chúng tôi.","Please come join our party."],["Hãy cùng đi ăn tối nhé.","Let's go have dinner together."]]}},
+{id:30, week:15, krTitle:"초대 심화 (확신 표현)", viTitle:"Mời nâng cao — Diễn đạt mức độ chắc chắn",
+ vocab:[["Có thể","Possibly/can"],["Chắc là","Probably"],["Nhất định","Definitely"],["Hy vọng","To hope"],["Xác nhận lại","Reconfirm"],["Vắng mặt","Absent"],["Tham dự","To attend"],["Cảm kích","Grateful/touched"]],
+ expr:[["Chắc là tôi sẽ đến muộn một chút.","I'll probably be a bit late."],["Tôi nhất định sẽ tham dự.","I will definitely attend."],["Rất tiếc, tôi có thể vắng mặt.","Unfortunately, I might be absent."],["Tôi rất cảm kích vì lời mời.","I'm very grateful for the invitation."]],
+ grammar:{title:"확신의 정도를 나타내는 부사",explain:"'Chắc chắn'(확실히) > 'Nhất định'(반드시) > 'Chắc là/Có lẽ'(아마도) 순으로 확신의 강도가 다릅니다. 문장 앞에 놓아 전체 진술의 확신도를 조절합니다.",examples:[["Chắc chắn là vậy.","That's definitely the case."],["Có lẽ trời sẽ mưa.","It might rain."]]}},
+{id:31, week:16, krTitle:"실전 회화 종합 연습", viTitle:"Luyện tập hội thoại tổng hợp",
+ vocab:[["Kết nối","To connect"],["Vì","Because"],["Nên","So / therefore"],["Nhưng","But"],["Ngoài ra","Besides"],["Tóm lại","In summary"],["Trải nghiệm","Experience"],["Ấn tượng","Impression"]],
+ expr:[["Vì trời mưa nên tôi ở nhà.","Because it rained, I stayed home."],["Món này ngon nhưng hơi đắt.","This dish is good but a bit pricey."],["Tóm lại, tôi rất thích chuyến đi này.","In summary, I really liked this trip."],["Đó là trải nghiệm đáng nhớ.","That was a memorable experience."]],
+ grammar:{title:"접속사 \"Vì...nên\" / \"Nhưng\" — 문장 연결",explain:"'Vì(원인)...nên(결과)'는 인과관계를, 'nhưng'(그러나)은 역접을 나타냅니다. 지금까지 배운 문형을 접속사로 이어 붙이면 훨씬 자연스러운 긴 문장을 만들 수 있습니다.",examples:[["Vì bận nên tôi không thể đến.","Because I'm busy, I can't come."],["Tôi thích món này nhưng hơi cay.","I like this dish but it's a bit spicy."]]}},
+{id:32, week:16, krTitle:"최종 복습 및 실전 평가", viTitle:"Ôn tập cuối khóa & Đánh giá hội thoại",
+ vocab:[["Tổng kết","Summary"],["Ôn tập","Review"],["Tiến bộ","Progress"],["Tự tin","Confident"],["Luyện tập","Practice"],["Kỹ năng","Skill"],["Thành công","Success"],["Chúc mừng","Congratulations"]],
+ expr:[["Tôi đã học được rất nhiều.","I've learned a lot."],["Tôi cảm thấy tự tin hơn.","I feel more confident."],["Cảm ơn thầy/cô đã dạy.","Thank you teacher for teaching."],["Hẹn gặp lại lần sau!","See you next time!"]],
+ grammar:{title:"16주 문법 총정리",explain:"là(be동사) · có phải...không(확인) · của(소유격) · đã/đang/sẽ(시제) · muốn/thích(희망·선호) · hơn/nhất(비교) · phải/cần/nên(의무) · nếu...thì(조건) · bị(수동) · vì...nên(인과) 등 16주간 배운 핵심 문형을 실전 대화에서 자유롭게 조합해 보세요.",examples:[["Vì đã luyện tập nhiều nên tôi tự tin hơn.","Because I practiced a lot, I feel more confident."],["Tôi nghĩ tôi có thể nói chuyện đơn giản bằng tiếng Việt.","I think I can have simple conversations in Vietnamese."]]}}
+];
+
+/* =====================  DATA: CHINESE NYT READING (16 sessions)  ===================== */
+const ZH_SESSIONS = [
+{id:1, week:1, section:"국제/미국", krTitle:"中俄印伊峰会：地缘博弈中，习近平手中的筹码", zhTitle:"中俄印伊峰会：地缘博弈中，习近平手中的筹码", date:"2026-08-31~09-01",
+ url:"https://www.google.com/search?q=site%3Acn.nytimes.com%20%E4%B8%AD%E4%BF%84%E5%8D%B0%E4%BC%8A%E5%B3%B0%E4%BC%9A%EF%BC%9A%E5%9C%B0%E7%BC%98%E5%8D%9A%E5%BC%88%E4%B8%AD%EF%BC%8C%E4%B9%A0%E8%BF%91%E5%B9%B3%E6%89%8B%E4%B8%AD%E7%9A%84%E7%AD%B9%E7%A0%81", exactUrl:false,
+ gloss:"러시아·인도·이란 등이 참여한 정상회의를 계기로, 최근 지정학적 갈등(무역·이란 문제 등) 속에서 중국이 얻고 있는 외교적 지렛대를 분석하는 기사로 보입니다.",
+ vocab:[["峰会","fēnghuì","정상회의"],["杠杆/筹码","gǎngǎn / chóumǎ","지렛대, 협상 카드"],["地缘政治","dìyuán zhèngzhì","지정학"],["博弈","bóyì","(전략적) 경쟁, 게임"],["盟友","méngyǒu","동맹국"],["制衡","zhìhéng","견제하다"],["多边主义","duōbiān zhǔyì","다자주의"],["战略自主","zhànlüè zìzhǔ","전략적 자율성"]],
+ expr:["在...的背景下 (~을 배경으로)","进一步巩固了... (~을 한층 공고히 했다)","为...提供了契机 (~에 계기를 제공했다)"],
+ discuss:["이 기사의 핵심 사건/주장은 무엇인가요? 한두 문장으로 중국어로 요약해보세요.","위 표현 패턴 중 하나를 활용해 자신의 의견을 한 문장으로 말해보세요."]},
+{id:2, week:2, section:"국제", krTitle:"中国还是美国？两场会议展示两种全球权力样本", zhTitle:"中国还是美国？两场会议展示两种全球权力样本", date:"2026-09-01",
+ url:"https://www.google.com/search?q=site%3Acn.nytimes.com%20%E4%B8%AD%E5%9B%BD%E8%BF%98%E6%98%AF%E7%BE%8E%E5%9B%BD%EF%BC%9F%E4%B8%A4%E5%9C%BA%E4%BC%9A%E8%AE%AE%E5%B1%95%E7%A4%BA%E4%B8%A4%E7%A7%8D%E5%85%A8%E7%90%83%E6%9D%83%E5%8A%9B%E6%A0%B7%E6%9C%AC", exactUrl:false,
+ gloss:"비슷한 시기에 열린 두 개의 국제회의(미국 주도 vs 중국 주도)를 비교하며, 세계 질서에서 두 강대국이 각각 어떤 방식으로 영향력을 과시하는지 다루는 기사로 보입니다.",
+ vocab:[["全球权力","quánqiú quánlì","글로벌 파워"],["展示","zhǎnshì","과시하다, 보여주다"],["竞争","jìngzhēng","경쟁"],["国际舞台","guójì wǔtái","국제 무대"],["软实力","ruǎn shílì","소프트파워"],["硬实力","yìng shílì","하드파워"],["主导","zhǔdǎo","주도하다"],["格局","géjú","(세력) 구도"]],
+ expr:["与此同时 (이와 동시에)","形成鲜明对比 (뚜렷한 대조를 이루다)","在国际舞台上扮演...角色 (국제무대에서 ~한 역할을 하다)"],
+ discuss:["이 기사의 핵심 사건/주장은 무엇인가요? 한두 문장으로 중국어로 요약해보세요.","위 표현 패턴 중 하나를 활용해 자신의 의견을 한 문장으로 말해보세요."]},
+{id:3, week:3, section:"중국/티베트", krTitle:"中国审查并处罚不当言论，以塑造西藏洪灾叙事，与尼泊尔形成对比", zhTitle:"中国审查并处罚不当言论，以塑造西藏洪灾叙事，与尼泊尔形成对比", date:"2026-09-01",
+ url:"https://www.google.com/search?q=site%3Acn.nytimes.com%20%E4%B8%AD%E5%9B%BD%E5%AE%A1%E6%9F%A5%E5%B9%B6%E5%A4%84%E7%BD%9A%E4%B8%8D%E5%BD%93%E8%A8%80%E8%AE%BA%EF%BC%8C%E4%BB%A5%E5%A1%91%E9%80%A0%E8%A5%BF%E8%97%8F%E6%B4%AA%E7%81%BE%E5%8F%99%E4%BA%8B%EF%BC%8C%E4%B8%8E%E5%B0%BC%E6%B3%8A%E5%B0%94%E5%BD%A2%E6%88%90%E5%AF%B9%E6%AF%94", exactUrl:false,
+ gloss:"티베트 지역 홍수 재해에 대한 중국 정부의 여론 통제·검열 방식을, 같은 시기 네팔의 재난 대응 방식과 대조하는 기사로 보입니다.",
+ vocab:[["审查","shěnchá","검열하다"],["叙事","xùshì","내러티브, 서사"],["洪灾","hóngzāi","홍수 재해"],["言论管控","yánlùn guǎnkòng","언론 통제"],["处罚","chǔfá","처벌하다"],["舆论","yúlùn","여론"],["透明度","tòumíngdù","투명성"],["灾情","zāiqíng","재해 상황"]],
+ expr:["与...形成对比 (~와 대조를 이루다)","试图塑造...形象 (~한 이미지를 만들려 하다)","引发外界质疑 (외부의 의문을 불러일으키다)"],
+ discuss:["이 기사의 핵심 사건/주장은 무엇인가요? 한두 문장으로 중국어로 요약해보세요.","위 표현 패턴 중 하나를 활용해 자신의 의견을 한 문장으로 말해보세요."]},
+{id:4, week:4, section:"미국/정치", krTitle:"G20会议上，贝森特指责中国以廉价商品冲击全球市场", zhTitle:"G20会议上，贝森特指责中国以廉价商品冲击全球市场", date:"2026-09-01",
+ url:"https://www.google.com/search?q=site%3Acn.nytimes.com%20G20%E4%BC%9A%E8%AE%AE%E4%B8%8A%EF%BC%8C%E8%B4%9D%E6%A3%AE%E7%89%B9%E6%8C%87%E8%B4%A3%E4%B8%AD%E5%9B%BD%E4%BB%A5%E5%BB%89%E4%BB%B7%E5%95%86%E5%93%81%E5%86%B2%E5%87%BB%E5%85%A8%E7%90%83%E5%B8%82%E5%9C%BA", exactUrl:false,
+ gloss:"G20 재무장관 회의에서 미국 재무장관이 중국의 저가 수출(공급 과잉)을 비판한 상황과, 이에 대한 각국의 반응을 다루는 경제 기사로 보입니다.",
+ vocab:[["指责","zhǐzé","비난하다"],["廉价出口","liánjià chūkǒu","저가 수출"],["产能过剩","chǎnnéng guòshèng","생산 과잉"],["贸易失衡","màoyì shīhéng","무역 불균형"],["保护主义","bǎohù zhǔyì","보호주의"],["关税","guānshuì","관세"],["市场冲击","shìchǎng chōngjī","시장 충격"],["达成共识","dáchéng gòngshí","합의에 이르다"]],
+ expr:["指责...为... (~을 ~라고 비난하다)","未能达成一致 (합의에 이르지 못하다)","加剧了...紧张关系 (~긴장을 심화시켰다)"],
+ discuss:["이 기사의 핵심 사건/주장은 무엇인가요? 한두 문장으로 중국어로 요약해보세요.","위 표현 패턴 중 하나를 활용해 자신의 의견을 한 문장으로 말해보세요."]},
+{id:5, week:5, section:"국제/중국", krTitle:"伊朗战事重塑中东联盟之际，习近平抵达埃及", zhTitle:"伊朗战事重塑中东联盟之际，习近平抵达埃及", date:"2026-09-02~03",
+ url:"https://cn.nytimes.com/china/20260903/china-egypt-xi-jinping-el-sisi/", exactUrl:true,
+ gloss:"이란을 둘러싼 중동 정세 변화 속에서 시진핑 주석이 이집트를 국빈 방문한 배경과 의미를 분석하는 기사로 보입니다.",
+ vocab:[["国事访问","guóshì fǎngwèn","국빈 방문"],["中东","Zhōngdōng","중동"],["重塑","chóngsù","재편하다"],["联盟","liánméng","동맹"],["战略伙伴","zhànlüè huǒbàn","전략적 파트너"],["地区局势","dìqū júshì","지역 정세"],["一带一路","Yídài Yílù","일대일로"],["外交突破","wàijiāo tūpò","외교적 돌파구"]],
+ expr:["之际 (~한 시점에)","标志着... (~을 상징하다/보여주다)","进一步扩大...影响力 (~영향력을 한층 확대하다)"],
+ discuss:["이 기사의 핵심 사건/주장은 무엇인가요? 한두 문장으로 중국어로 요약해보세요.","위 표현 패턴 중 하나를 활용해 자신의 의견을 한 문장으로 말해보세요."]},
+{id:6, week:6, section:"오피니언", krTitle:"无序的新世界即将到来，我们没有做好准备", zhTitle:"无序的新世界即将到来，我们没有做好准备", date:"2026-09-03",
+ url:"https://cn.nytimes.com/opinion/20260903/world-order-international-relations/", exactUrl:true,
+ gloss:"기존의 국제 질서가 흔들리고 다극화된 '무질서'의 시대로 접어들고 있으며, 세계가 이에 충분히 대비하지 못하고 있다는 오피니언(칼럼) 기사입니다.",
+ vocab:[["世界秩序","shìjiè zhìxù","세계 질서"],["无序","wúxù","무질서한"],["多极化","duōjíhuà","다극화"],["权力真空","quánlì zhēnkōng","권력 공백"],["不确定性","bùquèdìngxìng","불확실성"],["旧秩序","jiù zhìxù","구질서"],["新常态","xīn chángtài","뉴노멀"],["动荡","dòngdàng","혼란, 격변"]],
+ expr:["我们没有做好准备 (우리는 준비가 안 되어 있다)","正在经历深刻的变革 (깊은 변화를 겪고 있다)","难以预测 (예측하기 어렵다)"],
+ discuss:["이 기사의 핵심 사건/주장은 무엇인가요? 한두 문장으로 중국어로 요약해보세요.","위 표현 패턴 중 하나를 활용해 자신의 의견을 한 문장으로 말해보세요."]},
+{id:7, week:7, section:"미국/군사", krTitle:"美国海军舰队的后勤噩梦", zhTitle:"美国海军舰队的后勤噩梦", date:"2026-09-03",
+ url:"https://cn.nytimes.com/usa/20260903/iran-war-us-navy-carriers-supply/", exactUrl:true,
+ gloss:"중동 등지에 배치된 미 해군 함대가 겪고 있는 보급·병참 문제를 다루는 기사로, 장기 군사 배치가 미군 물류 체계에 주는 부담을 조명하는 것으로 보입니다.",
+ vocab:[["后勤","hòuqín","병참, 로지스틱스"],["舰队","jiànduì","함대"],["补给","bǔjǐ","보급"],["部署","bùshǔ","배치하다"],["航母","hángmǔ","항공모함"],["战备","zhànbèi","전투 준비태세"],["供应链","gōngyìngliàn","공급망"],["消耗","xiāohào","소모하다"]],
+ expr:["面临...压力 (~압박에 직면하다)","难以为继 (지속하기 어렵다)","暴露出...问题 (~문제를 드러내다)"],
+ discuss:["이 기사의 핵심 사건/주장은 무엇인가요? 한두 문장으로 중국어로 요약해보세요.","위 표현 패턴 중 하나를 활용해 자신의 의견을 한 문장으로 말해보세요."]},
+{id:8, week:8, section:"미국/정치", krTitle:"特朗普对伊朗已经套路用尽、无牌可打？", zhTitle:"特朗普对伊朗已经套路用尽、无牌可打？", date:"2026-09-03",
+ url:"https://cn.nytimes.com/usa/20260903/trump-iran-strait-of-hormuz/", exactUrl:true,
+ gloss:"트럼프 행정부의 대(對)이란 정책 수단이 소진되어 가고 있는지를 짚어보는 분석 기사로 보입니다 (호르무즈 해협 관련).",
+ vocab:[["套路","tàolù","수법, 패턴"],["无牌可打","wú pái kě dǎ","쓸 카드가 없다(관용구)"],["强硬立场","qiángyìng lìchǎng","강경한 입장"],["谈判筹码","tánpàn chóumǎ","협상 카드"],["制裁","zhìcái","제재"],["局势升级","júshì shēngjí","상황 격화"],["外交施压","wàijiāo shīyā","외교적 압박"],["僵局","jiāngjú","교착 상태"]],
+ expr:["已经...殆尽 (이미 거의 ~ 소진되다)","陷入僵局 (교착 상태에 빠지다)","下一步棋 (다음 수/전략)"],
+ discuss:["이 기사의 핵심 사건/주장은 무엇인가요? 한두 문장으로 중국어로 요약해보세요.","위 표현 패턴 중 하나를 활용해 자신의 의견을 한 문장으로 말해보세요."]},
+{id:9, week:9, section:"미국/정치", krTitle:"深入剖析特朗普第二任期：谁应对他最成功？", zhTitle:"深入剖析特朗普第二任期：谁应对他最成功？", date:"2026-09-03",
+ url:"https://cn.nytimes.com/usa/20260903/trump-regime-change-strike-wedding/", exactUrl:true,
+ gloss:"트럼프 2기 행정부를 다각도로 분석하며, 그를 상대로 가장 성공적으로 대응해 온 인물/국가가 누구인지 짚어보는 심층 분석 기사로 보입니다.",
+ vocab:[["剖析","pōuxī","심층 분석하다"],["任期","rènqī","임기"],["应对","yìngduì","대응하다"],["政治遗产","zhèngzhì yíchǎn","정치적 유산"],["支持率","zhīchílǜ","지지율"],["内阁","nèigé","내각"],["权力集中","quánlì jízhōng","권력 집중"],["反对派","fǎnduìpài","반대파"]],
+ expr:["从...角度来看 (~관점에서 보면)","被认为是... (~로 여겨지다)","取得了一定成效 (어느 정도 성과를 거두다)"],
+ discuss:["이 기사의 핵심 사건/주장은 무엇인가요? 한두 문장으로 중국어로 요약해보세요.","위 표현 패턴 중 하나를 활용해 자신의 의견을 한 문장으로 말해보세요."]},
+{id:10, week:10, section:"세계/인간사", krTitle:"尼泊尔洪灾中的\"奇迹\"绿房子", zhTitle:"尼泊尔洪灾中的\"奇迹\"绿房子", date:"2026-09-03",
+ url:"https://cn.nytimes.com/world/20260903/nepal-flood-miracle-house-dhunge-bazaar/", exactUrl:true,
+ gloss:"네팔 대홍수 속에서 유일하게 무너지지 않고 살아남은 한 초록색 집을 중심으로, 재난과 회복력을 다루는 휴먼 스토리 기사로 보입니다.",
+ vocab:[["洪灾","hóngzāi","홍수 재해"],["奇迹","qíjì","기적"],["幸存","xìngcún","생존하다"],["废墟","fèixū","폐허"],["重建","chóngjiàn","재건하다"],["韧性","rènxìng","회복탄력성"],["社区","shèqū","공동체"],["自然灾害","zìrán zāihài","자연재해"]],
+ expr:["在...的废墟中 (~의 폐허 속에서)","成为...的象征 (~의 상징이 되다)","展现出惊人的韧性 (놀라운 회복력을 보여주다)"],
+ discuss:["이 기사의 핵심 사건/주장은 무엇인가요? 한두 문장으로 중국어로 요약해보세요.","위 표현 패턴 중 하나를 활용해 자신의 의견을 한 문장으로 말해보세요."]},
+{id:11, week:11, section:"사회/부고", krTitle:"美国女权运动标志性人物斯泰纳姆去世，享年92岁", zhTitle:"美国女权运动标志性人物斯泰纳姆去世，享年92岁", date:"2026-09-03",
+ url:"https://cn.nytimes.com/obits/20260904/gloria-steinem-dead/", exactUrl:true,
+ gloss:"미국 여성운동을 상징하는 인물 글로리아 스타이넘의 별세를 알리며, 그의 생애와 사회적 영향을 조명하는 부고 기사로 보입니다.",
+ vocab:[["女权运动","nǚquán yùndòng","여성 인권 운동"],["标志性人物","biāozhìxìng rénwù","상징적 인물"],["逝世/去世","shìshì / qùshì","별세하다"],["享年","xiǎngnián","향년"],["先驱","xiānqū","선구자"],["平权","píngquán","평등권"],["遗产","yíchǎn","(정신적) 유산"],["悼念","dàoniàn","애도하다"]],
+ expr:["享年...岁 (향년 ~세로)","被誉为... (~로 칭송받다)","为...奠定了基础 (~에 기초를 다졌다)"],
+ discuss:["이 기사의 핵심 사건/주장은 무엇인가요? 한두 문장으로 중국어로 요약해보세요.","위 표현 패턴 중 하나를 활용해 자신의 의견을 한 문장으로 말해보세요."]},
+{id:12, week:12, section:"문화", krTitle:"如果这个世界上多一些马友友", zhTitle:"如果这个世界上多一些马友友", date:"2026-09-04",
+ url:"https://cn.nytimes.com/culture/20260904/yo-yo-ma-profile/", exactUrl:true,
+ gloss:"첼리스트 요요마의 음악 인생과 그가 세상에 주는 울림을 조명하는 문화 섹션의 인물 프로필 기사로 보입니다.",
+ vocab:[["大提琴家","dàtíqínjiā","첼리스트"],["演奏","yǎnzòu","연주하다"],["跨界合作","kuàjiè hézuò","크로스오버 협업"],["曲目","qǔmù","레퍼토리"],["感染力","gǎnrǎnlì","(감정적) 전달력"],["天赋","tiānfù","타고난 재능"],["传奇","chuánqí","전설(적인)"],["情感共鸣","qínggǎn gòngmíng","감정적 공명"]],
+ expr:["以...著称 (~으로 유명하다)","打动了无数听众 (수많은 청중을 감동시켰다)","不仅...更... (~할 뿐 아니라 더욱 ~하다)"],
+ discuss:["이 기사의 핵심 사건/주장은 무엇인가요? 한두 문장으로 중국어로 요약해보세요.","위 표현 패턴 중 하나를 활용해 자신의 의견을 한 문장으로 말해보세요."]},
+{id:13, week:13, section:"건강/과학", krTitle:"肾病患者靠移植猪肾生活九个月，直到接受人类肾脏移植", zhTitle:"肾病患者靠移植猪肾生活九个月，直到接受人类肾脏移植", date:"2026-09-04",
+ url:"https://cn.nytimes.com/health/20260904/pig-kidney-bridge-transplant/", exactUrl:true,
+ gloss:"돼지 신장을 '가교(브릿지) 이식'받아 9개월을 버틴 뒤 사람 신장 이식을 받은 환자 사례를 통해 이종장기이식 연구의 진전을 다루는 기사로 보입니다.",
+ vocab:[["器官移植","qìguān yízhí","장기 이식"],["猪肾","zhūshèn","돼지 신장"],["基因编辑","jīyīn biānjí","유전자 편집"],["免疫排斥","miǎnyì páichì","면역 거부반응"],["肾衰竭","shènshuāijié","신부전"],["桥接治疗","qiáojiē zhìliáo","브릿지(가교) 치료"],["临床试验","línchuáng shìyàn","임상시험"],["突破性进展","tūpòxìng jìnzhǎn","획기적 진전"]],
+ expr:["为...争取了时间 (~을 위해 시간을 벌어주다)","标志着...里程碑 (~의 이정표가 되다)","仍面临...挑战 (여전히 ~한 도전에 직면해 있다)"],
+ discuss:["이 기사의 핵심 사건/주장은 무엇인가요? 한두 문장으로 중국어로 요약해보세요.","위 표현 패턴 중 하나를 활용해 자신의 의견을 한 문장으로 말해보세요."]},
+{id:14, week:14, section:"기술", krTitle:"人工智能全面接管？为什么你应该更担心AI有多危险", zhTitle:"人工智能全面接管？为什么你应该更担心AI有多危险", date:"2026-09-04",
+ url:"https://cn.nytimes.com/technology/20260904/openai-hugging-face-hacking/", exactUrl:true,
+ gloss:"AI가 통제 불능 상태로 치달을 가능성과 관련 보안 위험(해킹 등)을 짚어보며, 사람들이 AI 위험성을 왜 더 진지하게 우려해야 하는지 다루는 기술 기사로 보입니다.",
+ vocab:[["人工智能","réngōng zhìnéng","인공지능"],["失控","shīkòng","통제 불능이 되다"],["网络攻击","wǎngluò gōngjī","사이버 공격"],["黑客","hēikè","해커"],["自主性","zìzhǔxìng","자율성"],["安全隐患","ānquán yǐnhuàn","안전상의 위험 요소"],["监管","jiānguǎn","규제/감독하다"],["数据安全","shùjù ānquán","데이터 보안"]],
+ expr:["越来越多的人担心... (점점 더 많은 사람이 ~을 우려한다)","存在...风险 (~한 위험이 존재한다)","亟需加强监管 (규제 강화가 시급하다)"],
+ discuss:["이 기사의 핵심 사건/주장은 무엇인가요? 한두 문장으로 중국어로 요약해보세요.","위 표현 패턴 중 하나를 활용해 자신의 의견을 한 문장으로 말해보세요."]},
+{id:15, week:15, section:"경제", krTitle:"史上最彻底重组：大众汽车计划额外裁员5万人", zhTitle:"史上最彻底重组：大众汽车计划额外裁员5万人", date:"2026-09-04",
+ url:"https://cn.nytimes.com/business/20260904/volkswagen-job-cuts/", exactUrl:true,
+ gloss:"폭스바겐이 사상 최대 규모의 구조조정을 발표하며 추가로 5만 명을 감원할 계획이라는 소식을 다루는 경제 기사로, 전기차 전환과 경쟁 심화가 배경으로 보입니다.",
+ vocab:[["重组","chóngzǔ","구조조정"],["裁员","cáiyuán","감원하다"],["工会","gōnghuì","노동조합"],["产能过剩","chǎnnéng guòshèng","생산 과잉"],["电动车转型","diàndòngchē zhuǎnxíng","전기차 전환"],["竞争力","jìngzhēnglì","경쟁력"],["成本削减","chéngběn xuējiǎn","비용 절감"],["股东","gǔdōng","주주"]],
+ expr:["计划裁员...人 (~명 감원 계획이다)","面临激烈竞争 (치열한 경쟁에 직면하다)","史上最...的 (역사상 가장 ~한)"],
+ discuss:["이 기사의 핵심 사건/주장은 무엇인가요? 한두 문장으로 중국어로 요약해보세요.","위 표현 패턴 중 하나를 활용해 자신의 의견을 한 문장으로 말해보세요."]},
+{id:16, week:16, section:"중국/문화", krTitle:"\"台湾馆\"引发政治风波：中国抵制韩国光州双年展", zhTitle:"\"台湾馆\"引发政治风波：中国抵制韩国光州双年展", date:"2026-09-04",
+ url:"https://cn.nytimes.com/china/20260904/china-taiwan-gwangju-biennale/", exactUrl:true,
+ gloss:"한국 광주비엔날레에서 '대만관' 명칭 사용을 둘러싸고 중국이 반발하며 전시 참여를 보이콧한 외교적 갈등을 다루는 기사로 보입니다.",
+ vocab:[["双年展","shuāngniánzhǎn","비엔날레"],["撤展","chèzhǎn","전시 철수하다"],["外交风波","wàijiāo fēngbō","외교적 파문"],["主权","zhǔquán","주권"],["策展团队","cèzhǎn tuánduì","전시 기획팀"],["抵制","dǐzhì","보이콧하다"],["敏感议题","mǐngǎn yìtí","민감한 사안"],["立场","lìchǎng","입장"]],
+ expr:["引发...风波 (~파문을 불러일으키다)","以...为由 (~을 이유로)","坚持...立场 (~입장을 고수하다)"],
+ discuss:["이 기사의 핵심 사건/주장은 무엇인가요? 한두 문장으로 중국어로 요약해보세요.","위 표현 패턴 중 하나를 활용해 자신의 의견을 한 문장으로 말해보세요."]}
+];
+
+/* =====================  APP LOGIC  ===================== */
+const VI_WORKBOOK_TASKS = [
+  "새 단어 8개 소리 내어 읽고 녹음하기",
+  "핵심 표현 4개로 나만의 문장 만들기",
+  "문법 포인트 읽고 예문 2개 따라 쓰기",
+  "워크북 해당 차시 연습문제 풀기",
+  "5분 회화 연습 (섀도잉 또는 역할극)"
+];
+
+const ZH_WORKBOOK_TASKS = [
+  "원문 기사 읽기 완료",
+  "예습 단어 8개 다 익히기",
+  "표현 패턴 확인 및 한 문장 만들어보기",
+  "읽은 후 질문 2개에 중국어로 답해보기"
+];
+
+const LANGS = {
+  vi: {
+    key: "vi",
+    flag: "🇻🇳",
+    label: "베트남어 회화",
+    hubSub: "회화 중심 · 32차시 · 16주",
+    course: {
+      title: "영어-베트남 회화 자가학습",
+      bookLines: [
+        "회화: Spoken Vietnamese for Beginners (Tuttle)",
+        "문법: Essential Vietnamese Grammar - Tri C. Tran (Tuttle)"
+      ],
+      totalSessions: 32,
+      totalWeeks: 16
+    },
+    sessions: VI_SESSIONS,
+    workbookTasks: VI_WORKBOOK_TASKS,
+    ttsLang: "vi-VN",
+    papagoSk: "vi",
+    hasGrammar: true,
+    hasReading: false
+  },
+  zh: {
+    key: "zh",
+    flag: "🇨🇳",
+    label: "중국어 리딩 (NYT)",
+    hubSub: "뉴스 리딩 중심 · 16차시 · 16주",
+    course: {
+      title: "纽约时报中文网 중고급 리딩 커리큘럼",
+      bookLines: [
+        "교재: 纽约时报中文网 (NYT 중문판) 실제 기사 16편 · 中高级"
+      ],
+      totalSessions: 16,
+      totalWeeks: 16
+    },
+    sessions: ZH_SESSIONS,
+    workbookTasks: ZH_WORKBOOK_TASKS,
+    ttsLang: "zh-CN",
+    papagoSk: "zh-CN",
+    hasGrammar: false,
+    hasReading: true
+  }
+};
+
+/* =====================  STATE  ===================== */
+let currentLang = null;      // "vi" | "zh" | null (null = hub screen)
+let currentTab = "home";
+let currentSessionId = null;
+let slowMode = false;
+
+function progressKey(langKey){ return "langstudy_progress_" + langKey + "_v1"; }
+function sheetUrlKey(langKey){ return "langstudy_sheet_url_" + langKey; }
+
+function loadProgress(langKey){
+  try{ return JSON.parse(localStorage.getItem(progressKey(langKey))) || {}; }catch(e){ return {}; }
+}
+function saveProgress(langKey, p){
+  try{ localStorage.setItem(progressKey(langKey), JSON.stringify(p)); }catch(e){}
+}
+function getSessionState(langKey, id){
+  const p = loadProgress(langKey);
+  return p[id] || {attended:false, vocabChecked:[], exprChecked:[], workbookChecked:[], completedAt:null};
+}
+function setSessionState(langKey, id, state){
+  const p = loadProgress(langKey);
+  p[id] = state;
+  saveProgress(langKey, p);
+}
+function isWorkbookComplete(lang, state){
+  return state.workbookChecked && state.workbookChecked.length === lang.workbookTasks.length;
+}
+function getSheetUrl(langKey){ return localStorage.getItem(sheetUrlKey(langKey)) || ""; }
+function setSheetUrl(langKey, url){ localStorage.setItem(sheetUrlKey(langKey), url); }
+
+function logToSheet(langKey, payload){
+  const url = getSheetUrl(langKey);
+  if(!url) return Promise.resolve({skipped:true});
+  payload.language = langKey;
+  return fetch(url, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {"Content-Type":"text/plain"},
+    body: JSON.stringify(payload)
+  }).then(()=>({ok:true})).catch(()=>({ok:false}));
+}
+
+/* =====================  PRONUNCIATION (Web Speech API + reliable fallback)  ===================== */
+// Voices are cached per BCP-47-ish prefix ("vi" / "zh") so both languages
+// can each find their best on-device voice independently.
+let voiceCache = { vi: null, zh: null };
+let anyVoice = { vi: false, zh: false };
+let _ttsKeepAlive = null; // guards against Chrome/Safari GC-cancels-utterance bug
+
+function refreshVoices(){
+  if(!('speechSynthesis' in window)) return;
+  const voices = speechSynthesis.getVoices();
+  if(!voices.length) return;
+  ["vi","zh"].forEach(prefix=>{
+    const matches = voices.filter(v =>
+      (v.lang && v.lang.toLowerCase().replace('_','-').startsWith(prefix)) ||
+      (v.name && v.name.toLowerCase().includes(prefix === "vi" ? "vietnam" : "chinese"))
+    );
+    anyVoice[prefix] = matches.length > 0;
+    voiceCache[prefix] = matches.find(v=>v.localService) || matches[0] || null;
+  });
+}
+if('speechSynthesis' in window){
+  refreshVoices();
+  speechSynthesis.onvoiceschanged = refreshVoices;
+  // Some Android WebViews / some desktop browsers never fire onvoiceschanged
+  // promptly, or only populate the voice list after a short delay — poll briefly.
+  let tries = 0;
+  const poll = setInterval(()=>{
+    tries++;
+    refreshVoices();
+    if((anyVoice.vi && anyVoice.zh) || tries > 10) clearInterval(poll);
+  }, 400);
+  // Keep the speech queue alive — some desktop browsers auto-pause after inactivity.
+  setInterval(()=>{ if(speechSynthesis.paused) speechSynthesis.resume(); }, 4000);
+}
+
+// Reliable fallback: open Naver Papago with the text pre-filled in a new tab,
+// so pronunciation always works even with no on-device voice for that language.
+function openPronunciationFallback(langKey, text){
+  const sk = LANGS[langKey].papagoSk;
+  const url = "https://papago.naver.com/?sk=" + sk + "&tk=ko&st=" + encodeURIComponent(text);
+  window.open(url, "_blank", "noopener");
+}
+
+function speak(langKey, text, btnEl, _isRetry){
+  const prefix = langKey === "zh" ? "zh" : "vi";
+  const canUseDeviceVoice = ('speechSynthesis' in window) && anyVoice[prefix];
+
+  if(!canUseDeviceVoice){
+    openPronunciationFallback(langKey, text);
+    return;
+  }
+
+  if(speechSynthesis.paused) speechSynthesis.resume();
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = LANGS[langKey].ttsLang;
+  u.voice = voiceCache[prefix];
+  u.rate = slowMode ? 0.55 : 0.85;
+  u.pitch = 1;
+  u.volume = 1;
+  _ttsKeepAlive = u; // prevent GC mid-utterance (iOS/desktop Safari & some Chrome builds)
+  if(btnEl){
+    document.querySelectorAll('.spk-btn.playing').forEach(b=>b.classList.remove('playing'));
+    btnEl.classList.add("playing");
+  }
+  u.onend = ()=>{ if(btnEl) btnEl.classList.remove("playing"); };
+  u.onerror = ()=>{
+    if(btnEl) btnEl.classList.remove("playing");
+    if(!_isRetry){
+      // Transient failure (common on first call after page load) — retry once.
+      setTimeout(()=> speak(langKey, text, btnEl, true), 250);
+    } else {
+      openPronunciationFallback(langKey, text);
+    }
+  };
+  speechSynthesis.speak(u);
+}
+
+function voiceWarningHtml(lang){
+  const prefix = lang.key === "zh" ? "zh" : "vi";
+  if(anyVoice[prefix]) return "";
+  const langName = lang.key === "zh" ? "중국어(zh-CN)" : "베트남어(vi-VN)";
+  return `<div class="voice-warning">
+    <b>이 기기에 ${langName} 음성이 설치되어 있지 않은 것 같아요.</b><br>
+    괜찮습니다 — 🔊 재생 버튼을 누르면 자동으로 <b>Papago 번역</b> 새 창이 열려 원어민 발음을 들을 수 있어요.<br><br>
+    노트북/PC 크롬(Chrome)에서는 보통 기본 내장 음성이 있어 바로 재생됩니다. 안 될 경우 설정 탭의 <b>🔍 음성 진단</b>으로 확인해보세요.<br>
+    · <b>iOS</b>: 설정 → 손쉬운 사용 → 음성 콘텐츠 → 목소리 → 해당 언어 다운로드<br>
+    · <b>Android</b>: 설정 → 일반 관리 → 언어 및 입력 → 텍스트 음성 변환 → Google TTS 엔진 → 해당 언어 설치
+  </div>`;
+}
+
+function diagnoseTTS(langKey){
+  if(!('speechSynthesis' in window)){
+    alert("이 브라우저는 음성 합성(Web Speech API)을 지원하지 않습니다. 최신 Chrome/Safari/Edge를 사용해보세요.");
+    return;
+  }
+  const voices = speechSynthesis.getVoices();
+  const prefix = langKey === "zh" ? "zh" : "vi";
+  const matches = voices.filter(v => v.lang && v.lang.toLowerCase().replace('_','-').startsWith(prefix));
+  let msg = "전체 음성 개수: " + voices.length + "개\n" + (langKey==="zh"?"중국어":"베트남어") + " 음성: " + matches.length + "개\n";
+  if(matches.length > 0){
+    msg += matches.map(v=>"- " + v.name + " (" + v.lang + ")").join("\n");
+  } else {
+    msg += "\n설치된 음성이 없어 재생 시 Papago 새 창으로 자동 대체됩니다.\n노트북/PC라면 Chrome 최신 버전에서 시도하면 대부분 내장 음성이 잡힙니다.\n\niOS는 무음 스위치(측면 스위치)가 켜져 있으면 소리가 안 날 수 있습니다.";
+  }
+  speak(langKey, langKey==="zh" ? "你好，这是一个语音测试。" : "Xin chào, đây là bài kiểm tra giọng nói.", null);
+  alert(msg);
+}
+
+/* =====================  NAVIGATION  ===================== */
+const topHeader = document.getElementById("topHeader");
+const mainView = document.getElementById("mainView");
+const tabbar = document.getElementById("tabbar");
+
+document.querySelectorAll("nav.tabbar button").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    currentTab = btn.dataset.tab;
+    currentSessionId = null;
+    document.querySelectorAll("nav.tabbar button").forEach(b=>b.classList.toggle("on", b===btn));
+    render();
+  });
+});
+
+function goToHub(){
+  currentLang = null;
+  currentSessionId = null;
+  tabbar.style.display = "none";
+  render();
+}
+function selectLang(key){
+  currentLang = key;
+  currentTab = "home";
+  currentSessionId = null;
+  tabbar.style.display = "flex";
+  document.querySelectorAll("nav.tabbar button").forEach(b=>b.classList.toggle("on", b.dataset.tab==="home"));
+  render();
+}
+function openSession(id){
+  currentSessionId = id;
+  render();
+}
+function backFromSession(){
+  currentSessionId = null;
+  render();
+}
+
+function langSwitchBtnHtml(){
+  return `<button class="lang-switch" id="langSwitchBtn">🔁 언어 변경</button>`;
+}
+function wireLangSwitchBtn(){
+  const el = document.getElementById("langSwitchBtn");
+  if(el) el.addEventListener("click", goToHub);
+}
+
+function render(){
+  if(currentLang === null){ renderHub(); return; }
+  if(currentSessionId){ renderSessionDetail(currentSessionId); return; }
+  if(currentTab==="home") renderHome();
+  else if(currentTab==="sessions") renderSessionList();
+  else renderSettings();
+}
+
+/* =====================  HUB (language picker)  ===================== */
+function overallStats(langKey){
+  const lang = LANGS[langKey];
+  const p = loadProgress(langKey);
+  let completed = 0, attended = 0;
+  lang.sessions.forEach(s=>{
+    const st = p[s.id];
+    if(st && isWorkbookComplete(lang, st)) completed++;
+    if(st && st.attended) attended++;
+  });
+  return {completed, attended, total: lang.sessions.length};
+}
+
+function renderHub(){
+  topHeader.innerHTML = `<h1>🗂️ 켈리의 언어 자가학습</h1>`;
+  const cardsHtml = Object.keys(LANGS).map(key=>{
+    const lang = LANGS[key];
+    const stats = overallStats(key);
+    return `<div class="hub-card" data-lang="${key}">
+      <div class="flag">${lang.flag}</div>
+      <div class="info">
+        <div class="name">${lang.label}</div>
+        <div class="sub">${lang.hubSub}</div>
+        <div class="mini-progress">${stats.completed}/${stats.total}차시 완료 · 출석 ${stats.attended}회</div>
+      </div>
+      <div class="chevron">›</div>
+    </div>`;
+  }).join("");
+
+  mainView.innerHTML = `
+    <div class="hub-intro">학습할 언어를 선택하세요. 두 과정 모두 같은 방식(어휘·표현·워크북 체크·구글시트 기록)으로 진행됩니다.</div>
+    ${cardsHtml}
+  `;
+  mainView.querySelectorAll(".hub-card").forEach(card=>{
+    card.addEventListener("click", ()=> selectLang(card.dataset.lang));
+  });
+}
+
+/* =====================  HOME (per-language)  ===================== */
+function nextSession(lang, langKey){
+  const p = loadProgress(langKey);
+  const found = lang.sessions.find(s=> !(p[s.id] && isWorkbookComplete(lang, p[s.id])) );
+  return found || lang.sessions[lang.sessions.length-1];
+}
+
+function sessionLabel(lang, s){
+  if(lang.key === "zh"){
+    return { main: s.zhTitle, sub: s.section + " · " + s.date };
+  }
+  return { main: s.krTitle, sub: s.viTitle };
+}
+
+function renderWeekOverview(lang, langKey){
+  const weeks = {};
+  lang.sessions.forEach(s=>{ (weeks[s.week] = weeks[s.week]||[]).push(s); });
+  const p = loadProgress(langKey);
+  let html = "";
+  Object.keys(weeks).forEach(w=>{
+    const list = weeks[w];
+    const doneCount = list.filter(s=> p[s.id] && isWorkbookComplete(lang, p[s.id])).length;
+    html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 2px;font-size:12.5px;color:var(--ink-dim);">
+      <span>${w}주차</span><span>${doneCount}/${list.length} 완료</span></div>`;
+  });
+  return html;
+}
+
+function renderHome(){
+  const lang = LANGS[currentLang];
+  topHeader.innerHTML = `<h1>${lang.flag} ${lang.label}</h1>${langSwitchBtnHtml()}`;
+  const stats = overallStats(currentLang);
+  const pct = Math.round((stats.completed/stats.total)*100);
+  const next = nextSession(lang, currentLang);
+  const nl = sessionLabel(lang, next);
+
+  mainView.innerHTML = `
+    <div class="hero-card">
+      <div class="course-tag">${lang.course.totalWeeks}주 · 주 2회 · 총 ${lang.course.totalSessions}차시</div>
+      <h2>${lang.course.title}</h2>
+      ${lang.course.bookLines.map(l=>`<div class="book">${l}</div>`).join("")}
+      <div class="hero-stats">
+        <div class="stat"><b>${stats.completed}/${stats.total}</b><span>워크북 완료</span></div>
+        <div class="stat"><b>${stats.attended}/${stats.total}</b><span>출석</span></div>
+        <div class="stat"><b>${pct}%</b><span>진도율</span></div>
+      </div>
+      <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    </div>
+
+    <div class="section-title">다음 학습 <small>탭하여 이어가기</small></div>
+    <div class="session-row" id="nextCard">
+      <div class="session-num">${next.id}</div>
+      <div class="session-body">
+        <div class="kr">${nl.main}</div>
+        <div class="vi">${nl.sub}</div>
+      </div>
+      <div class="chevron">›</div>
+    </div>
+
+    <div class="section-title">주차 개요 <small>${lang.course.totalSessions}차시 전체</small></div>
+    ${renderWeekOverview(lang, currentLang)}
+  `;
+  document.getElementById("nextCard").addEventListener("click", ()=>openSession(next.id));
+  wireLangSwitchBtn();
+}
+
+/* =====================  SESSION LIST  ===================== */
+function renderSessionList(){
+  const lang = LANGS[currentLang];
+  topHeader.innerHTML = `<h1>전체 ${lang.course.totalSessions}차시</h1>${langSwitchBtnHtml()}`;
+  const p = loadProgress(currentLang);
+  const weeks = {};
+  lang.sessions.forEach(s=>{ (weeks[s.week] = weeks[s.week]||[]).push(s); });
+  let html = "";
+  Object.keys(weeks).forEach(w=>{
+    html += `<div class="week-label">${w}주차</div>`;
+    weeks[w].forEach(s=>{
+      const st = p[s.id];
+      const done = st && isWorkbookComplete(lang, st);
+      const attended = st && st.attended;
+      let stateLabel = "미시작";
+      if(done) stateLabel = "완료 ✓";
+      else if(attended) stateLabel = "출석함";
+      const lbl = sessionLabel(lang, s);
+      html += `
+        <div class="session-row ${done?'done':''}" data-id="${s.id}">
+          <div class="session-num">${s.id}</div>
+          <div class="session-body">
+            <div class="kr">${lbl.main}</div>
+            <div class="vi">${lbl.sub}</div>
+          </div>
+          <div class="session-state">${stateLabel}</div>
+          <div class="chevron">›</div>
+        </div>`;
+    });
+  });
+  mainView.innerHTML = html;
+  mainView.querySelectorAll(".session-row").forEach(row=>{
+    row.addEventListener("click", ()=> openSession(parseInt(row.dataset.id)));
+  });
+  wireLangSwitchBtn();
+}
+
+/* =====================  SESSION DETAIL  ===================== */
+function parseZhExpr(raw){
+  const m = raw.match(/^(.*?)\s*\(([^()]*)\)\s*$/);
+  if(m) return {main: m[1].trim(), sub: m[2].trim()};
+  return {main: raw, sub: ""};
+}
+
+function renderSessionDetail(id){
+  const lang = LANGS[currentLang];
+  const s = lang.sessions.find(x=>x.id===id);
+  const state = getSessionState(currentLang, id);
+  const lbl = sessionLabel(lang, s);
+
+  topHeader.innerHTML = `<div class="back" id="backBtn">‹</div><h1>${s.week}주차 · ${s.id}차시</h1>${langSwitchBtnHtml()}`;
+  document.getElementById("backBtn").addEventListener("click", backFromSession);
+
+  const vocabHtml = s.vocab.map((v,i)=>{
+    const checked = state.vocabChecked.includes(i);
+    const pinyinRow = lang.key === "zh" ? `<div class="pinyin">${v[1]}</div>` : "";
+    const meaning = lang.key === "zh" ? v[2] : v[1];
+    return `<div class="vocab-card ${checked?'checked':''}" data-type="vocab" data-i="${i}">
+      <div><div class="vi">${v[0]}</div>${pinyinRow}<div class="en">${meaning}</div></div>
+      <button class="spk-btn" data-speak-kind="vocab" data-speak-i="${i}" aria-label="발음 듣기">🔊</button>
+    </div>`;
+  }).join("");
+
+  const exprHtml = s.expr.map((e,i)=>{
+    const checked = state.exprChecked.includes(i);
+    const parsed = lang.key === "zh" ? parseZhExpr(e) : {main:e[0], sub:e[1]};
+    return `<div class="expr-item ${checked?'checked':''}" data-type="expr" data-i="${i}">
+      <div><div class="vi">${parsed.main}</div><div class="en">${parsed.sub}</div></div>
+      <button class="spk-btn" data-speak-kind="expr" data-speak-i="${i}" aria-label="발음 듣기">🔊</button>
+    </div>`;
+  }).join("");
+
+  const wbHtml = lang.workbookTasks.map((t,i)=>{
+    const checked = state.workbookChecked.includes(i);
+    return `<div class="workbook-item ${checked?'checked':''}" data-i="${i}">
+      <div class="box">${checked?'✓':''}</div><span>${t}</span>
+    </div>`;
+  }).join("");
+
+  const complete = isWorkbookComplete(lang, state);
+
+  const grammarBlockHtml = (lang.hasGrammar && s.grammar) ? `
+    <div class="block">
+      <div class="block-head"><h3>오늘의 문법</h3><span class="count">📘</span></div>
+      <div class="grammar-card">
+        <div class="grammar-title">${s.grammar.title}</div>
+        <div class="grammar-explain">${s.grammar.explain}</div>
+        <div class="grammar-examples">
+          ${s.grammar.examples.map((ex,i) => `<div class="grammar-ex">
+            <div><div class="vi">${ex[0]}</div><div class="en">${ex[1]}</div></div>
+            <button class="spk-btn" data-speak-kind="grammar" data-speak-i="${i}" aria-label="발음 듣기">🔊</button>
+          </div>`).join("")}
+        </div>
+      </div>
+    </div>` : "";
+
+  const readingBlockHtml = (lang.hasReading) ? `
+    <div class="reading-card">
+      <div class="gloss">📝 <b>주제 요약(추정)</b> — ${s.gloss}</div>
+      <a class="src-link" href="${s.url}" target="_blank" rel="noopener">${s.exactUrl ? "🔗 원문 기사 열기 (cn.nytimes.com)" : "🔍 구글에서 cn.nytimes.com 내 기사 검색 (정확한 링크 미확인)"}</a>
+    </div>` : "";
+
+  const discussBlockHtml = (lang.hasReading && s.discuss) ? `
+    <div class="block">
+      <div class="block-head"><h3>읽은 후 생각해보기</h3></div>
+      <ol class="discuss-list">${s.discuss.map(d=>`<li>${d}</li>`).join("")}</ol>
+    </div>` : "";
+
+  mainView.innerHTML = `
+    <div class="chip">${s.week}주차 · ${s.id}/${lang.course.totalSessions}차시</div>
+    <h2 class="session-title">${lbl.main}</h2>
+    <div class="session-title-vi">${lbl.sub}</div>
+
+    ${readingBlockHtml}
+    ${voiceWarningHtml(lang)}
+    <div class="rate-toggle ${slowMode?'on':''}" id="rateToggle">🐢 느리게 재생 ${slowMode? '(켜짐)':'(꺼짐)'}</div>
+
+    <div class="attend-row">
+      <button class="btn ${state.attended?'active':''}" id="attendBtn">${state.attended? '출석 ✓' : '수업 출석 체크'}</button>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><h3>외워야 할 단어</h3><span class="count" id="vocabCount">${state.vocabChecked.length}/${s.vocab.length}</span></div>
+      <div class="vocab-grid">${vocabHtml}</div>
+    </div>
+
+    ${grammarBlockHtml}
+
+    <div class="block">
+      <div class="block-head"><h3>핵심 표현</h3><span class="count" id="exprCount">${state.exprChecked.length}/${s.expr.length}</span></div>
+      ${exprHtml}
+    </div>
+
+    ${discussBlockHtml}
+
+    <div class="block">
+      <div class="block-head"><h3>워크북 체크리스트</h3><span class="count" id="wbCount">${state.workbookChecked.length}/${lang.workbookTasks.length}</span></div>
+      ${wbHtml}
+    </div>
+
+    <button class="btn primary" id="completeBtn" ${complete? '' : 'disabled'}>
+      ${complete? (state.completedAt ? '이 차시 완료됨 · 다시 저장' : '이 차시 완료 저장하기') : '워크북을 모두 체크하면 저장할 수 있어요'}
+    </button>
+    <div class="save-banner" id="saveBanner">${state.completedAt ? '마지막 저장: '+new Date(state.completedAt).toLocaleString('ko-KR') : (getSheetUrl(currentLang)? '구글시트 연동됨' : '구글시트 미연동 — 설정 탭에서 연결하세요')}</div>
+  `;
+  wireLangSwitchBtn();
+
+  document.getElementById("attendBtn").addEventListener("click", ()=>{
+    state.attended = !state.attended;
+    setSessionState(currentLang, id, state);
+    renderSessionDetail(id);
+  });
+
+  document.getElementById("rateToggle").addEventListener("click", ()=>{
+    slowMode = !slowMode;
+    renderSessionDetail(id);
+  });
+
+  mainView.querySelectorAll('.spk-btn').forEach(btn=>{
+    btn.addEventListener("click", (ev)=>{
+      ev.stopPropagation();
+      const kind = btn.dataset.speakKind;
+      const i = parseInt(btn.dataset.speakI);
+      let text;
+      if(kind === "vocab") text = s.vocab[i][0];
+      else if(kind === "grammar") text = s.grammar.examples[i][0];
+      else { // expr
+        text = lang.key === "zh" ? parseZhExpr(s.expr[i]).main : s.expr[i][0];
+      }
+      speak(currentLang, text, btn);
+    });
+  });
+
+  mainView.querySelectorAll('[data-type="vocab"]').forEach(el=>{
+    el.addEventListener("click", ()=>{
+      const i = parseInt(el.dataset.i);
+      const idx = state.vocabChecked.indexOf(i);
+      if(idx>-1) state.vocabChecked.splice(idx,1); else state.vocabChecked.push(i);
+      setSessionState(currentLang, id, state);
+      renderSessionDetail(id);
+    });
+  });
+  mainView.querySelectorAll('[data-type="expr"]').forEach(el=>{
+    el.addEventListener("click", ()=>{
+      const i = parseInt(el.dataset.i);
+      const idx = state.exprChecked.indexOf(i);
+      if(idx>-1) state.exprChecked.splice(idx,1); else state.exprChecked.push(i);
+      setSessionState(currentLang, id, state);
+      renderSessionDetail(id);
+    });
+  });
+  mainView.querySelectorAll('.workbook-item').forEach(el=>{
+    el.addEventListener("click", ()=>{
+      const i = parseInt(el.dataset.i);
+      const idx = state.workbookChecked.indexOf(i);
+      if(idx>-1) state.workbookChecked.splice(idx,1); else state.workbookChecked.push(i);
+      setSessionState(currentLang, id, state);
+      renderSessionDetail(id);
+    });
+  });
+
+  const completeBtn = document.getElementById("completeBtn");
+  completeBtn.addEventListener("click", ()=>{
+    if(!isWorkbookComplete(lang, state)) return;
+    state.completedAt = new Date().toISOString();
+    setSessionState(currentLang, id, state);
+    const banner = document.getElementById("saveBanner");
+    banner.textContent = "저장 중...";
+    logToSheet(currentLang, {
+      timestamp: state.completedAt,
+      session: s.id,
+      week: s.week,
+      title: lbl.main,
+      subtitle: lbl.sub,
+      attended: state.attended,
+      vocabDone: state.vocabChecked.length + "/" + s.vocab.length,
+      exprDone: state.exprChecked.length + "/" + s.expr.length,
+      workbookComplete: true
+    }).then(res=>{
+      banner.textContent = getSheetUrl(currentLang)
+        ? "구글시트에 기록되었습니다 · " + new Date().toLocaleString('ko-KR')
+        : "로컬에 저장됨 (구글시트 미연동) · " + new Date().toLocaleString('ko-KR');
+    });
+  });
+}
+
+/* =====================  SETTINGS  ===================== */
+function renderSettings(){
+  const lang = LANGS[currentLang];
+  topHeader.innerHTML = `<h1>설정</h1>${langSwitchBtnHtml()}`;
+  const stats = overallStats(currentLang);
+  const url = getSheetUrl(currentLang);
+  mainView.innerHTML = `
+    <div class="section-title" style="margin-top:0;">${lang.flag} ${lang.label} · 구글시트 연동 <small>${url ? '연결됨' : '미연결'}</small></div>
+    <span class="status-pill ${url?'ok':'off'}">${url ? '✓ Web App URL 등록됨' : '아직 연결 안 됨'}</span>
+
+    <div class="field" style="margin-top:16px;">
+      <label>Apps Script Web App URL</label>
+      <input type="text" id="sheetUrlInput" placeholder="https://script.google.com/macros/s/.../exec" value="${url}">
+    </div>
+    <div class="help-text" style="margin-bottom:14px;">베트남어·중국어를 같은 시트에 기록하려면 같은 URL을 두 언어 모두에 입력하세요. 기록에는 language 필드(vi/zh)가 함께 전송되어 구분할 수 있습니다.</div>
+    <button class="btn primary" id="saveUrlBtn" style="width:100%;">URL 저장</button>
+    <button class="btn" id="testBtn" style="width:100%; margin-top:10px;">테스트 기록 전송</button>
+    <div class="save-banner" id="settingsBanner"></div>
+
+    <div class="section-title">음성(TTS) 진단</div>
+    <button class="btn" id="diagBtn" style="width:100%;">🔍 ${lang.label} 음성 진단 + 테스트 재생</button>
+    <div class="help-text" style="margin-top:8px;">기기에 설치된 음성 목록을 확인하고 테스트 문장을 재생합니다. 음성이 없으면 재생 버튼에서 자동으로 Papago 새 창이 열립니다.</div>
+
+    <div class="section-title">연동 설정 방법</div>
+    <div class="step"><div class="n">1</div><p>구글시트를 새로 만들고 (예: "${lang.label} 학습 기록"), 상단 메뉴에서 <b>확장 프로그램 → Apps Script</b>를 엽니다.</p></div>
+    <div class="step"><div class="n">2</div><p>아래 코드를 전체 붙여넣기 하고 저장합니다.</p></div>
+    <pre class="code" id="scriptCode">function doPost(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('Log') || ss.insertSheet('Log');
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(['기록시각','언어','차시','주차','제목','부제목','출석','단어','표현','워크북완료']);
+  }
+  var data = JSON.parse(e.postData.contents);
+  sheet.appendRow([
+    data.timestamp, data.language, data.session, data.week, data.title, data.subtitle,
+    data.attended, data.vocabDone, data.exprDone, data.workbookComplete
+  ]);
+  return ContentService.createTextOutput(JSON.stringify({status:'ok'}))
+    .setMimeType(ContentService.MimeType.JSON);
+}</pre>
+    <div class="step" style="margin-top:16px;"><div class="n">3</div><p>우측 상단 <b>배포 → 새 배포</b> 선택 → 유형 "웹 앱" → 액세스 권한 <b>"모든 사용자"</b>, 실행 계정 <b>"나"</b>로 설정 후 배포합니다.</p></div>
+    <div class="step"><div class="n">4</div><p>발급된 웹 앱 URL(...../exec)을 복사해서 위 입력창에 붙여넣고 저장하세요.</p></div>
+
+    <div class="section-title">데이터 초기화</div>
+    <button class="btn" id="resetBtn" style="width:100%; color:var(--lacquer);">${lang.label} 진도만 초기화</button>
+    <div class="help-text" style="margin-top:14px;">${lang.label} 진도: 워크북 완료 ${stats.completed}/${stats.total} · 출석 ${stats.attended}/${stats.total}</div>
+  `;
+  wireLangSwitchBtn();
+
+  document.getElementById("saveUrlBtn").addEventListener("click", ()=>{
+    const v = document.getElementById("sheetUrlInput").value.trim();
+    setSheetUrl(currentLang, v);
+    document.getElementById("settingsBanner").textContent = v ? "저장되었습니다." : "URL이 비어 있습니다.";
+    renderSettings();
+  });
+  document.getElementById("testBtn").addEventListener("click", ()=>{
+    document.getElementById("settingsBanner").textContent = "전송 중...";
+    logToSheet(currentLang, {
+      timestamp: new Date().toISOString(), session:"TEST", week:"-",
+      title:"연동 테스트", subtitle:"Test", attended:true,
+      vocabDone:"-", exprDone:"-", workbookComplete:"TEST"
+    }).then(()=>{
+      document.getElementById("settingsBanner").textContent = getSheetUrl(currentLang)
+        ? "테스트 요청을 전송했습니다. 시트의 'Log' 탭을 확인하세요."
+        : "URL을 먼저 저장하세요.";
+    });
+  });
+  document.getElementById("diagBtn").addEventListener("click", ()=> diagnoseTTS(currentLang));
+  document.getElementById("resetBtn").addEventListener("click", ()=>{
+    if(confirm(lang.label + " 진도가 초기화됩니다. 계속할까요?")){
+      localStorage.removeItem(progressKey(currentLang));
+      renderSettings();
+    }
+  });
+}
+
+/* =====================  INIT  ===================== */
+render();
+
+</script>
+</body>
+</html>
