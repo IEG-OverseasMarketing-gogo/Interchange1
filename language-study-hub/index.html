@@ -231,6 +231,25 @@
     background:var(--bg-elev); color:var(--ink); font-size:13.5px; font-family:var(--font-body);
   }
   .field input::placeholder{color:var(--ink-faint);}
+  .field textarea{
+    width:100%; padding:12px 13px; border-radius:10px; border:1px solid var(--line);
+    background:var(--bg-elev); color:var(--ink); font-size:13.5px; font-family:var(--font-body);
+    min-height:64px; resize:vertical;
+  }
+  .field textarea::placeholder{color:var(--ink-faint);}
+
+  .rating-row{display:flex; gap:7px;}
+  .rating-btn{
+    flex:1; padding:11px 3px; border-radius:12px; border:1px solid var(--line);
+    background:var(--bg-card); font-size:19px; text-align:center; cursor:pointer;
+  }
+  .rating-btn .lbl{display:block; font-size:9px; margin-top:4px; color:var(--ink-faint); font-weight:600; line-height:1.3;}
+  .rating-btn.active{border-color:var(--jade); background:var(--jade-dim);}
+
+  table.history{width:100%; border-collapse:collapse; font-size:12px; margin-top:4px;}
+  table.history th, table.history td{border:1px solid var(--line); padding:7px 6px; text-align:center;}
+  table.history th{background:var(--bg-elev); color:var(--ink-dim);}
+
   .help-text{font-size:12px; color:var(--ink-faint); line-height:1.6; margin-top:6px;}
   pre.code{
     background:#0f1a1d; border:1px solid var(--line); border-radius:12px; padding:14px;
@@ -612,7 +631,7 @@ let currentSessionId = null;
 let slowMode = false;
 
 function progressKey(langKey){ return "langstudy_progress_" + langKey + "_v1"; }
-function sheetUrlKey(langKey){ return "langstudy_sheet_url_" + langKey; }
+const SHEET_URL_KEY = "langstudy_sheet_url_shared";
 
 function loadProgress(langKey){
   try{ return JSON.parse(localStorage.getItem(progressKey(langKey))) || {}; }catch(e){ return {}; }
@@ -622,7 +641,7 @@ function saveProgress(langKey, p){
 }
 function getSessionState(langKey, id){
   const p = loadProgress(langKey);
-  return p[id] || {attended:false, vocabChecked:[], exprChecked:[], workbookChecked:[], completedAt:null};
+  return p[id] || {attended:false, vocabChecked:[], exprChecked:[], workbookChecked:[], completedAt:null, rating:null, strengths:"", improvement:""};
 }
 function setSessionState(langKey, id, state){
   const p = loadProgress(langKey);
@@ -632,11 +651,32 @@ function setSessionState(langKey, id, state){
 function isWorkbookComplete(lang, state){
   return state.workbookChecked && state.workbookChecked.length === lang.workbookTasks.length;
 }
-function getSheetUrl(langKey){ return localStorage.getItem(sheetUrlKey(langKey)) || ""; }
-function setSheetUrl(langKey, url){ localStorage.setItem(sheetUrlKey(langKey), url); }
+function canSubmitSession(lang, state){
+  return isWorkbookComplete(lang, state) && state.rating !== null && state.rating !== undefined;
+}
+const RATINGS = [
+  {v:1, emoji:"😣", label:"많이 어려웠음"},
+  {v:2, emoji:"😕", label:"조금 힘들었음"},
+  {v:3, emoji:"🙂", label:"보통"},
+  {v:4, emoji:"😀", label:"잘 이해함"},
+  {v:5, emoji:"🤩", label:"수월했음"}
+];
+
+function historyKey(langKey){ return "langstudy_history_" + langKey; }
+function getHistory(langKey){
+  try{ return JSON.parse(localStorage.getItem(historyKey(langKey))) || []; }catch(e){ return []; }
+}
+function pushHistory(langKey, record){
+  const hist = getHistory(langKey);
+  hist.push(record);
+  try{ localStorage.setItem(historyKey(langKey), JSON.stringify(hist)); }catch(e){}
+}
+
+function getSheetUrl(){ return localStorage.getItem(SHEET_URL_KEY) || ""; }
+function setSheetUrl(url){ localStorage.setItem(SHEET_URL_KEY, url); }
 
 function logToSheet(langKey, payload){
-  const url = getSheetUrl(langKey);
+  const url = getSheetUrl();
   if(!url) return Promise.resolve({skipped:true});
   payload.language = langKey;
   return fetch(url, {
@@ -993,6 +1033,9 @@ function renderSessionDetail(id){
   }).join("");
 
   const complete = isWorkbookComplete(lang, state);
+  const canSubmit = canSubmitSession(lang, state);
+
+  const ratingRowHtml = RATINGS.map(r=>`<div class="rating-btn ${state.rating===r.v?'active':''}" data-rating="${r.v}">${r.emoji}<span class="lbl">${r.label}</span></div>`).join("");
 
   const grammarBlockHtml = (lang.hasGrammar && s.grammar) ? `
     <div class="block">
@@ -1009,11 +1052,19 @@ function renderSessionDetail(id){
       </div>
     </div>` : "";
 
-  const readingBlockHtml = (lang.hasReading) ? `
+  const readingBlockHtml = (lang.hasReading) ? (()=>{
+    const searchUrl = "https://www.google.com/search?q=" + encodeURIComponent("site:cn.nytimes.com " + s.zhTitle);
+    const directLinkHtml = s.exactUrl
+      ? `<a class="src-link" href="${s.url}" target="_blank" rel="noopener">🔗 원문 기사 열기 (cn.nytimes.com)</a>`
+      : "";
+    return `
     <div class="reading-card">
       <div class="gloss">📝 <b>주제 요약(추정)</b> — ${s.gloss}</div>
-      <a class="src-link" href="${s.url}" target="_blank" rel="noopener">${s.exactUrl ? "🔗 원문 기사 열기 (cn.nytimes.com)" : "🔍 구글에서 cn.nytimes.com 내 기사 검색 (정확한 링크 미확인)"}</a>
-    </div>` : "";
+      ${directLinkHtml}
+      <div><a class="src-link" href="${searchUrl}" target="_blank" rel="noopener">🔍 구글에서 이 기사 검색해서 찾기</a></div>
+      <div class="help-text" style="margin-top:8px;">cn.nytimes.com은 구독제 사이트라 지역·로그인 상태에 따라 접속이 막히거나 링크가 바뀔 수 있어요. 안 열리면 위 검색 링크로 제목을 그대로 검색해서 원문(또는 같은 소식을 다룬 다른 매체 기사)을 찾아 읽으시면 됩니다.</div>
+    </div>`;
+  })() : "";
 
   const discussBlockHtml = (lang.hasReading && s.discuss) ? `
     <div class="block">
@@ -1053,10 +1104,27 @@ function renderSessionDetail(id){
       ${wbHtml}
     </div>
 
-    <button class="btn primary" id="completeBtn" ${complete? '' : 'disabled'}>
-      ${complete? (state.completedAt ? '이 차시 완료됨 · 다시 저장' : '이 차시 완료 저장하기') : '워크북을 모두 체크하면 저장할 수 있어요'}
+    <div class="block">
+      <div class="block-head"><h3>오늘의 이해도</h3></div>
+      <div class="rating-row" id="ratingRow">${ratingRowHtml}</div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><h3>자가 평가</h3></div>
+      <div class="field">
+        <label>👍 오늘 잘한 점</label>
+        <textarea id="strengthsInput" placeholder="예: 새 단어 습득이 빨라졌어요">${state.strengths || ""}</textarea>
+      </div>
+      <div class="field">
+        <label>🔧 더 학습이 필요한 점</label>
+        <textarea id="improvementInput" placeholder="예: 문장이 길어지면 구조 파악이 어려워요">${state.improvement || ""}</textarea>
+      </div>
+    </div>
+
+    <button class="btn primary" id="completeBtn" ${canSubmit? '' : 'disabled'}>
+      ${canSubmit? (state.completedAt ? '이 차시 완료됨 · 다시 저장' : '이 차시 완료 저장하기') : (!complete ? '워크북을 모두 체크하면 저장할 수 있어요' : '오늘의 이해도를 선택하면 저장할 수 있어요')}
     </button>
-    <div class="save-banner" id="saveBanner">${state.completedAt ? '마지막 저장: '+new Date(state.completedAt).toLocaleString('ko-KR') : (getSheetUrl(currentLang)? '구글시트 연동됨' : '구글시트 미연동 — 설정 탭에서 연결하세요')}</div>
+    <div class="save-banner" id="saveBanner">${state.completedAt ? '마지막 저장: '+new Date(state.completedAt).toLocaleString('ko-KR') : (getSheetUrl()? '구글시트 연동됨' : '구글시트 미연동 — 설정 탭에서 연결하세요')}</div>
   `;
   wireLangSwitchBtn();
 
@@ -1069,6 +1137,24 @@ function renderSessionDetail(id){
   document.getElementById("rateToggle").addEventListener("click", ()=>{
     slowMode = !slowMode;
     renderSessionDetail(id);
+  });
+
+  document.querySelectorAll('.rating-btn').forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      state.rating = parseInt(btn.dataset.rating);
+      setSessionState(currentLang, id, state);
+      renderSessionDetail(id);
+    });
+  });
+
+  // Text areas: save on input WITHOUT re-rendering, so typing doesn't lose focus.
+  document.getElementById("strengthsInput").addEventListener("input", (ev)=>{
+    state.strengths = ev.target.value;
+    setSessionState(currentLang, id, state);
+  });
+  document.getElementById("improvementInput").addEventListener("input", (ev)=>{
+    state.improvement = ev.target.value;
+    setSessionState(currentLang, id, state);
   });
 
   mainView.querySelectorAll('.spk-btn').forEach(btn=>{
@@ -1116,9 +1202,16 @@ function renderSessionDetail(id){
 
   const completeBtn = document.getElementById("completeBtn");
   completeBtn.addEventListener("click", ()=>{
-    if(!isWorkbookComplete(lang, state)) return;
+    if(!canSubmitSession(lang, state)) return;
     state.completedAt = new Date().toISOString();
     setSessionState(currentLang, id, state);
+    pushHistory(currentLang, {
+      date: state.completedAt.slice(0,10),
+      week: s.week,
+      session: s.id,
+      pct: 100,
+      rating: state.rating
+    });
     const banner = document.getElementById("saveBanner");
     banner.textContent = "저장 중...";
     logToSheet(currentLang, {
@@ -1130,9 +1223,11 @@ function renderSessionDetail(id){
       attended: state.attended,
       vocabDone: state.vocabChecked.length + "/" + s.vocab.length,
       exprDone: state.exprChecked.length + "/" + s.expr.length,
-      workbookComplete: true
+      rating: state.rating,
+      strengths: state.strengths || "",
+      improvement: state.improvement || ""
     }).then(res=>{
-      banner.textContent = getSheetUrl(currentLang)
+      banner.textContent = getSheetUrl()
         ? "구글시트에 기록되었습니다 · " + new Date().toLocaleString('ko-KR')
         : "로컬에 저장됨 (구글시트 미연동) · " + new Date().toLocaleString('ko-KR');
     });
@@ -1144,43 +1239,53 @@ function renderSettings(){
   const lang = LANGS[currentLang];
   topHeader.innerHTML = `<h1>설정</h1>${langSwitchBtnHtml()}`;
   const stats = overallStats(currentLang);
-  const url = getSheetUrl(currentLang);
+  const url = getSheetUrl();
+  const hist = getHistory(currentLang).slice(-8).reverse();
+  const historyHtml = hist.length === 0
+    ? `<tr><td colspan="4" style="text-align:center; color:var(--ink-faint); padding:14px;">아직 기록이 없어요</td></tr>`
+    : hist.map(h=>`<tr><td>${h.date}</td><td>${h.week}주 · ${h.session}차시</td><td>${h.pct}%</td><td>${'⭐'.repeat(h.rating||0)}</td></tr>`).join("");
+
   mainView.innerHTML = `
-    <div class="section-title" style="margin-top:0;">${lang.flag} ${lang.label} · 구글시트 연동 <small>${url ? '연결됨' : '미연결'}</small></div>
+    <div class="section-title" style="margin-top:0;">구글시트 연동 (베트남어·중국어 공용) <small>${url ? '연결됨' : '미연결'}</small></div>
     <span class="status-pill ${url?'ok':'off'}">${url ? '✓ Web App URL 등록됨' : '아직 연결 안 됨'}</span>
 
     <div class="field" style="margin-top:16px;">
-      <label>Apps Script Web App URL</label>
+      <label>Apps Script Web App URL (하나만 입력, 두 언어 공용)</label>
       <input type="text" id="sheetUrlInput" placeholder="https://script.google.com/macros/s/.../exec" value="${url}">
     </div>
-    <div class="help-text" style="margin-bottom:14px;">베트남어·중국어를 같은 시트에 기록하려면 같은 URL을 두 언어 모두에 입력하세요. 기록에는 language 필드(vi/zh)가 함께 전송되어 구분할 수 있습니다.</div>
+    <div class="help-text" style="margin-bottom:14px;">URL은 베트남어·중국어 어느 화면에서 입력해도 두 언어 모두에 똑같이 적용됩니다. 구글시트 하나 안에서 'VI' 탭과 'ZH' 탭으로 자동 분리되어 기록됩니다 (아래 스크립트 참고).</div>
     <button class="btn primary" id="saveUrlBtn" style="width:100%;">URL 저장</button>
-    <button class="btn" id="testBtn" style="width:100%; margin-top:10px;">테스트 기록 전송</button>
+    <button class="btn" id="testBtn" style="width:100%; margin-top:10px;">테스트 기록 전송 (현재 언어: ${lang.label})</button>
     <div class="save-banner" id="settingsBanner"></div>
 
     <div class="section-title">음성(TTS) 진단</div>
     <button class="btn" id="diagBtn" style="width:100%;">🔍 ${lang.label} 음성 진단 + 테스트 재생</button>
     <div class="help-text" style="margin-top:8px;">기기에 설치된 음성 목록을 확인하고 테스트 문장을 재생합니다. 음성이 없으면 재생 버튼에서 자동으로 Papago 새 창이 열립니다.</div>
 
-    <div class="section-title">연동 설정 방법</div>
-    <div class="step"><div class="n">1</div><p>구글시트를 새로 만들고 (예: "${lang.label} 학습 기록"), 상단 메뉴에서 <b>확장 프로그램 → Apps Script</b>를 엽니다.</p></div>
-    <div class="step"><div class="n">2</div><p>아래 코드를 전체 붙여넣기 하고 저장합니다.</p></div>
+    <div class="section-title">연동 설정 방법 (최초 1회만)</div>
+    <div class="step"><div class="n">1</div><p>구글시트를 새로 만들고 (예: "언어 자가학습 기록"), 상단 메뉴에서 <b>확장 프로그램 → Apps Script</b>를 엽니다.</p></div>
+    <div class="step"><div class="n">2</div><p>아래 코드를 전체 붙여넣기 하고 저장합니다. 언어(vi/zh)별로 시트 탭이 자동 생성됩니다.</p></div>
     <pre class="code" id="scriptCode">function doPost(e) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName('Log') || ss.insertSheet('Log');
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(['기록시각','언어','차시','주차','제목','부제목','출석','단어','표현','워크북완료']);
-  }
   var data = JSON.parse(e.postData.contents);
+  var tabName = (data.language || 'ETC').toUpperCase(); // VI 또는 ZH 탭
+  var sheet = ss.getSheetByName(tabName) || ss.insertSheet(tabName);
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(['기록시각','차시','주차','제목','부제목','출석','단어','표현','이해도','잘한점','개선점']);
+  }
   sheet.appendRow([
-    data.timestamp, data.language, data.session, data.week, data.title, data.subtitle,
-    data.attended, data.vocabDone, data.exprDone, data.workbookComplete
+    data.timestamp, data.session, data.week, data.title, data.subtitle,
+    data.attended, data.vocabDone, data.exprDone, data.rating,
+    data.strengths, data.improvement
   ]);
   return ContentService.createTextOutput(JSON.stringify({status:'ok'}))
     .setMimeType(ContentService.MimeType.JSON);
 }</pre>
     <div class="step" style="margin-top:16px;"><div class="n">3</div><p>우측 상단 <b>배포 → 새 배포</b> 선택 → 유형 "웹 앱" → 액세스 권한 <b>"모든 사용자"</b>, 실행 계정 <b>"나"</b>로 설정 후 배포합니다.</p></div>
-    <div class="step"><div class="n">4</div><p>발급된 웹 앱 URL(...../exec)을 복사해서 위 입력창에 붙여넣고 저장하세요.</p></div>
+    <div class="step"><div class="n">4</div><p>발급된 웹 앱 URL(...../exec)을 복사해서 위 입력창에 붙여넣고 저장하세요. 두 언어 모두 이 하나의 URL을 그대로 씁니다.</p></div>
+
+    <div class="section-title">${lang.label} · 최근 기록 (이 기기 기준)</div>
+    <table class="history"><tr><th>날짜</th><th>차시</th><th>완료율</th><th>이해도</th></tr>${historyHtml}</table>
 
     <div class="section-title">데이터 초기화</div>
     <button class="btn" id="resetBtn" style="width:100%; color:var(--lacquer);">${lang.label} 진도만 초기화</button>
@@ -1190,8 +1295,8 @@ function renderSettings(){
 
   document.getElementById("saveUrlBtn").addEventListener("click", ()=>{
     const v = document.getElementById("sheetUrlInput").value.trim();
-    setSheetUrl(currentLang, v);
-    document.getElementById("settingsBanner").textContent = v ? "저장되었습니다." : "URL이 비어 있습니다.";
+    setSheetUrl(v);
+    document.getElementById("settingsBanner").textContent = v ? "저장되었습니다. 두 언어 모두에 적용됩니다." : "URL이 비어 있습니다.";
     renderSettings();
   });
   document.getElementById("testBtn").addEventListener("click", ()=>{
@@ -1199,10 +1304,10 @@ function renderSettings(){
     logToSheet(currentLang, {
       timestamp: new Date().toISOString(), session:"TEST", week:"-",
       title:"연동 테스트", subtitle:"Test", attended:true,
-      vocabDone:"-", exprDone:"-", workbookComplete:"TEST"
+      vocabDone:"-", exprDone:"-", rating:"-", strengths:"-", improvement:"-"
     }).then(()=>{
-      document.getElementById("settingsBanner").textContent = getSheetUrl(currentLang)
-        ? "테스트 요청을 전송했습니다. 시트의 'Log' 탭을 확인하세요."
+      document.getElementById("settingsBanner").textContent = getSheetUrl()
+        ? "테스트 요청을 전송했습니다. 시트의 '" + currentLang.toUpperCase() + "' 탭을 확인하세요."
         : "URL을 먼저 저장하세요.";
     });
   });
